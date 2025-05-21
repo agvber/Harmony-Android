@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.ui
+package com.teampatch.feature.onboarding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,11 +12,11 @@ import com.teampatch.core.domain.usecase.onboarding.LoginKakaoUseCase
 import com.teampatch.core.domain.usecase.onboarding.RegisterFamilyUseCase
 import com.teampatch.feature.onboarding.login.model.LoginEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(

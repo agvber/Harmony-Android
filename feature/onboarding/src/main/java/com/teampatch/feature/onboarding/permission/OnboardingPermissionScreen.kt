@@ -1,5 +1,6 @@
-package com.teampatch.feature.onboarding.ui
+package com.teampatch.feature.onboarding.permission
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,12 +41,13 @@ import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.feature.onboarding.R.drawable.bell
 import com.teampatch.feature.onboarding.R.string.text_onboarding_start_harmony
 
+@SuppressLint("InlinedApi")
 private val requiredPermissions: Array<String> = arrayOf(
     android.Manifest.permission.POST_NOTIFICATIONS
 )
 
 @Composable
-fun OnboardingPermissionNotificationScreen(
+fun OnboardingPermissionScreen(
     onNextPageRequest: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -130,6 +132,6 @@ fun OnboardingPermissionNotificationScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardingPermissionNotificationScreenPreview() {
-    OnboardingPermissionNotificationScreen({})
+fun OnboardingPermissionScreenPreview() {
+    OnboardingPermissionScreen({})
 }

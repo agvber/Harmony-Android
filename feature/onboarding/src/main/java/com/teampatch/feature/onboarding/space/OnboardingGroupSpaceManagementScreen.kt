@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.ui
+package com.teampatch.feature.onboarding.space
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,13 +26,8 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.R
 
-/**
- * 여기서 OnboardingStartRoute를 만들고
- * 파라미터로 request 2개, route 2개, 스크린도 2개(MakeGroup, Enter) 만들기
- */
-
 @Composable
-fun OnboardingStartSpaceScreen(
+fun OnboardingGroupSpaceManagementScreen(
     onBackRequest: () -> Unit,
     onboardingMakeGroupRequest: () -> Unit,
     onboardingEnterScreenRequest: () -> Unit,
@@ -86,9 +81,9 @@ fun OnboardingStartSpaceScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun OnboardingStartScreenPreview() {
+private fun OnboardingGroupSpaceManagementScreenPreview() {
     HarmonyTheme {
-        OnboardingStartSpaceScreen(
+        OnboardingGroupSpaceManagementScreen(
             onBackRequest = {},
             onboardingMakeGroupRequest = {},
             onboardingEnterScreenRequest = {}
