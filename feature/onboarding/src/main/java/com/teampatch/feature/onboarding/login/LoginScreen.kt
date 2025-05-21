@@ -1,13 +1,9 @@
-package com.teampatch.feature.onboarding.ui
+package com.teampatch.feature.onboarding.login
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,28 +25,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.teampatch.core.designsystem.R
-import com.teampatch.feature.onboarding.model.LoginEvent
+import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.feature.onboarding.hasNotificationGranted
+import com.teampatch.feature.onboarding.login.model.LoginEvent
+import com.teampatch.feature.onboarding.ui.OnboardingViewModel
 
 @Composable
-internal fun OnboardingLoginScreen(
+internal fun LoginRoute(
     onHomeScreenRequest: () -> Unit,
     onPermissionNotificationRequest: () -> Unit,
     onStartSpaceScreenRequest: () -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
+    val context: Context = LocalContext.current
 
-    fun hasNotificationGranted(context: Context): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
-    } else {
-        true
-    }
+    LoginScreen(
+        onKakaoLoginRequest = viewModel::loginKakao
+    )
 
     LaunchedEffect(Unit) {
         viewModel.loginEvent.collect { event ->
@@ -58,20 +51,25 @@ internal fun OnboardingLoginScreen(
                 is LoginEvent.Error -> {
                     Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_LONG).show()
                 }
+
                 LoginEvent.FamilyRegistrationRequired -> {
                     if (!hasNotificationGranted(context)) {
                         onPermissionNotificationRequest()
-                    } else {
-                        onStartSpaceScreenRequest()
+                        return@collect
                     }
+                    onStartSpaceScreenRequest()
                 }
+
                 LoginEvent.Success -> {
                     onHomeScreenRequest()
                 }
             }
         }
     }
+}
 
+@Composable
+internal fun LoginScreen(onKakaoLoginRequest: () -> Unit) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -82,7 +80,7 @@ internal fun OnboardingLoginScreen(
                     .padding(horizontal = 20.dp)
                     .height(68.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable { viewModel.loginKakao() },
+                    .noRippleClickable(onClick = onKakaoLoginRequest),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -117,10 +115,8 @@ internal fun OnboardingLoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardingLoginScreenPreview() {
-    OnboardingLoginScreen(
-        onHomeScreenRequest = {},
-        onPermissionNotificationRequest = {},
-        onStartSpaceScreenRequest = {}
+fun LoginScreenPreview() {
+    LoginScreen(
+        onKakaoLoginRequest = { }
     )
 }

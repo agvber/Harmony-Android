@@ -7,35 +7,6 @@ import androidx.navigation.Navigator
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
-/**
- * 1. OnboardingRoute
- * 2. 파라미터가 되는 OnboardingPermissionRoute, OnboardingStartRoute
- * 3. StartScreen의 파라미터가 되는 OnboardingMakeGroupRoute, OnboardingEnterInvitationCodeRoute
- */
-@Serializable
-data object OnboardingRoute
-
-fun NavController.navigateToOnboardingScreen(
-    navOptions: NavOptions? = null,
-    navigatorExtras: Navigator.Extras? = null,
-) {
-    navigate(OnboardingRoute, navOptions, navigatorExtras)
-}
-
-fun NavGraphBuilder.addOnboardingScreen(
-    onHomeScreenRequest: () -> Unit,
-    onPermissionNotificationRequest: () -> Unit,
-    onStartScreenRequest: () -> Unit,
-) {
-    composable<OnboardingRoute> {
-        OnboardingRoute(
-            onHomeScreenRequest = onHomeScreenRequest,
-            onPermissionNotificationRequest = onPermissionNotificationRequest,
-            onStartScreenRequest = onStartScreenRequest
-        )
-    }
-}
-
 @Serializable
 data object OnboardingPermissionRoute
 

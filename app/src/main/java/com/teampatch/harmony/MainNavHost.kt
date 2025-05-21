@@ -29,13 +29,8 @@ import com.teampatch.feature.onboarding.enter.navigateToEnterInvitationCodeScree
 import com.teampatch.feature.onboarding.enter.navigateToEnterProfileSettingsScreen
 import com.teampatch.feature.onboarding.enter.navigateToEnterRelationScreen
 import com.teampatch.feature.onboarding.enter.navigateToEnterSpaceScreen
-import com.teampatch.feature.onboarding.ui.OnboardingRoute
-import com.teampatch.feature.onboarding.ui.OnboardingStartRoute
-import com.teampatch.feature.onboarding.ui.addOnboardingPermissionNotificationScreen
-import com.teampatch.feature.onboarding.ui.addOnboardingScreen
-import com.teampatch.feature.onboarding.ui.addOnboardingStartScreen
-import com.teampatch.feature.onboarding.ui.navigateToPermissionNotificationScreen
-import com.teampatch.feature.onboarding.ui.navigateToStartScreen
+import com.teampatch.feature.onboarding.login.OnboardingRoute
+import com.teampatch.feature.onboarding.login.addOnboardingScreen
 import com.teampatch.feature.onboarding.make.addOnboardingMakeInviteGrandParentsScreen
 import com.teampatch.feature.onboarding.make.addOnboardingMakeParentsNameScreen
 import com.teampatch.feature.onboarding.make.addOnboardingMakeProfileSettingsScreen
@@ -44,6 +39,11 @@ import com.teampatch.feature.onboarding.make.navigateToMakeGroupScreen
 import com.teampatch.feature.onboarding.make.navigateToMakeProfileSettingsScreen
 import com.teampatch.feature.onboarding.make.navigateToMakeRelationScreen
 import com.teampatch.feature.onboarding.make.navigateToShareInvitationScreen
+import com.teampatch.feature.onboarding.ui.OnboardingStartRoute
+import com.teampatch.feature.onboarding.ui.addOnboardingPermissionNotificationScreen
+import com.teampatch.feature.onboarding.ui.addOnboardingStartScreen
+import com.teampatch.feature.onboarding.ui.navigateToPermissionNotificationScreen
+import com.teampatch.feature.onboarding.ui.navigateToStartScreen
 import com.teampatch.feature.profile.edit.addProfileEditScreen
 import com.teampatch.feature.profile.edit.navigateToProfileEditScreen
 import com.teampatch.feature.question.addQuestionScreen

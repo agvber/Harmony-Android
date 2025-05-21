@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.model
+package com.teampatch.feature.onboarding.login.model
 
 internal sealed interface LoginEvent {
     data object Success : LoginEvent
