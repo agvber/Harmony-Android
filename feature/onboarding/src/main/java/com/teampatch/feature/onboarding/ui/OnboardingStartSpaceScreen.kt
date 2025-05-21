@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.login.ui
+package com.teampatch.feature.onboarding.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

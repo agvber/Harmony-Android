@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.login.ui
+package com.teampatch.feature.onboarding.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +10,7 @@ import com.teampatch.core.domain.model.Image
 import com.teampatch.core.domain.model.InvitationMessage
 import com.teampatch.core.domain.usecase.onboarding.LoginKakaoUseCase
 import com.teampatch.core.domain.usecase.onboarding.RegisterFamilyUseCase
-import com.teampatch.feature.onboarding.login.model.LoginEvent
+import com.teampatch.feature.onboarding.model.LoginEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel

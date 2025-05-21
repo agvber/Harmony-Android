@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.login.ui
+package com.teampatch.feature.onboarding.ui
 
 import android.Manifest
 import android.content.Context
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.teampatch.core.designsystem.R
-import com.teampatch.feature.onboarding.login.model.LoginEvent
+import com.teampatch.feature.onboarding.model.LoginEvent
 
 @Composable
 internal fun OnboardingLoginScreen(

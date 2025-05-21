@@ -29,7 +29,7 @@ import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.memorystorage.MemoryStorageRoute
 import com.teampatch.feature.memorystorage.navigateToMemoryStorageScreen
-import com.teampatch.feature.onboarding.login.ui.navigateToOnboardingScreen
+import com.teampatch.feature.onboarding.ui.navigateToOnboardingScreen
 import com.teampatch.feature.question.QuestionRoute
 import com.teampatch.feature.question.navigateToQuestionScreen
 import com.teampatch.harmony.model.MainUiState

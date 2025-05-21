@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.login.ui
+package com.teampatch.feature.onboarding.ui
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
