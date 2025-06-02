@@ -36,6 +36,7 @@ import com.teampatch.core.designsystem.component.SpeechBubble
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G3
 import com.teampatch.core.designsystem.theme.G5
+import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.feature.onboarding.R.drawable.bell
@@ -138,5 +139,7 @@ fun OnboardingPermissionScreen(
 @Preview(showBackground = true)
 @Composable
 fun OnboardingPermissionScreenPreview() {
-    OnboardingPermissionScreen({})
+    HarmonyTheme {
+        OnboardingPermissionScreen(onNextPageRequest = {})
+    }
 }
