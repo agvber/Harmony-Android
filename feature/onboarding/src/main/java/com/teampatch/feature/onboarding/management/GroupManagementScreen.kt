@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.space
+package com.teampatch.feature.onboarding.management
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,7 @@ import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.R
 
 @Composable
-fun OnboardingGroupSpaceManagementScreen(
+fun GroupManagementScreen(
     onBackRequest: () -> Unit,
     onboardingMakeGroupRequest: () -> Unit,
     onboardingEnterScreenRequest: () -> Unit,
@@ -81,9 +81,9 @@ fun OnboardingGroupSpaceManagementScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun OnboardingGroupSpaceManagementScreenPreview() {
+private fun GroupManagementScreenPreview() {
     HarmonyTheme {
-        OnboardingGroupSpaceManagementScreen(
+        GroupManagementScreen(
             onBackRequest = {},
             onboardingMakeGroupRequest = {},
             onboardingEnterScreenRequest = {}

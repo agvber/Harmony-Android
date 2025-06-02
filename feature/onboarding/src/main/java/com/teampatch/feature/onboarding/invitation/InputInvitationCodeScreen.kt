@@ -1,7 +1,6 @@
-package com.teampatch.feature.onboarding.enter
+package com.teampatch.feature.onboarding.invitation
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,7 +25,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -48,27 +46,23 @@ import com.teampatch.core.designsystem.component.OnBoardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.feature.onboarding.enter.R.array.title_onboarding_enter_invitation
-import com.teampatch.feature.onboarding.enter.R.string.subtext_onboarding_enter_invitation
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_next
-import com.teampatch.feature.onboarding.enter.model.OnboardingEnterInvitationCodeEvent
-import com.teampatch.feature.onboarding.enter.model.OnboardingEnterInvitationCodeUiState
-import com.teampatch.feature.onboarding.enter.viewmodel.OnboardingEnterInvitationCodeViewModel
+import com.teampatch.feature.onboarding.R
+import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
+import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 
 private const val MAX_LENGTH = 5
 
 @Composable
-internal fun OnboardingEnterInvitationCodeRoute(
+internal fun InputInvitationCodeRoute(
     onBackRequest: () -> Unit,
     onEnterRelationScreenRequest: () -> Unit,
-    viewModel: OnboardingEnterInvitationCodeViewModel = hiltViewModel(),
+    viewModel: OnboardingInputInvitationCodeViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val context: Context = LocalContext.current
-    val uiState: OnboardingEnterInvitationCodeUiState by
-        viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: InputInvitationCodeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    OnboardingEnterInvitationCodeScreen(
+    InputInvitationCodeScreen(
         onBackRequest = onBackRequest,
         onEnterSpaceScreenRequest = onEnterRelationScreenRequest,
         onInviteCodeChange = viewModel::updateInviteCode,
@@ -76,15 +70,15 @@ internal fun OnboardingEnterInvitationCodeRoute(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.onboardingEnterInvitationCodeEvent
+        viewModel.event
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { event ->
                 when (event) {
-                    is OnboardingEnterInvitationCodeEvent.Error -> {
+                    is InputInvitationCodeEvent.Error -> {
                         Toast.makeText(context, "초대 코드가 올바르지 않습니다.", Toast.LENGTH_LONG).show()
                     }
 
-                    OnboardingEnterInvitationCodeEvent.Success -> {
+                    InputInvitationCodeEvent.Success -> {
                         onEnterRelationScreenRequest()
                     }
                 }
@@ -93,32 +87,24 @@ internal fun OnboardingEnterInvitationCodeRoute(
 }
 
 @Composable
-internal fun OnboardingEnterInvitationCodeScreen(
+internal fun InputInvitationCodeScreen(
     onBackRequest: () -> Unit,
     onEnterSpaceScreenRequest: () -> Unit,
     onInviteCodeChange: (String) -> Unit,
-    uiState: OnboardingEnterInvitationCodeUiState,
+    uiState: InputInvitationCodeUiState,
 ) {
     val focusManager = LocalFocusManager.current
-    val titles = stringArrayResource(title_onboarding_enter_invitation)
 
     OnBoardingLayout(
         title = buildAnnotatedString {
-            if (titles.size >= 3) {
-                withStyle(style = SpanStyle(color = MainGreen)) {
-                    append(titles[0])
-                }
-                withStyle(style = SpanStyle(color = BL)) {
-                    append(titles[1])
-                }
-                withStyle(style = SpanStyle(color = BL)) {
-                    append(titles[2])
-                }
-            } else {
-                Log.e("TitleCheck", "Error: Missing Strings")
+            withStyle(style = SpanStyle(color = MainGreen)) {
+                append("초대코드")
+            }
+            withStyle(style = SpanStyle(color = BL)) {
+                append("를\n입력해 주세요.")
             }
         },
-        subtext = stringResource(subtext_onboarding_enter_invitation),
+        subtext = stringResource(R.string.subtext_onboarding_enter_invitation),
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(
@@ -128,10 +114,9 @@ internal fun OnboardingEnterInvitationCodeScreen(
                     .fillMaxWidth()
                     .padding(20.dp)
             ) {
-                Text(stringResource(text_onboarding_enter_next))
+                Text(stringResource(R.string.text_onboarding_enter_next))
             }
-        }
-    ) {
+        }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,8 +135,7 @@ internal fun OnboardingEnterInvitationCodeScreen(
                         modifier = Modifier
                             .size(60.dp)
                             .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
-                            .background(Color(0xFFF7F7F7)),
-                        contentAlignment = Alignment.Center
+                            .background(Color(0xFFF7F7F7)), contentAlignment = Alignment.Center
                     ) {
                         BasicTextField(
                             value = uiState.inviteCode.getOrNull(index)?.toString() ?: "",
@@ -173,13 +157,10 @@ internal fun OnboardingEnterInvitationCodeScreen(
                                 }
                             },
                             textStyle = TextStyle(
-                                fontSize = 24.sp,
-                                textAlign = TextAlign.Center,
-                                color = Color.Black
+                                fontSize = 24.sp, textAlign = TextAlign.Center, color = Color.Black
                             ),
                             keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Next
+                                keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                             ),
                             singleLine = true,
                             modifier = Modifier
@@ -195,13 +176,13 @@ internal fun OnboardingEnterInvitationCodeScreen(
 
 @Preview
 @Composable
-private fun OnboardingEnterInvitationCodeScreenPreview() {
+private fun InputInvitationCodeScreenPreview() {
     HarmonyTheme {
-        OnboardingEnterInvitationCodeScreen(
+        InputInvitationCodeScreen(
             onBackRequest = {},
             onEnterSpaceScreenRequest = {},
             onInviteCodeChange = {},
-            uiState = OnboardingEnterInvitationCodeUiState()
+            uiState = InputInvitationCodeUiState()
         )
     }
 }

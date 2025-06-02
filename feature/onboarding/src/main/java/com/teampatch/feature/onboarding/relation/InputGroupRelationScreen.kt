@@ -1,8 +1,6 @@
-package com.teampatch.feature.onboarding.enter
+package com.teampatch.feature.onboarding.relation
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,15 +11,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -30,10 +27,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.OnBoardingLayout
 import com.teampatch.core.designsystem.theme.BL
@@ -42,88 +37,78 @@ import com.teampatch.core.designsystem.theme.G2
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
-import com.teampatch.feature.onboarding.enter.R.array.title_onboarding_enter_relation
-import com.teampatch.feature.onboarding.enter.R.string.subtext_onboarding_enter_relation
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_grandson
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_name_placeholder
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_name_title
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_next
-import com.teampatch.feature.onboarding.enter.R.string.text_onboarding_enter_relation_title
-import com.teampatch.feature.onboarding.enter.model.OnboardingEnterInvitationCodeEvent
-import com.teampatch.feature.onboarding.enter.viewmodel.OnboardingEnterInvitationCodeViewModel
-import kotlinx.coroutines.flow.collectLatest
+import com.teampatch.feature.onboarding.OnboardingCommonUiState
+import com.teampatch.feature.onboarding.R
 
 @Composable
-internal fun OnboardingEnterRelationRoute(
+internal fun InputGroupRelationRoute(
     onBackRequest: () -> Unit,
     onEnterProfileSettingsScreenRequest: () -> Unit,
-    viewModel: OnboardingEnterInvitationCodeViewModel = hiltViewModel(),
 ) {
-    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val context: Context = LocalContext.current
+    val registry = LocalSaveableStateRegistry.current
 
-    OnboardingEnterRelationScreen(
+    InputGroupRelationScreen(
         onBackRequest = onBackRequest,
-        onEnterProfileSettingsScreenRequest = { relation: String, name: String ->
-            viewModel.registerMemberProfile(relation, name)
+        onResult = { relation: String, name: String ->
+            val restore = registry?.consumeRestored(OnboardingCommonUiState.TAG)
+            (restore as? OnboardingCommonUiState)?.let {
+                registry.registerProvider(OnboardingCommonUiState.TAG) {
+                    it.copy(managerAlias = relation, managerName = name)
+                }
+            }
         }
     )
 
-    LaunchedEffect(Unit) {
-        viewModel.onboardingEnterInvitationCodeEvent
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest {
-                when (it) {
-                    is OnboardingEnterInvitationCodeEvent.Success -> onEnterProfileSettingsScreenRequest()
-                    is OnboardingEnterInvitationCodeEvent.Error -> {
-                        Toast.makeText(
-                            context,
-                            "관계 설정 과정에서 에러가 발생하였습니다.\n다시 시도 해주세요.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.onboardingInputInvitationCodeEvent
+//            .flowWithLifecycle(lifecycleOwner.lifecycle)
+//            .collectLatest {
+//                when (it) {
+//                    is OnboardingInputInvitationCodeEvent.Success -> onEnterProfileSettingsScreenRequest()
+//                    is OnboardingInputInvitationCodeEvent.Error -> {
+//                        Toast.makeText(
+//                            context,
+//                            "관계 설정 과정에서 에러가 발생하였습니다.\n다시 시도 해주세요.",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                }
+//            }
+//    }
 }
 
 @Composable
-internal fun OnboardingEnterRelationScreen(
+internal fun InputGroupRelationScreen(
     onBackRequest: () -> Unit,
-    onEnterProfileSettingsScreenRequest: (relation: String, name: String) -> Unit,
+    onResult: (relation: String, name: String) -> Unit,
 ) {
     var relation by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") }
 
-    val titles = stringArrayResource(title_onboarding_enter_relation)
-
     OnBoardingLayout(
         title = buildAnnotatedString {
-            if (titles.size >= 3) {
-                withStyle(style = SpanStyle(color = BL)) {
-                    append(titles[0])
-                }
-                withStyle(style = SpanStyle(color = MainGreen)) {
-                    append(titles[1])
-                }
-                withStyle(style = SpanStyle(color = BL)) {
-                    append(titles[2])
-                }
-            } else {
-                Log.e("TitleCheck", "Error: Missing Strings")
+            withStyle(style = SpanStyle(color = BL)) {
+                append("할머니와")
+            }
+            withStyle(style = SpanStyle(color = MainGreen)) {
+                append("어떤 관계")
+            }
+            withStyle(style = SpanStyle(color = BL)) {
+                append("인가요?")
             }
         },
-        subtext = stringResource(subtext_onboarding_enter_relation),
+        subtext = stringResource(R.string.subtext_onboarding_enter_relation),
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(
-                onClick = { onEnterProfileSettingsScreenRequest(relation, name) },
+                onClick = { onResult(relation, name) },
                 enabled = relation.isNotBlank() && name.isNotBlank(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
             ) {
-                Text(stringResource(text_onboarding_enter_next))
+                Text(stringResource(R.string.text_onboarding_enter_next))
             }
         }
     ) {
@@ -151,7 +136,7 @@ fun CustomTextField(
     ) {
         Column {
             Text(
-                text = stringResource(text_onboarding_enter_relation_title),
+                text = stringResource(R.string.text_onboarding_enter_relation_title),
                 fontFamily = PretendardFontFamily,
                 color = BL,
                 fontSize = 18.sp,
@@ -165,7 +150,7 @@ fun CustomTextField(
                 enabled = true,
                 placeholder = {
                     Text(
-                        stringResource(text_onboarding_enter_grandson),
+                        stringResource(R.string.text_onboarding_enter_grandson),
                         color = Color.Gray
                     )
                 },
@@ -181,7 +166,7 @@ fun CustomTextField(
 
         Column {
             Text(
-                text = stringResource(text_onboarding_enter_name_title),
+                text = stringResource(R.string.text_onboarding_enter_name_title),
                 fontFamily = PretendardFontFamily,
                 color = BL,
                 fontSize = 18.sp,
@@ -195,7 +180,7 @@ fun CustomTextField(
                 enabled = true,
                 placeholder = {
                     Text(
-                        stringResource(text_onboarding_enter_name_placeholder),
+                        stringResource(R.string.text_onboarding_enter_name_placeholder),
                         color = Color.Gray
                     )
                 },
@@ -214,11 +199,11 @@ fun CustomTextField(
 
 @Preview
 @Composable
-private fun OnboardingMakeRelationScreenPreview() {
+private fun InputGroupRelationScreenPreview() {
     HarmonyTheme {
-        OnboardingEnterRelationScreen(
+        InputGroupRelationScreen(
             onBackRequest = {},
-            onEnterProfileSettingsScreenRequest = { _, _ -> }
+            onResult = { _, _ -> }
         )
     }
 }

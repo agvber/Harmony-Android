@@ -98,7 +98,12 @@ fun OnboardingPermissionScreen(
 
                     Text(
                         text = buildAnnotatedString {
-                            withStyle(style = SpanStyle(color = MainGreen, fontWeight = FontWeight.Bold)) {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MainGreen,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
                                 append("알림")
                             }
                             append("을 허용해 주세요.")

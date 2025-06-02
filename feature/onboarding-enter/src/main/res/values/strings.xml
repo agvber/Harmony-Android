@@ -35,8 +35,6 @@
     <string name="subtext_onboarding_enter_name">"할머니나 할아버지의 성함을\n입력해 주세요."</string>
 
 
-
-
     <string name="text_onboarding_enter_next">"다음"</string>
     <string name="text_onboarding_enter_space">"다음"</string>
     <string name="text_onboarding_enter_relation_title">"관계"</string>
@@ -44,15 +42,6 @@
     <string name="text_onboarding_enter_name_title">"이름"</string>
     <string name="text_onboarding_enter_name_placeholder">"예) 손녀"</string>
     <string name="text_onboarding_enter_enter_space">"가족 공간 입장하기"</string>
-
-
-
-
-
-
-
-
-
 
 
 </resources>

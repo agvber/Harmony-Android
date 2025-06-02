@@ -1,4 +1,4 @@
-package com.teampatch.feature.onboarding.space
+package com.teampatch.feature.onboarding.management
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,7 +23,7 @@ fun NavGraphBuilder.addOnboardingStartScreen(
     onboardingEnterScreenRequest: () -> Unit,
 ) {
     composable<OnboardingStartRoute> {
-        OnboardingGroupSpaceManagementScreen(
+        GroupManagementScreen(
             onBackRequest = onBackRequest,
             onboardingMakeGroupRequest = onboardingMakeGroupRequest,
             onboardingEnterScreenRequest = onboardingEnterScreenRequest

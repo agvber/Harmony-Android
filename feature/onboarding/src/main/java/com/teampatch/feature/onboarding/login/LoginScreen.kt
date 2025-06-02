@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.teampatch.core.designsystem.R
 import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.feature.onboarding.OnboardingViewModel
 import com.teampatch.feature.onboarding.hasNotificationGranted
 import com.teampatch.feature.onboarding.login.model.LoginEvent
-import com.teampatch.feature.onboarding.OnboardingViewModel
 
 @Composable
 internal fun LoginRoute(

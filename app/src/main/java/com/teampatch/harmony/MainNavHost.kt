@@ -39,11 +39,11 @@ import com.teampatch.feature.onboarding.make.navigateToMakeGroupScreen
 import com.teampatch.feature.onboarding.make.navigateToMakeProfileSettingsScreen
 import com.teampatch.feature.onboarding.make.navigateToMakeRelationScreen
 import com.teampatch.feature.onboarding.make.navigateToShareInvitationScreen
-import com.teampatch.feature.onboarding.space.OnboardingStartRoute
+import com.teampatch.feature.onboarding.management.OnboardingStartRoute
 import com.teampatch.feature.onboarding.permission.addOnboardingPermissionScreen
-import com.teampatch.feature.onboarding.space.addOnboardingStartScreen
+import com.teampatch.feature.onboarding.management.addOnboardingStartScreen
 import com.teampatch.feature.onboarding.permission.navigateToPermissionScreen
-import com.teampatch.feature.onboarding.space.navigateToStartScreen
+import com.teampatch.feature.onboarding.management.navigateToStartScreen
 import com.teampatch.feature.profile.edit.addProfileEditScreen
 import com.teampatch.feature.profile.edit.navigateToProfileEditScreen
 import com.teampatch.feature.question.addQuestionScreen
