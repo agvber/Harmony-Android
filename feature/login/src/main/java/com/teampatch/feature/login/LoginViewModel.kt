@@ -3,7 +3,7 @@ package com.teampatch.feature.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teampatch.core.domain.exception.FamilyRegistrationRequiredException
-import com.teampatch.core.domain.usecase.onboarding.LoginKakaoUseCase
+import com.teampatch.core.domain.usecase.authentication.LoginKakaoUseCase
 import com.teampatch.feature.login.model.LoginEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

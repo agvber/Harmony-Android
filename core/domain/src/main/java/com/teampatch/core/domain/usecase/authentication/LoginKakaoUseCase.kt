@@ -1,4 +1,4 @@
-package com.teampatch.core.domain.usecase.onboarding
+package com.teampatch.core.domain.usecase.authentication
 
 import com.teampatch.core.domain.exception.FamilyRegistrationRequiredException
 import com.teampatch.core.domain.repository.AuthenticationRepository
@@ -9,7 +9,7 @@ class LoginKakaoUseCase @Inject constructor(
 ) {
 
     /**
-     * @throws FamilyRegistrationRequiredException 그룹이 존재 하지 않는 유저인 경우
+     * @throws com.teampatch.core.domain.exception.FamilyRegistrationRequiredException 그룹이 존재 하지 않는 유저인 경우
      */
 
     suspend operator fun invoke() {
