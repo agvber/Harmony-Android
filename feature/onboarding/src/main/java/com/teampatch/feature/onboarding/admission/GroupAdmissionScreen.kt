@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.teampatch.core.common.findActivity
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.OnBoardingLayout
@@ -69,6 +70,7 @@ internal fun GroupAdmissionWithViewModel(
                 OnboardingAction.INIT -> {
                     Toast.makeText(context, "온보딩 정보가 존재하지 않습니다.\n다시 시도해주세요.", Toast.LENGTH_LONG)
                         .show()
+                    context?.findActivity()?.recreate()
                 }
             }
         }

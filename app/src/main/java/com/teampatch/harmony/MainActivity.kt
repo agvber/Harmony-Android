@@ -1,5 +1,6 @@
 package com.teampatch.harmony
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,9 +15,9 @@ import com.kakao.sdk.common.util.Utility
 import com.teampatch.core.common.ActivitySavedInstanceHelper
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -70,6 +71,13 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         activitySavedInstanceHelper.saveState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun recreate() {
+        Intent(this, MainActivity::class.java).apply {
+            startActivity(this)
+        }
+        finish()
     }
 
     companion object {
