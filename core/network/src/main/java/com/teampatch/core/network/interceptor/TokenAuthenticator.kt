@@ -1,7 +1,7 @@
 package com.teampatch.core.network.interceptor
 
 import com.teampatch.core.common.BuildConfig
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.network.UserRemoteDataSource
 import com.teampatch.core.network.model.user.SignupOrLoginRequestBody
 import com.teampatch.core.network.model.user.SignupOrLoginResponse

@@ -3,7 +3,7 @@ package com.teampatch.core.data.entity
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.teampatch.core.common.BuildConfig
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking

@@ -1,6 +1,6 @@
 package com.teampatch.core.network.interceptor
 
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.network.annotation.AuthorizedRequest
 import javax.inject.Inject
 import okhttp3.Interceptor

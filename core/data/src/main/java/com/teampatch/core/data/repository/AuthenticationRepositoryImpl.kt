@@ -2,7 +2,7 @@ package com.teampatch.core.data.repository
 
 import com.agvber.core.authentication.kakao.KakaoLoginService
 import com.teampatch.core.data.utils.toServerDateFormat
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.model.LoginResult
 import com.teampatch.core.domain.repository.AuthenticationRepository
 import com.teampatch.core.network.UserRemoteDataSource

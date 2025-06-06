@@ -9,7 +9,7 @@ import com.teampatch.core.data.repository.local.LocalGroupManagementRepositoryIm
 import com.teampatch.core.data.repository.local.LocalMemoryCardRepositoryImpl
 import com.teampatch.core.data.repository.local.LocalQuestionRepositoryImpl
 import com.teampatch.core.data.repository.local.LocalUserRepositoryImpl
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.repository.AnswerRepository
 import com.teampatch.core.domain.repository.AppManagementRepository
 import com.teampatch.core.domain.repository.AuthenticationRepository

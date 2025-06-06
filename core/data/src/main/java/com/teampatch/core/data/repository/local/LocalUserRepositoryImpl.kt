@@ -12,7 +12,7 @@ import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.VIP
 import com.teampatch.core.data.mapper.toDomain
 import com.teampatch.core.data.utils.getMediaStoreInfo
-import com.teampatch.core.domain.entity.SocialLoginHelper
+import com.teampatch.core.domain.entities.SocialLoginHelper
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository

@@ -1,4 +1,4 @@
-package com.teampatch.core.domain.entity
+package com.teampatch.core.domain.entities
 
 import javax.inject.Inject
 import javax.inject.Singleton

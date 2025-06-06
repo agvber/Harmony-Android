@@ -1,6 +1,6 @@
 package com.teampatch.core.network
 
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.network.di.NetworkSingletonModule
 import com.teampatch.core.network.interceptor.TokenInterceptor
 import java.util.regex.Pattern

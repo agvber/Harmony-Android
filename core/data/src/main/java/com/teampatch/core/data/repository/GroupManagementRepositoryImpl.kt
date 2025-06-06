@@ -1,7 +1,7 @@
 package com.teampatch.core.data.repository
 
 import com.teampatch.core.data.mapper.toDomain
-import com.teampatch.core.domain.entity.TokenManager
+import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.model.InvitedGroup
 import com.teampatch.core.domain.model.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
