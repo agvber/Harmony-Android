@@ -8,22 +8,22 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object OnboardingRoute
+data object LoginRoute
 
-fun NavController.navigateToOnboardingScreen(
+fun NavController.navigateToLoginScreen(
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
 ) {
-    navigate(OnboardingRoute, navOptions, navigatorExtras)
+    navigate(LoginRoute, navOptions, navigatorExtras)
 }
 
-fun NavGraphBuilder.addOnboardingScreen(
+fun NavGraphBuilder.addLoginScreen(
     onHomeScreenRequest: () -> Unit,
     onPermissionNotificationRequest: () -> Unit,
     onStartScreenRequest: () -> Unit,
 ) {
-    composable<OnboardingRoute> {
-        LoginRoute(
+    composable<LoginRoute> {
+        LoginWithViewModelScreen(
             onHomeScreenRequest = onHomeScreenRequest,
             onPermissionNotificationRequest = onPermissionNotificationRequest,
             onStartSpaceScreenRequest = onStartScreenRequest

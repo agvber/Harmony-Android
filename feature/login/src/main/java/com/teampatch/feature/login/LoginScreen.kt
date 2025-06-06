@@ -31,7 +31,7 @@ import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.feature.login.model.LoginEvent
 
 @Composable
-internal fun LoginRoute(
+internal fun LoginWithViewModelScreen(
     onHomeScreenRequest: () -> Unit,
     onPermissionNotificationRequest: () -> Unit,
     onStartSpaceScreenRequest: () -> Unit,

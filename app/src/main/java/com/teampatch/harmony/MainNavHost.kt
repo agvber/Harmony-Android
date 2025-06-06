@@ -25,8 +25,8 @@ import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScr
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.invitation.addOnboardingInputInvitationScreen
 import com.teampatch.feature.onboarding.invitation.navigateToOnboardingInputInvitationScreen
-import com.teampatch.feature.onboarding.login.OnboardingRoute
-import com.teampatch.feature.onboarding.login.addOnboardingScreen
+import com.teampatch.feature.login.LoginRoute
+import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.onboarding.management.OnboardingGroupManagementRoute
 import com.teampatch.feature.onboarding.management.addOnboardingGroupManagementScreen
 import com.teampatch.feature.onboarding.management.navigateToOnboardingGroupManagementScreen
@@ -66,7 +66,7 @@ fun MainNavHost(
         navController = navController,
         startDestination = OnboardingGroupManagementRoute
     ) {
-        addOnboardingScreen(
+        addLoginScreen(
             onHomeScreenRequest = navController::navigateToHomeScreenWithBackStackClear,
             onPermissionNotificationRequest = navController::navigateToOnboardingPermissionScreen,
             onStartScreenRequest = navController::navigateToOnboardingGroupManagementScreen
@@ -194,7 +194,7 @@ fun MainNavHost(
 private fun NavHostController.navigateToHomeScreenWithBackStackClear() {
     navigateToHomeScreen(
         navOptions = navOptions {
-            popUpTo(OnboardingRoute) {
+            popUpTo(LoginRoute) {
                 inclusive = true
             }
             launchSingleTop = true
