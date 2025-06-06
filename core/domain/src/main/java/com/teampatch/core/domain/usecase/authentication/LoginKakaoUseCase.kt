@@ -4,6 +4,8 @@ import com.teampatch.core.domain.exception.FamilyRegistrationRequiredException
 import com.teampatch.core.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 
+private const val FAMILY_REGISTRATION_REQUIRED_CODE: String = "-1"
+
 class LoginKakaoUseCase @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
 ) {
@@ -15,7 +17,7 @@ class LoginKakaoUseCase @Inject constructor(
     suspend operator fun invoke() {
         val loginResult = authenticationRepository.loginKakao()
 
-        if (loginResult.groupId == "-1") {
+        if (loginResult.groupId == FAMILY_REGISTRATION_REQUIRED_CODE) {
             throw FamilyRegistrationRequiredException()
         }
     }
