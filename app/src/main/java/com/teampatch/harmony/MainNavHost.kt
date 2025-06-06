@@ -23,6 +23,8 @@ import com.teampatch.feature.memorycard.registration.navigateToMemoryCardRegistr
 import com.teampatch.feature.memorystorage.addMemoryStorageScreen
 import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
+import com.teampatch.feature.onboarding.invitation.addOnboardingInputInvitationScreen
+import com.teampatch.feature.onboarding.invitation.navigateToOnboardingInputInvitationScreen
 import com.teampatch.feature.onboarding.login.OnboardingRoute
 import com.teampatch.feature.onboarding.login.addOnboardingScreen
 import com.teampatch.feature.onboarding.management.OnboardingGroupManagementRoute
@@ -50,8 +52,6 @@ import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailConversa
 import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailScreen
 import kotlinx.coroutines.InternalCoroutinesApi
 
-private const val TAG: String = "MainNavHost"
-
 @OptIn(InternalCoroutinesApi::class)
 @Composable
 fun MainNavHost(
@@ -68,18 +68,14 @@ fun MainNavHost(
     ) {
         addOnboardingScreen(
             onHomeScreenRequest = navController::navigateToHomeScreenWithBackStackClear,
-            onPermissionNotificationRequest = { navController.navigateToOnboardingPermissionScreen() },
-            onStartScreenRequest = { navController.navigateToOnboardingGroupManagementScreen() }
+            onPermissionNotificationRequest = navController::navigateToOnboardingPermissionScreen,
+            onStartScreenRequest = navController::navigateToOnboardingGroupManagementScreen
         )
 
         addOnboardingGroupManagementScreen(
             onBackRequest = navController::navigateUp,
-            onGroupCreateRequest = {
-                navController.navigateToOnboardingInputVipInformationScreen()
-            },
-            onGroupJoinRequest = {
-//                onboardingCommonUiState.update { it.copy(action = OnboardingAction.JOIN) }
-            }
+            onGroupCreateRequest = navController::navigateToOnboardingInputVipInformationScreen,
+            onGroupJoinRequest = navController::navigateToOnboardingInputInvitationScreen
         )
 
         addOnboardingInputVipInformationScreen(
@@ -101,6 +97,11 @@ fun MainNavHost(
             onNextPageRequest = { uri: Uri ->
                 navController.navigateToOnboardingGroupAdmissionScreen()
             }
+        )
+
+        addOnboardingInputInvitationScreen(
+            onBackRequest = navController::navigateUp,
+            onNextPageRequest = navController::navigateToOnboardingGroupAdmissionScreen
         )
 
         addOnboardingGroupAdmissionScreen(

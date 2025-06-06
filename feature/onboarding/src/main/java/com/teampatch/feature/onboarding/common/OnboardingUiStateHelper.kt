@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import com.teampatch.core.common.ActivitySavedInstanceHelper
 import com.teampatch.core.common.getCustomParcelableExtra
+import com.teampatch.feature.onboarding.common.model.OnboardingAction
+import com.teampatch.feature.onboarding.common.model.OnboardingCommonUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +18,7 @@ internal class OnboardingUiStateHelper : ActivitySavedInstanceHelper {
         MutableStateFlow(OnboardingCommonUiState())
     val uiState: StateFlow<OnboardingCommonUiState> = _uiState.asStateFlow()
 
-    fun updateAction(action: OnboardingCommonUiState.OnboardingAction) {
+    fun updateAction(action: OnboardingAction) {
         _uiState.update { it.copy(action = action) }
     }
 
@@ -43,6 +45,10 @@ internal class OnboardingUiStateHelper : ActivitySavedInstanceHelper {
         profileImageUri: Uri,
     ) {
         _uiState.update { it.copy(profileImageUri = profileImageUri) }
+    }
+
+    fun updateInviteCode(inviteCode: String) {
+        _uiState.update { it.copy(inviteCode = inviteCode) }
     }
 
     override fun saveState(bundle: Bundle) {

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-internal class OnboardingInputInvitationCodeViewModel @Inject constructor(
+internal class InputInvitationCodeViewModel @Inject constructor(
     private val joinFamilyGroupUseCase: JoinFamilyGroupUseCase,
 ) : ViewModel() {
 

@@ -2,7 +2,6 @@ package com.teampatch.feature.onboarding.admission
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +35,9 @@ import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
-import com.teampatch.feature.onboarding.common.OnboardingCommonUiState
 import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
+import com.teampatch.feature.onboarding.common.model.OnboardingAction
+import com.teampatch.feature.onboarding.common.model.OnboardingCommonUiState
 
 @Composable
 internal fun GroupAdmissionWithViewModel(
@@ -56,8 +56,8 @@ internal fun GroupAdmissionWithViewModel(
             val uiState: OnboardingCommonUiState = uiStateHelper.uiState.value
 
             when (uiState.action) {
-                OnboardingCommonUiState.OnboardingAction.JOIN -> {}
-                OnboardingCommonUiState.OnboardingAction.CREATE ->
+                OnboardingAction.JOIN -> viewModel.joinGroup(uiState.inviteCode)
+                OnboardingAction.CREATE ->
                     viewModel.createGroup(
                         vipName = uiState.vipName,
                         vipAlias = uiState.vipAlias,
@@ -66,10 +66,10 @@ internal fun GroupAdmissionWithViewModel(
                         profileImageUri = uiState.profileImageUri
                     )
 
-                OnboardingCommonUiState.OnboardingAction.INIT -> Log.d(
-                    "GroupAdmission",
-                    "Onboarding action: init"
-                )
+                OnboardingAction.INIT -> {
+                    Toast.makeText(context, "온보딩 정보가 존재하지 않습니다.\n다시 시도해주세요.", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
     )

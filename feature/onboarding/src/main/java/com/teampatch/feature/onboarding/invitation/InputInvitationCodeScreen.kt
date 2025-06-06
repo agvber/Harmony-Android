@@ -47,16 +47,18 @@ import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.R
+import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
+import com.teampatch.feature.onboarding.common.model.OnboardingAction
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 
 private const val MAX_LENGTH = 5
 
 @Composable
-internal fun InputInvitationCodeRoute(
+internal fun InputInvitationCodeWithViewModel(
     onBackRequest: () -> Unit,
-    onEnterRelationScreenRequest: () -> Unit,
-    viewModel: OnboardingInputInvitationCodeViewModel = hiltViewModel(),
+    onNextPageRequest: () -> Unit,
+    viewModel: InputInvitationCodeViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val context: Context = LocalContext.current
@@ -64,7 +66,7 @@ internal fun InputInvitationCodeRoute(
 
     InputInvitationCodeScreen(
         onBackRequest = onBackRequest,
-        onEnterSpaceScreenRequest = onEnterRelationScreenRequest,
+        onNextPageRequest = viewModel::confirmInviteCode,
         onInviteCodeChange = viewModel::updateInviteCode,
         uiState = uiState
     )
@@ -79,7 +81,9 @@ internal fun InputInvitationCodeRoute(
                     }
 
                     InputInvitationCodeEvent.Success -> {
-                        onEnterRelationScreenRequest()
+                        val onboardingUiStateHelper = OnboardingUiStateHelper.getInstance()
+                        onboardingUiStateHelper.updateAction(OnboardingAction.JOIN)
+                        onNextPageRequest()
                     }
                 }
             }
@@ -89,7 +93,7 @@ internal fun InputInvitationCodeRoute(
 @Composable
 internal fun InputInvitationCodeScreen(
     onBackRequest: () -> Unit,
-    onEnterSpaceScreenRequest: () -> Unit,
+    onNextPageRequest: () -> Unit,
     onInviteCodeChange: (String) -> Unit,
     uiState: InputInvitationCodeUiState,
 ) {
@@ -108,7 +112,7 @@ internal fun InputInvitationCodeScreen(
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(
-                onClick = { onEnterSpaceScreenRequest() },
+                onClick = { onNextPageRequest() },
                 enabled = !uiState.isProgress,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -185,7 +189,7 @@ private fun InputInvitationCodeScreenPreview() {
     HarmonyTheme {
         InputInvitationCodeScreen(
             onBackRequest = {},
-            onEnterSpaceScreenRequest = {},
+            onNextPageRequest = {},
             onInviteCodeChange = {},
             uiState = InputInvitationCodeUiState()
         )

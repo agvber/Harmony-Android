@@ -7,10 +7,10 @@ import com.teampatch.core.domain.usecase.group.CreateFamilyGroupUseCase
 import com.teampatch.core.domain.usecase.group.JoinFamilyGroupUseCase
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class GroupAdmissionViewModel @Inject constructor(
@@ -21,6 +21,10 @@ internal class GroupAdmissionViewModel @Inject constructor(
     private val _event: Channel<GroupAdmissionEvent> = Channel<GroupAdmissionEvent>()
     val groupAdmissionEvent = _event.receiveAsFlow()
 
+    private fun loadData() {
+        // TODO: 해당 그룹의 정보를 가져오기
+    }
+
     fun createGroup(
         vipName: String,
         vipAlias: String,
@@ -29,7 +33,11 @@ internal class GroupAdmissionViewModel @Inject constructor(
         profileImageUri: Uri,
     ) = viewModelScope.launch {
         runCatching { createFamilyGroupUseCase() }
-            .onFailure { it.printStackTrace() }
+            .onSuccess { _event.send(GroupAdmissionEvent.Success) }
+            .onFailure {
+                it.printStackTrace()
+                _event.send(GroupAdmissionEvent.GroupCreateError)
+            }
     }
 
     fun joinGroup(inviteCode: String) = viewModelScope.launch {
@@ -39,9 +47,5 @@ internal class GroupAdmissionViewModel @Inject constructor(
                 it.printStackTrace()
                 _event.send(GroupAdmissionEvent.GroupJoinError)
             }
-    }
-
-    companion object {
-        const val TAG: String = "GroupAdmissionViewModel"
     }
 }

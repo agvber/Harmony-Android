@@ -26,8 +26,8 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.feature.onboarding.R
-import com.teampatch.feature.onboarding.common.OnboardingCommonUiState
 import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
+import com.teampatch.feature.onboarding.common.model.OnboardingAction
 
 @Composable
 fun GroupManagementScreen(
@@ -62,7 +62,7 @@ fun GroupManagementScreen(
                     .fillMaxWidth()
                     .noRippleClickable {
                         val uiStateHelper = OnboardingUiStateHelper.getInstance()
-                        uiStateHelper.updateAction(OnboardingCommonUiState.OnboardingAction.CREATE)
+                        uiStateHelper.updateAction(OnboardingAction.CREATE)
                         onGroupCreateRequest()
                     }
             )
@@ -82,7 +82,7 @@ fun GroupManagementScreen(
                     .fillMaxWidth()
                     .clickable {
                         val uiStateHelper = OnboardingUiStateHelper.getInstance()
-                        uiStateHelper.updateAction(OnboardingCommonUiState.OnboardingAction.CREATE)
+                        uiStateHelper.updateAction(OnboardingAction.CREATE)
                         onGroupJoinRequest()
                     }
             )
