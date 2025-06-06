@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.teampatch.core.designsystem.R
 import com.teampatch.core.designsystem.utils.noRippleClickable
-import com.teampatch.feature.onboarding.OnboardingViewModel
 import com.teampatch.feature.onboarding.hasNotificationGranted
 import com.teampatch.feature.onboarding.login.model.LoginEvent
 
@@ -37,7 +36,7 @@ internal fun LoginRoute(
     onHomeScreenRequest: () -> Unit,
     onPermissionNotificationRequest: () -> Unit,
     onStartSpaceScreenRequest: () -> Unit,
-    viewModel: OnboardingViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context: Context = LocalContext.current
 

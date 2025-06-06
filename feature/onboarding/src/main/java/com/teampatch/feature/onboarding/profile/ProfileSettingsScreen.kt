@@ -1,5 +1,6 @@
 package com.teampatch.feature.onboarding.profile
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,10 +16,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -37,36 +43,27 @@ import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.feature.onboarding.R
+import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
+
+private const val TAG: String = "OnboardingProfileSettingsScreen"
+private val pickVisualMediaRequest: PickVisualMediaRequest =
+    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
 
 @Composable
-internal fun OnboardingProfileSettingsRoute(
+internal fun ProfileSettingsScreen(
     onBackRequest: () -> Unit,
-    onEnterSpaceScreenRequest: (List<Uri>) -> Unit, // 이 시그니처는 유지 (List<Uri> 전달)
+    onNextPageRequest: (uri: Uri) -> Unit,
 ) {
-    OnboardingProfileSettingsScreen(
-        profileImageUris = emptyList(), // ViewModel의 현재 상태 전달
-        onBackRequest = onBackRequest,
-        onProfileImageUpdate = { uri -> },
-        onEnterSpaceScreenRequest = onEnterSpaceScreenRequest // 콜백 그대로 전달
-    )
-}
-
-@Composable
-internal fun OnboardingProfileSettingsScreen(
-    profileImageUris: List<Uri>,
-    onBackRequest: () -> Unit,
-    onProfileImageUpdate: (Uri) -> Unit,
-    onEnterSpaceScreenRequest: (List<Uri>) -> Unit,
-) {
+    val context: Context? = LocalContext.current
+    var selectedProfileUri: Uri by remember { mutableStateOf(Uri.EMPTY) }
     val photoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            if (uri != null) {
-                Log.d("ProfileImageUpdate", "Picked URI: $uri")
-                onProfileImageUpdate(uri)
-            } else {
-                Log.d("ProfileImageUpdate", "No URI picked")
+            uri?.let {
+                selectedProfileUri = it
+                Log.d(TAG, "Picked URI: $it")
             }
+                ?: Log.e(TAG, "No URI picked")
         }
     )
 
@@ -86,7 +83,11 @@ internal fun OnboardingProfileSettingsScreen(
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(
-                onClick = { onEnterSpaceScreenRequest(profileImageUris) }, // ✅ 리스트 전달
+                onClick = {
+                    OnboardingUiStateHelper.getInstance()
+                        .updateProfileImage(selectedProfileUri)
+                    onNextPageRequest(selectedProfileUri)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
@@ -101,18 +102,15 @@ internal fun OnboardingProfileSettingsScreen(
                 .fillMaxWidth()
                 .padding(top = 44.dp)
                 .noRippleClickable {
-                    val pickerRequest =
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    photoPicker.launch(pickerRequest)
+                    photoPicker.launch(pickVisualMediaRequest)
                 }
         ) {
-            // 이미지를 감싸는 Box 추가 (아이콘을 정렬하기 위해)
             Box(
-                modifier = Modifier.size(144.dp) // 이미지 크기와 동일한 크기
+                modifier = Modifier.size(144.dp)
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = profileImageUris.lastOrNull() ?: ic_my_appbar,
+                        model = selectedProfileUri.takeIf { it == Uri.EMPTY } ?: ic_my_appbar,
                         placeholder = painterResource(ic_my_appbar),
                         error = painterResource(ic_my_appbar)
                     ),
@@ -144,13 +142,11 @@ internal fun OnboardingProfileSettingsScreen(
 
 @Preview
 @Composable
-private fun OnboardingProfileSettingsScreenPreview() {
+private fun ProfileSettingsScreenPreview() {
     HarmonyTheme {
-        OnboardingProfileSettingsScreen(
-            profileImageUris = emptyList(), // ✅ 리스트로 전달
+        ProfileSettingsScreen(
             onBackRequest = {},
-            onProfileImageUpdate = {},
-            onEnterSpaceScreenRequest = {}
+            onNextPageRequest = {}
         )
     }
 }

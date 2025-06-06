@@ -116,7 +116,8 @@ internal fun InputInvitationCodeScreen(
             ) {
                 Text(stringResource(R.string.text_onboarding_enter_next))
             }
-        }) {
+        }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,7 +136,8 @@ internal fun InputInvitationCodeScreen(
                         modifier = Modifier
                             .size(60.dp)
                             .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
-                            .background(Color(0xFFF7F7F7)), contentAlignment = Alignment.Center
+                            .background(Color(0xFFF7F7F7)),
+                        contentAlignment = Alignment.Center
                     ) {
                         BasicTextField(
                             value = uiState.inviteCode.getOrNull(index)?.toString() ?: "",
@@ -157,10 +159,13 @@ internal fun InputInvitationCodeScreen(
                                 }
                             },
                             textStyle = TextStyle(
-                                fontSize = 24.sp, textAlign = TextAlign.Center, color = Color.Black
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color.Black
                             ),
                             keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next
                             ),
                             singleLine = true,
                             modifier = Modifier

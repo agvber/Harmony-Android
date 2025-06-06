@@ -125,8 +125,6 @@ dependencies {
     implementation(project(":feature:question-expand"))
     implementation(project(":feature:question-detail"))
     implementation(project(":feature:answer"))
-    implementation(project(":feature:onboarding-make"))
-    implementation(project(":feature:onboarding-enter"))
 
     implementation(project(":feature:memorystorage"))
     implementation(project(":feature:memorystorage-detail"))

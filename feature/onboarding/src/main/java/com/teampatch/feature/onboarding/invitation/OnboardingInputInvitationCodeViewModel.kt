@@ -6,6 +6,7 @@ import com.teampatch.core.domain.usecase.group.JoinFamilyGroupUseCase
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,11 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 internal class OnboardingInputInvitationCodeViewModel @Inject constructor(
-    private val joinFamilyGroupUseCase: JoinFamilyGroupUseCase
+    private val joinFamilyGroupUseCase: JoinFamilyGroupUseCase,
 ) : ViewModel() {
 
     private val _event: Channel<InputInvitationCodeEvent> = Channel()

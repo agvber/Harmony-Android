@@ -24,13 +24,16 @@ import com.teampatch.core.designsystem.component.OnBoardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
+import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.feature.onboarding.R
+import com.teampatch.feature.onboarding.common.OnboardingCommonUiState
+import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
 
 @Composable
 fun GroupManagementScreen(
     onBackRequest: () -> Unit,
-    onboardingMakeGroupRequest: () -> Unit,
-    onboardingEnterScreenRequest: () -> Unit,
+    onGroupCreateRequest: () -> Unit,
+    onGroupJoinRequest: () -> Unit,
 ) {
     OnBoardingLayout(
         title = buildAnnotatedString {
@@ -57,7 +60,11 @@ fun GroupManagementScreen(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onboardingMakeGroupRequest() }
+                    .noRippleClickable {
+                        val uiStateHelper = OnboardingUiStateHelper.getInstance()
+                        uiStateHelper.updateAction(OnboardingCommonUiState.OnboardingAction.CREATE)
+                        onGroupCreateRequest()
+                    }
             )
 
             // Spacer 대신 Box로 배경색을 설정한 여백 추가
@@ -73,7 +80,11 @@ fun GroupManagementScreen(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onboardingEnterScreenRequest() }
+                    .clickable {
+                        val uiStateHelper = OnboardingUiStateHelper.getInstance()
+                        uiStateHelper.updateAction(OnboardingCommonUiState.OnboardingAction.CREATE)
+                        onGroupJoinRequest()
+                    }
             )
         }
     }
@@ -85,8 +96,8 @@ private fun GroupManagementScreenPreview() {
     HarmonyTheme {
         GroupManagementScreen(
             onBackRequest = {},
-            onboardingMakeGroupRequest = {},
-            onboardingEnterScreenRequest = {}
+            onGroupCreateRequest = {},
+            onGroupJoinRequest = {}
         )
     }
 }

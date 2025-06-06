@@ -1,6 +1,9 @@
 package com.teampatch.feature.onboarding.admission
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -10,16 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.component.DefaultButton
@@ -27,21 +35,74 @@ import com.teampatch.core.designsystem.component.OnBoardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
+import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
+import com.teampatch.feature.onboarding.common.OnboardingCommonUiState
+import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
 
 @Composable
-internal fun GroupAdmissionRoute(
+internal fun GroupAdmissionWithViewModel(
     onBackRequest: () -> Unit,
     onHomeRouteRequest: () -> Unit,
+    viewModel: GroupAdmissionViewModel = hiltViewModel(),
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context: Context? = LocalContext.current
+
     GroupAdmissionScreen(
         profileImageUris = listOf(),
         onBackRequest = onBackRequest,
-        onHomeRouteRequest = onHomeRouteRequest
+        onHomeRouteRequest = {
+            val uiStateHelper: OnboardingUiStateHelper = OnboardingUiStateHelper.getInstance()
+            val uiState: OnboardingCommonUiState = uiStateHelper.uiState.value
+
+            when (uiState.action) {
+                OnboardingCommonUiState.OnboardingAction.JOIN -> {}
+                OnboardingCommonUiState.OnboardingAction.CREATE ->
+                    viewModel.createGroup(
+                        vipName = uiState.vipName,
+                        vipAlias = uiState.vipAlias,
+                        managerName = uiState.managerName,
+                        managerRelation = uiState.managerRelation,
+                        profileImageUri = uiState.profileImageUri
+                    )
+
+                OnboardingCommonUiState.OnboardingAction.INIT -> Log.d(
+                    "GroupAdmission",
+                    "Onboarding action: init"
+                )
+            }
+        }
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.groupAdmissionEvent
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { event ->
+                when (event) {
+                    GroupAdmissionEvent.GroupCreateError -> {
+                        Toast.makeText(
+                            context,
+                            "가족 공간 생성에 실패했습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    GroupAdmissionEvent.GroupJoinError -> {
+                        Toast.makeText(
+                            context,
+                            "가족 공간을 찾을 수 없습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    GroupAdmissionEvent.Success -> onHomeRouteRequest()
+                }
+            }
+    }
 }
 
 @Composable
-fun GroupAdmissionScreen(
+private fun GroupAdmissionScreen(
     profileImageUris: List<Uri>,
     onBackRequest: () -> Unit,
     onHomeRouteRequest: () -> Unit,
@@ -49,13 +110,13 @@ fun GroupAdmissionScreen(
     OnBoardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = MainGreen)) {
-                append("a")
+                append("손녀 조다은님")
             }
             withStyle(style = SpanStyle(color = BL)) {
-                append("b")
+                append("이\n")
             }
             withStyle(style = SpanStyle(color = BL)) {
-                append("C")
+                append("만든 가족공간이에요.")
             }
         },
         subtext = "",
@@ -89,7 +150,7 @@ fun GroupAdmissionScreen(
         ) {
             Image(
                 painter = rememberAsyncImagePainter(
-                    model = painterResource(id = ic_my_appbar),
+                    model = ic_my_appbar,
                     placeholder = painterResource(id = ic_my_appbar),
                     error = painterResource(id = ic_my_appbar)
                 ),

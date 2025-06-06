@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object OnboardingPermissionRoute
 
-fun NavController.navigateToPermissionScreen(
+fun NavController.navigateToOnboardingPermissionScreen(
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
 ) {

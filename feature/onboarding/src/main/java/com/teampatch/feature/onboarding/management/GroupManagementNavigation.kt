@@ -8,25 +8,25 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object OnboardingStartRoute
+data object OnboardingGroupManagementRoute
 
-fun NavController.navigateToStartScreen(
+fun NavController.navigateToOnboardingGroupManagementScreen(
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
 ) {
-    navigate(OnboardingStartRoute, navOptions, navigatorExtras)
+    navigate(OnboardingGroupManagementRoute, navOptions, navigatorExtras)
 }
 
-fun NavGraphBuilder.addOnboardingStartScreen(
+fun NavGraphBuilder.addOnboardingGroupManagementScreen(
     onBackRequest: () -> Unit,
-    onboardingMakeGroupRequest: () -> Unit,
-    onboardingEnterScreenRequest: () -> Unit,
+    onGroupCreateRequest: () -> Unit,
+    onGroupJoinRequest: () -> Unit,
 ) {
-    composable<OnboardingStartRoute> {
+    composable<OnboardingGroupManagementRoute> {
         GroupManagementScreen(
             onBackRequest = onBackRequest,
-            onboardingMakeGroupRequest = onboardingMakeGroupRequest,
-            onboardingEnterScreenRequest = onboardingEnterScreenRequest
+            onGroupCreateRequest = onGroupCreateRequest,
+            onGroupJoinRequest = onGroupJoinRequest
         )
     }
 }

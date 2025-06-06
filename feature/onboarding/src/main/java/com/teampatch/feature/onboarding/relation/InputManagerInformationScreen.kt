@@ -1,6 +1,5 @@
 package com.teampatch.feature.onboarding.relation
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,8 +24,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.OnBoardingLayout
 import com.teampatch.core.designsystem.theme.BL
@@ -37,51 +32,13 @@ import com.teampatch.core.designsystem.theme.G2
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
-import com.teampatch.feature.onboarding.OnboardingCommonUiState
 import com.teampatch.feature.onboarding.R
+import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
 
 @Composable
-internal fun InputGroupRelationRoute(
+internal fun InputManagerInformationScreen(
     onBackRequest: () -> Unit,
-    onEnterProfileSettingsScreenRequest: () -> Unit,
-) {
-    val context: Context = LocalContext.current
-    val registry = LocalSaveableStateRegistry.current
-
-    InputGroupRelationScreen(
-        onBackRequest = onBackRequest,
-        onResult = { relation: String, name: String ->
-            val restore = registry?.consumeRestored(OnboardingCommonUiState.TAG)
-            (restore as? OnboardingCommonUiState)?.let {
-                registry.registerProvider(OnboardingCommonUiState.TAG) {
-                    it.copy(managerAlias = relation, managerName = name)
-                }
-            }
-        }
-    )
-
-//    LaunchedEffect(Unit) {
-//        viewModel.onboardingInputInvitationCodeEvent
-//            .flowWithLifecycle(lifecycleOwner.lifecycle)
-//            .collectLatest {
-//                when (it) {
-//                    is OnboardingInputInvitationCodeEvent.Success -> onEnterProfileSettingsScreenRequest()
-//                    is OnboardingInputInvitationCodeEvent.Error -> {
-//                        Toast.makeText(
-//                            context,
-//                            "관계 설정 과정에서 에러가 발생하였습니다.\n다시 시도 해주세요.",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                }
-//            }
-//    }
-}
-
-@Composable
-internal fun InputGroupRelationScreen(
-    onBackRequest: () -> Unit,
-    onResult: (relation: String, name: String) -> Unit,
+    onNextPageRequest: (relation: String, name: String) -> Unit,
 ) {
     var relation by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") }
@@ -99,10 +56,14 @@ internal fun InputGroupRelationScreen(
             }
         },
         subtext = stringResource(R.string.subtext_onboarding_enter_relation),
-        onBackRequest = { onBackRequest() },
+        onBackRequest = onBackRequest,
         bottomBar = {
             DefaultButton(
-                onClick = { onResult(relation, name) },
+                onClick = {
+                    OnboardingUiStateHelper.getInstance()
+                        .updateManagerInformation(name, relation)
+                    onNextPageRequest(relation, name)
+                },
                 enabled = relation.isNotBlank() && name.isNotBlank(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,7 +83,7 @@ internal fun InputGroupRelationScreen(
 }
 
 @Composable
-fun CustomTextField(
+private fun CustomTextField(
     relation: String,
     onRelationChange: (String) -> Unit,
     name: String,
@@ -199,11 +160,11 @@ fun CustomTextField(
 
 @Preview
 @Composable
-private fun InputGroupRelationScreenPreview() {
+private fun InputManagerInformationScreenPreview() {
     HarmonyTheme {
-        InputGroupRelationScreen(
+        InputManagerInformationScreen(
             onBackRequest = {},
-            onResult = { _, _ -> }
+            onNextPageRequest = { _, _ -> }
         )
     }
 }
