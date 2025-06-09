@@ -1,6 +1,7 @@
 package com.teampatch.core.data.repository.local
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.core.net.toUri
@@ -11,24 +12,24 @@ import com.teampatch.core.data.di.annotation.HarmonyDispatcher
 import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.VIP
 import com.teampatch.core.data.mapper.toDomain
+import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
 import com.teampatch.core.data.utils.getMediaStoreInfo
-import com.teampatch.core.domain.entities.SocialLoginHelper
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
-import java.io.FileOutputStream
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import javax.inject.Inject
 
 internal class LocalUserRepositoryImpl @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
     private val userDao: UserDao,
-    private val socialLoginHelper: SocialLoginHelper,
     @ApplicationContext private val appContext: Context,
     @HarmonyDispatcher(DispatchersContext.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : UserRepository {
@@ -51,7 +52,8 @@ internal class LocalUserRepositoryImpl @Inject constructor(
                 val fileExtension = mimeTypeMap.getExtensionFromMimeType(mediaStoreInfo?.mimType)
 
                 contentResolver.openInputStream(it)?.use { profileImageInputStream ->
-                    val file = File.createTempFile("profile_image", ".$fileExtension", profileImageFolder)
+                    val file =
+                        File.createTempFile("profile_image", ".$fileExtension", profileImageFolder)
                     FileOutputStream(file).use {
                         it.write(profileImageInputStream.readBytes())
                     }
@@ -74,6 +76,9 @@ internal class LocalUserRepositoryImpl @Inject constructor(
         profileImageUrl: String?,
         role: Role,
     ) {
+        val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
+            .also { require(it.isNotBlank()) }
+
         val userEntity = UserEntity(
             uid = null,
             groupId = null,
@@ -84,7 +89,7 @@ internal class LocalUserRepositoryImpl @Inject constructor(
                 Role.VIP -> VIP
                 Role.MEMBER -> MEMBER
             },
-            snsId = socialLoginHelper.getSocialUserId(),
+            snsId = snsId,
             isMe = true
         )
         userDao.insertUsers(userEntity)

@@ -1,21 +1,32 @@
 package com.teampatch.core.data.repository.local
 
+import android.content.SharedPreferences
 import com.harmony.core.database.dao.GroupDao
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.model.GroupEntity
+import com.harmony.core.database.model.UserEntity
+import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.roleStringMapper
+import com.teampatch.core.data.mapper.toDomain
+import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
+import com.teampatch.core.domain.model.AdmissionGroupInformation
 import com.teampatch.core.domain.model.FamilyInfo
 import com.teampatch.core.domain.model.InvitedGroup
 import com.teampatch.core.domain.model.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.zip
 import javax.inject.Inject
 import kotlin.random.Random
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 internal class LocalGroupManagementRepositoryImpl @Inject constructor(
     private val groupDao: GroupDao,
     private val userDao: UserDao,
+    private val sharedPreferences: SharedPreferences
 ) : GroupManagementRepository {
 
     override suspend fun createFamilyGroup(): String {
@@ -84,5 +95,58 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
 
     override suspend fun queryGroupInvitationCode(): String {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun createGroup(
+        vipName: String,
+        vipAlias: String,
+        managerName: String,
+        managerRelation: String,
+        managerProfileImageUri: String?
+    ) {
+        val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
+            .also { require(it.isNotBlank()) }
+
+        val userEntity = UserEntity(
+            uid = null,
+            groupId = null,
+            name = managerName,
+            relation = managerRelation,
+            profileImageUri = managerProfileImageUri,
+            role = MEMBER,
+            snsId = snsId,
+            isMe = false
+        )
+        userDao.insertUsers(userEntity)
+        val mangerInformation = userDao.getUserBySnsId(snsId).first()
+        val groupEntity = GroupEntity(
+            id = null,
+            vipUid = null,
+            managerUid = mangerInformation.uid,
+            inviteCode = Random.nextLong(10000, 99999).toString()
+        )
+        groupDao.insertGroups(groupEntity)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation {
+        return groupDao.queryGroupByInviteCode(inviteCode).flatMapLatest { groupEntity ->
+            userDao.getUserByGroupId(groupEntity.id!!).zip(
+                userDao.getUserById(groupEntity.managerUid!!)
+            ) { groupMembers, manger ->
+                groupEntity.toDomain(
+                    managerInformation = manger.toDomain(),
+                    groupMembers = groupMembers.mapNotNull {
+                        if (it.uid == manger.uid) return@mapNotNull null
+                        it.toDomain()
+                    }
+                )
+            }
+        }
+            .first()
+    }
+
+    override suspend fun isGroupExist(inviteCode: String): Boolean {
+        return groupDao.queryGroupByInviteCode(inviteCode).firstOrNull() != null
     }
 }

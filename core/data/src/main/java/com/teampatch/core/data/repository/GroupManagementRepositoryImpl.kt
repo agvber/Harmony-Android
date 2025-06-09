@@ -2,6 +2,7 @@ package com.teampatch.core.data.repository
 
 import com.teampatch.core.data.mapper.toDomain
 import com.teampatch.core.domain.entities.TokenManager
+import com.teampatch.core.domain.model.AdmissionGroupInformation
 import com.teampatch.core.domain.model.InvitedGroup
 import com.teampatch.core.domain.model.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
@@ -55,5 +56,23 @@ class GroupManagementRepositoryImpl @Inject constructor(
         val user = userRepository.getUserInfo().first()
         val response = groupRemoteDataSource.queryGroupInvitationCode(user.groupId)
         return response.groupName
+    }
+
+    override suspend fun createGroup(
+        vipName: String,
+        vipAlias: String,
+        managerName: String,
+        managerRelation: String,
+        managerProfileImageUri: String?
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun isGroupExist(inviteCode: String): Boolean {
+        TODO("Not yet implemented")
     }
 }

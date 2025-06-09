@@ -1,5 +1,6 @@
 package com.teampatch.core.domain.repository
 
+import com.teampatch.core.domain.model.AdmissionGroupInformation
 import com.teampatch.core.domain.model.InvitedGroup
 import com.teampatch.core.domain.model.UserGroup
 
@@ -26,4 +27,16 @@ interface GroupManagementRepository {
      * @return Group 초대 코드
      */
     suspend fun queryGroupInvitationCode(): String
+
+    suspend fun createGroup(
+        vipName: String,
+        vipAlias: String,
+        managerName: String,
+        managerRelation: String,
+        managerProfileImageUri: String?
+    )
+
+    suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation
+
+    suspend fun isGroupExist(inviteCode: String): Boolean
 }
