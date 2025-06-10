@@ -13,5 +13,4 @@ data class UserEntity(
     @ColumnInfo(name = "profile_image_uri") val profileImageUri: String?,
     @ColumnInfo(name = "role") val role: String,
     @ColumnInfo(name = "sns_id") val snsId: String,
-    @ColumnInfo(name = "is_me") val isMe: Boolean,
 )

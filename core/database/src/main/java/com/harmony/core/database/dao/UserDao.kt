@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM user WHERE is_me = 1")
-    fun getMyUserData(): Flow<UserEntity>
-
     @Query("SELECT * FROM user WHERE uid > 0")
     fun getUsers(): Flow<List<UserEntity>>
 

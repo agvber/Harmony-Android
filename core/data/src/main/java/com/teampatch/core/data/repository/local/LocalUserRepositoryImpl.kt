@@ -39,8 +39,10 @@ internal class LocalUserRepositoryImpl @Inject constructor(
             .also { it.mkdirs() }
     }
 
-    override fun getUserInfo(): Flow<User> = userDao.getMyUserData().map {
-        it.toDomain()
+    override fun getUserInfo(): Flow<User> {
+        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        return userDao.getUserBySnsId(socialLoginId)
+            .map { it.toDomain() }
     }
 
     override suspend fun editProfile(name: String?, profileImageUri: String?) {
@@ -61,8 +63,8 @@ internal class LocalUserRepositoryImpl @Inject constructor(
                 }
             }
         }
-
-        val userEntity = userDao.getMyUserData().first()
+        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val userEntity = userDao.getUserBySnsId(socialLoginId).first()
         val updateUserEntity = userEntity.copy(
             name = name ?: userEntity.name,
             profileImageUri = processedProfileImageUri?.toString() ?: userEntity.profileImageUri
@@ -90,7 +92,6 @@ internal class LocalUserRepositoryImpl @Inject constructor(
                 Role.MEMBER -> MEMBER
             },
             snsId = snsId,
-            isMe = true
         )
         userDao.insertUsers(userEntity)
     }

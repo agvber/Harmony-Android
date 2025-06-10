@@ -30,22 +30,23 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
 ) : GroupManagementRepository {
 
     override suspend fun createFamilyGroup(): String {
-        val myUserData = userDao.getMyUserData()
+        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val myUserData = userDao.getUserBySnsId(socialLoginId).first()
         val inviteCode = Random.nextLong(10000, 99999).toString()
         val groupEntity = GroupEntity(
             id = null,
             vipUid = null,
-            managerUid = myUserData.first().uid!!,
+            managerUid = myUserData.uid!!,
             inviteCode = inviteCode
         )
         val groupInsertedIds = groupDao.insertGroups(groupEntity)
-        val user = userDao.getMyUserData().first()
-        userDao.updateUser(user.copy(groupId = groupInsertedIds[0]))
+        userDao.updateUser(myUserData.copy(groupId = groupInsertedIds[0]))
         return inviteCode
     }
 
     override suspend fun generateInviteCode(): String {
-        val myUserData = userDao.getMyUserData().first()
+        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val myUserData = userDao.getUserBySnsId(socialLoginId).first()
         val groupEntity = groupDao.queryGroupById(myUserData.groupId!!)
         return groupEntity.first().inviteCode
     }
@@ -115,7 +116,6 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
             profileImageUri = managerProfileImageUri,
             role = MEMBER,
             snsId = snsId,
-            isMe = false
         )
         userDao.insertUsers(userEntity)
         val mangerInformation = userDao.getUserBySnsId(snsId).first()

@@ -1,38 +1,42 @@
 package com.teampatch.core.data.repository.local
 
+import android.content.SharedPreferences
 import androidx.paging.PagingData
 import com.harmony.core.database.LOCAL_DB_DATE_TIME_FORMATTER
 import com.harmony.core.database.dao.QuestionDao
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.getCurrentTimeLocalDBFormat
 import com.harmony.core.database.model.QuestionCommentEntity
+import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
 import com.teampatch.core.domain.model.Question
 import com.teampatch.core.domain.model.QuestionComment
 import com.teampatch.core.domain.model.QuestionDetail
 import com.teampatch.core.domain.repository.QuestionRepository
-import java.time.LocalDateTime
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
+import javax.inject.Inject
 
 internal class LocalQuestionRepositoryImpl @Inject constructor(
     private val questionDao: QuestionDao,
     private val userDao: UserDao,
+    private val sharedPreferences: SharedPreferences
 ) : QuestionRepository {
 
-    override fun getQuestions(limit: Int): Flow<PagingData<Question>> = questionDao.getQuestions(limit).map { questionEntities ->
-        questionEntities.map { questionEntity ->
-            Question(
-                id = questionEntity.id.toString(),
-                number = 0,
-                title = questionEntity.title
-            )
-        }
-            .let {
-                PagingData.from(it)
+    override fun getQuestions(limit: Int): Flow<PagingData<Question>> =
+        questionDao.getQuestions(limit).map { questionEntities ->
+            questionEntities.map { questionEntity ->
+                Question(
+                    id = questionEntity.id.toString(),
+                    number = 0,
+                    title = questionEntity.title
+                )
             }
-    }
+                .let {
+                    PagingData.from(it)
+                }
+        }
 
     override suspend fun getQuestionDetail(questionId: String): QuestionDetail {
         val question = questionDao.getQuestionById(questionId.toLong()).first()
@@ -58,7 +62,8 @@ internal class LocalQuestionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addComment(questionId: String, comment: String): QuestionComment {
-        val user = userDao.getMyUserData().first()
+        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val user = userDao.getUserBySnsId(socialLoginId).first()
         val currentTime = getCurrentTimeLocalDBFormat()
         val questionCommentEntity = QuestionCommentEntity(
             questionId = questionId.toLong(),
