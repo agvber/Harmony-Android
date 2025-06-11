@@ -7,7 +7,19 @@ class CreateGroupUseCase @Inject constructor(
     private val groupManagementRepository: GroupManagementRepository,
 ) {
 
-    suspend operator fun invoke() {
-        groupManagementRepository.createFamilyGroup()
+    suspend operator fun invoke(
+        vipName: String,
+        vipAlias: String,
+        managerName: String,
+        managerRelation: String,
+        managerProfileImageUri: String?
+    ) {
+        groupManagementRepository.createGroup(
+            vipName = vipName,
+            vipAlias = vipAlias,
+            managerName = managerName,
+            managerRelation = managerRelation,
+            managerProfileImageUri = managerProfileImageUri
+        )
     }
 }

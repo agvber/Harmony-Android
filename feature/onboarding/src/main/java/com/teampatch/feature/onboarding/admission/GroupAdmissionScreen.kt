@@ -1,7 +1,6 @@
 package com.teampatch.feature.onboarding.admission
 
 import android.content.Context
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +12,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.teampatch.core.common.findActivity
@@ -36,6 +39,7 @@ import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
+import com.teampatch.feature.onboarding.admission.model.GroupAdmissionUiState
 import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
 import com.teampatch.feature.onboarding.common.model.OnboardingAction
 import com.teampatch.feature.onboarding.common.model.OnboardingCommonUiState
@@ -49,11 +53,15 @@ internal fun GroupAdmissionWithViewModel(
     val lifecycleOwner = LocalLifecycleOwner.current
     val context: Context? = LocalContext.current
 
+    val uiStateHelper: OnboardingUiStateHelper = remember {
+        OnboardingUiStateHelper.getInstance()
+    }
+
+    val uiState: GroupAdmissionUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     GroupAdmissionScreen(
-        profileImageUris = listOf(),
         onBackRequest = onBackRequest,
         onHomeRouteRequest = {
-            val uiStateHelper: OnboardingUiStateHelper = OnboardingUiStateHelper.getInstance()
             val uiState: OnboardingCommonUiState = uiStateHelper.uiState.value
 
             when (uiState.action) {
@@ -67,17 +75,27 @@ internal fun GroupAdmissionWithViewModel(
                         profileImageUri = uiState.profileImageUri
                     )
 
-                OnboardingAction.INIT -> {
-                    Toast.makeText(context, "온보딩 정보가 존재하지 않습니다.\n다시 시도해주세요.", Toast.LENGTH_LONG)
-                        .show()
-                    context?.findActivity()?.recreate()
-                }
+                OnboardingAction.INIT -> context?.loadErrorMethod()
             }
-        }
+        },
+        uiState = uiState
     )
 
+    SideEffect {
+        val uiState: OnboardingCommonUiState = uiStateHelper.uiState.value
+        when (uiState.action) {
+            OnboardingAction.CREATE -> viewModel.loadDemoGroupInformation(
+                managerName = uiState.managerName,
+                managerRelation = uiState.managerRelation
+            )
+
+            OnboardingAction.JOIN -> viewModel.loadInvitedGroupInformation(uiState.inviteCode)
+            OnboardingAction.INIT -> context?.loadErrorMethod()
+        }
+    }
+
     LaunchedEffect(Unit) {
-        viewModel.groupAdmissionEvent
+        viewModel.event
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { event ->
                 when (event) {
@@ -85,7 +103,7 @@ internal fun GroupAdmissionWithViewModel(
                         Toast.makeText(
                             context,
                             "가족 공간 생성에 실패했습니다.",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
 
@@ -93,21 +111,32 @@ internal fun GroupAdmissionWithViewModel(
                         Toast.makeText(
                             context,
                             "가족 공간을 찾을 수 없습니다.",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
 
                     GroupAdmissionEvent.Success -> onHomeRouteRequest()
+                    GroupAdmissionEvent.GroupInformationLoadError -> Toast.makeText(
+                        context,
+                        "초대된 가족공간의 정보를 가져올 수 없습니다.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
     }
 }
 
+private fun Context.loadErrorMethod() {
+    Toast.makeText(this, "온보딩 정보가 존재하지 않습니다.\n다시 시도해주세요.", Toast.LENGTH_LONG)
+        .show()
+    findActivity()?.recreate()
+}
+
 @Composable
 private fun GroupAdmissionScreen(
-    profileImageUris: List<Uri>,
     onBackRequest: () -> Unit,
     onHomeRouteRequest: () -> Unit,
+    uiState: GroupAdmissionUiState,
 ) {
     OnBoardingLayout(
         title = buildAnnotatedString {
@@ -171,9 +200,9 @@ private fun GroupAdmissionScreen(
 private fun GroupAdmissionScreenPreview() {
     HarmonyTheme {
         GroupAdmissionScreen(
-            profileImageUris = emptyList(),
             onBackRequest = {},
-            onHomeRouteRequest = {}
+            onHomeRouteRequest = {},
+            uiState = GroupAdmissionUiState.init()
         )
     }
 }
