@@ -50,8 +50,11 @@ internal class GroupAdmissionViewModel @Inject constructor(
     fun loadInvitedGroupInformation(inviteCode: String) = viewModelScope.launch {
         runCatching {
             val groupInformation = getGroupInformationUseCase.invoke(inviteCode)
-            _uiState.value = groupInformation
-                .copy(users = groupInformation.users.subList(0, 3))
+            _uiState.value = groupInformation.run {
+                if (users.size > 3)
+                    copy(users = users.slice(groupMemberSliceRange))
+                else this
+            }
                 .toPresentation()
         }
             .onFailure {
@@ -95,5 +98,9 @@ internal class GroupAdmissionViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         _event.close()
+    }
+
+    companion object {
+        private val groupMemberSliceRange: IntRange = 0..2
     }
 }
