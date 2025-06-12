@@ -85,7 +85,7 @@ internal fun GroupAdmissionWithViewModel(
                         profileImageUri = uiState.profileImageUri
                     )
 
-                OnboardingAction.INIT -> context?.loadErrorMethod()
+                OnboardingAction.INIT -> context?.handleInitLoadError()
             }
         },
         uiState = uiState
@@ -100,7 +100,7 @@ internal fun GroupAdmissionWithViewModel(
             )
 
             OnboardingAction.JOIN -> viewModel.loadInvitedGroupInformation(uiState.inviteCode)
-            OnboardingAction.INIT -> context?.loadErrorMethod()
+            OnboardingAction.INIT -> context?.handleInitLoadError()
         }
     }
 
@@ -112,7 +112,7 @@ internal fun GroupAdmissionWithViewModel(
                     GroupAdmissionEvent.GroupCreateError -> {
                         Toast.makeText(
                             context,
-                            "가족 공간 생성에 실패했습니다.",
+                            context?.getString(R.string.toast_admission_group_create_error),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -120,7 +120,7 @@ internal fun GroupAdmissionWithViewModel(
                     GroupAdmissionEvent.GroupJoinError -> {
                         Toast.makeText(
                             context,
-                            "가족 공간을 찾을 수 없습니다.",
+                            context?.getString(R.string.toast_admission_group_join_error),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -128,7 +128,7 @@ internal fun GroupAdmissionWithViewModel(
                     GroupAdmissionEvent.Success -> onHomeRouteRequest()
                     GroupAdmissionEvent.GroupInformationLoadError -> Toast.makeText(
                         context,
-                        "초대된 가족공간의 정보를 가져올 수 없습니다.",
+                        context?.getString(R.string.toast_admission_group_information_load_error),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -136,8 +136,8 @@ internal fun GroupAdmissionWithViewModel(
     }
 }
 
-private fun Context.loadErrorMethod() {
-    Toast.makeText(this, "온보딩 정보가 존재하지 않습니다.\n다시 시도해주세요.", Toast.LENGTH_LONG)
+private fun Context.handleInitLoadError() {
+    Toast.makeText(this, getString(R.string.toast_admission_init_load_error), Toast.LENGTH_LONG)
         .show()
     findActivity()?.recreate()
 }

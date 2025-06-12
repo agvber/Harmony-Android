@@ -89,5 +89,9 @@
     <string name="text_admission_title1">%s님</string>
     <string name="text_admission_title2">이\n만든 가족 공간이에요.</string>
     <string name="text_admission_group_count">%d명의 구성원</string>
+    <string name="toast_admission_init_load_error">이전에 입력하신 정보가 존재하지 않습니다.\n다시 시도해주세요.</string>
+    <string name="toast_admission_group_create_error">가족 공간 생성에 실패했습니다.</string>
+    <string name="toast_admission_group_join_error">가족 공간을 찾을 수 없습니다.</string>
+    <string name="toast_admission_group_information_load_error">초대된 가족 정보를 가져올 수 없습니다.</string>
 </resources>
 
