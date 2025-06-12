@@ -84,6 +84,10 @@
     <string name="text_onboarding_enter_name_placeholder">"예) 손녀"</string>
     <string name="text_onboarding_enter_enter_space">"가족 공간 입장하기"</string>
 
-
+    <string name="text_admission_bottom_button">가족 공간 입장하기</string>
+    <string name="text_admission_speech_bubble">가족과 함께\n소중한 추억을 기록해볼까요?</string>
+    <string name="text_admission_title1">%s님</string>
+    <string name="text_admission_title2">이\n만든 가족 공간이에요.</string>
+    <string name="text_admission_group_count">%d명의 구성원</string>
 </resources>
 

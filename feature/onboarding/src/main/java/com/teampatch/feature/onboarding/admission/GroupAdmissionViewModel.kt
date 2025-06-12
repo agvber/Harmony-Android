@@ -37,16 +37,22 @@ internal class GroupAdmissionViewModel @Inject constructor(
         managerRelation: String
     ) = viewModelScope.launch {
         _uiState.value = GroupAdmissionUiState(
-            name = managerName,
-            vipRelation = managerRelation,
-            members = listOf(GroupAdmissionUiState.Member(profileImageUri = null))
+            manager = GroupAdmissionUiState.Manager(
+                name = managerName,
+                vipRelation = managerRelation,
+                profileImageUri = null
+            ),
+            members = listOf(),
+            memberSize = 1
         )
     }
 
     fun loadInvitedGroupInformation(inviteCode: String) = viewModelScope.launch {
         runCatching {
             val groupInformation = getGroupInformationUseCase.invoke(inviteCode)
-            _uiState.value = groupInformation.toPresentation()
+            _uiState.value = groupInformation
+                .copy(users = groupInformation.users.subList(0, 3))
+                .toPresentation()
         }
             .onFailure {
                 it.printStackTrace()

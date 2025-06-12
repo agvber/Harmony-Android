@@ -3,10 +3,16 @@ package com.teampatch.feature.onboarding.admission.model
 import android.net.Uri
 
 data class GroupAdmissionUiState(
-    val name: String,
-    val vipRelation: String,
-    val members: List<Member>
+    val manager: Manager,
+    val members: List<Member>,
+    val memberSize: Int
 ) {
+
+    data class Manager(
+        val name: String,
+        val vipRelation: String,
+        val profileImageUri: Uri?
+    )
 
     data class Member(
         val profileImageUri: Uri?
@@ -14,6 +20,10 @@ data class GroupAdmissionUiState(
 
     companion object {
         fun init(): GroupAdmissionUiState =
-            GroupAdmissionUiState(name = "", vipRelation = "", members = emptyList())
+            GroupAdmissionUiState(
+                manager = Manager(name = "", vipRelation = "", profileImageUri = null),
+                members = emptyList(),
+                memberSize = 0
+            )
     }
 }
