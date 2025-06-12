@@ -1,7 +1,9 @@
 package com.teampatch.feature.onboarding.permission
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -43,22 +44,23 @@ import com.teampatch.feature.onboarding.R.drawable.bell
 import com.teampatch.feature.onboarding.R.string.text_onboarding_start_harmony
 
 @SuppressLint("InlinedApi")
-private val requiredPermissions: Array<String> = arrayOf(
-    android.Manifest.permission.POST_NOTIFICATIONS
-)
-
 @Composable
 fun OnboardingPermissionScreen(
     onNextPageRequest: () -> Unit,
 ) {
-    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            onNextPageRequest()
+        }
+    )
+
     Scaffold(
         bottomBar = {
             DefaultButton(
                 onClick = {
-                    (context as? Activity)
-                        ?.requestPermissions(requiredPermissions, 1)
-                    onNextPageRequest()
+                    permissionLauncher
+                        .launch(Manifest.permission.POST_NOTIFICATIONS)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
