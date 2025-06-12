@@ -6,7 +6,6 @@ import com.teampatch.core.domain.usecase.group.JoinFamilyGroupUseCase
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class InputInvitationCodeViewModel @Inject constructor(
@@ -31,11 +31,13 @@ internal class InputInvitationCodeViewModel @Inject constructor(
     }
 
     fun confirmInviteCode() = viewModelScope.launch {
-        try {
+        runCatching {
             joinFamilyGroupUseCase(uiState.value.inviteCode)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _event.send(InputInvitationCodeEvent.Error(e))
         }
+            .onSuccess { _event.send(InputInvitationCodeEvent.Success) }
+            .onFailure { e ->
+                e.printStackTrace()
+                _event.send(InputInvitationCodeEvent.Error(e))
+            }
     }
 }

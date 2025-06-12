@@ -82,7 +82,7 @@ fun GroupManagementScreen(
                     .fillMaxWidth()
                     .clickable {
                         val uiStateHelper = OnboardingUiStateHelper.getInstance()
-                        uiStateHelper.updateAction(OnboardingAction.CREATE)
+                        uiStateHelper.updateAction(OnboardingAction.JOIN)
                         onGroupJoinRequest()
                     }
             )

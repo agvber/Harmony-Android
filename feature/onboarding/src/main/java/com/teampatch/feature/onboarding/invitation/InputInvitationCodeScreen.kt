@@ -82,7 +82,7 @@ internal fun InputInvitationCodeWithViewModel(
 
                     InputInvitationCodeEvent.Success -> {
                         val onboardingUiStateHelper = OnboardingUiStateHelper.getInstance()
-                        onboardingUiStateHelper.updateAction(OnboardingAction.JOIN)
+                        onboardingUiStateHelper.updateInviteCode(uiState.inviteCode)
                         onNextPageRequest()
                     }
                 }
