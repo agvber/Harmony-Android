@@ -30,6 +30,7 @@ import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.onboarding.management.OnboardingGroupManagementRoute
 import com.teampatch.feature.onboarding.management.addOnboardingGroupManagementScreen
 import com.teampatch.feature.onboarding.management.navigateToOnboardingGroupManagementScreen
+import com.teampatch.feature.onboarding.permission.addOnboardingPermissionScreen
 import com.teampatch.feature.onboarding.permission.navigateToOnboardingPermissionScreen
 import com.teampatch.feature.onboarding.profile.addOnboardingProfileSettingsScreen
 import com.teampatch.feature.onboarding.profile.navigateToOnboardingProfileSettingsScreen
@@ -70,6 +71,10 @@ fun MainNavHost(
             onHomeScreenRequest = navController::navigateToHomeScreenWithBackStackClear,
             onPermissionNotificationRequest = navController::navigateToOnboardingPermissionScreen,
             onStartScreenRequest = navController::navigateToOnboardingGroupManagementScreen
+        )
+
+        addOnboardingPermissionScreen(
+            onNextPageRequest = navController::navigateToOnboardingGroupManagementScreen
         )
 
         addOnboardingGroupManagementScreen(
