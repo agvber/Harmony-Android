@@ -232,7 +232,7 @@ private fun GroupAdmissionScreen(
                 Text(
                     text = stringResource(
                         R.string.text_admission_group_count,
-                        uiState.members.size
+                        uiState.memberSize
                     ),
                     fontSize = 18.sp,
                     color = G5,
