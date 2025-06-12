@@ -17,7 +17,6 @@ internal class UserPreloadData : DataPreloadHelper() {
             put("relation", "operator")
             put("role", "v")
             put("sns_id", "9999999999")
-            put("is_me", false)
         }
     )
 }
