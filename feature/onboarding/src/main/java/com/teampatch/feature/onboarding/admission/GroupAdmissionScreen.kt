@@ -155,6 +155,7 @@ private fun GroupAdmissionScreen(
                 SpeechBubble(
                     backgroundColor = WH,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .heightIn(min = 80.dp)
                 ) {
                     Text(
