@@ -93,5 +93,9 @@
     <string name="toast_admission_group_create_error">가족 공간 생성에 실패했습니다.</string>
     <string name="toast_admission_group_join_error">가족 공간을 찾을 수 없습니다.</string>
     <string name="toast_admission_group_information_load_error">초대된 가족 정보를 가져올 수 없습니다.</string>
+
+    <string name="text_input_manager_information_title1">할머니와</string>
+    <string name="text_input_manager_information_title2">어떤 관계</string>
+    <string name="text_input_manager_information_title3">인가요?</string>
 </resources>
 

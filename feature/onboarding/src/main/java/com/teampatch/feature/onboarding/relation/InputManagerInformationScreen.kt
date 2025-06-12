@@ -10,8 +10,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -40,19 +42,23 @@ internal fun InputManagerInformationScreen(
     onBackRequest: () -> Unit,
     onNextPageRequest: (relation: String, name: String) -> Unit,
 ) {
-    var relation by rememberSaveable { mutableStateOf("") }
-    var name by rememberSaveable { mutableStateOf("") }
+    var relation: String by rememberSaveable { mutableStateOf("") }
+    var name: String by rememberSaveable { mutableStateOf("") }
+
+    val isBottomButtonEnabled: Boolean by remember {
+        derivedStateOf { relation.isNotBlank() && name.isNotBlank() }
+    }
 
     OnBoardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = BL)) {
-                append("할머니와")
+                append(stringResource(R.string.text_input_manager_information_title1))
             }
             withStyle(style = SpanStyle(color = MainGreen)) {
-                append("어떤 관계")
+                append(stringResource(R.string.text_input_manager_information_title2))
             }
             withStyle(style = SpanStyle(color = BL)) {
-                append("인가요?")
+                append(stringResource(R.string.text_input_manager_information_title3))
             }
         },
         subtext = stringResource(R.string.subtext_onboarding_enter_relation),
@@ -64,7 +70,7 @@ internal fun InputManagerInformationScreen(
                         .updateManagerInformation(name, relation)
                     onNextPageRequest(relation, name)
                 },
-                enabled = relation.isNotBlank() && name.isNotBlank(),
+                enabled = isBottomButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
