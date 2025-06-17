@@ -23,7 +23,7 @@ interface UserDao {
     fun getUserBySnsId(id: String): Flow<UserEntity>
 
     @Insert
-    suspend fun insertUsers(vararg userEntity: UserEntity)
+    suspend fun insertUsers(vararg userEntity: UserEntity): List<Long>
 
     @Update
     suspend fun updateUser(userEntity: UserEntity)
