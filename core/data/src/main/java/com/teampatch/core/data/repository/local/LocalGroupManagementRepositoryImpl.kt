@@ -22,7 +22,6 @@ import com.teampatch.core.domain.model.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -118,7 +117,7 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
         val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
             .also { require(it.isNotBlank()) }
 
-        val userEntity = UserEntity(
+        val managerUserEntity = UserEntity(
             uid = null,
             groupId = null,
             name = managerName,
@@ -126,16 +125,16 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
             profileImageUri = managerProfileImageUri,
             role = MEMBER,
             snsId = snsId,
-        )
-        userDao.insertUsers(userEntity)
-        val mangerInformation = userDao.getUserBySnsId(snsId).first()
+        ).let { it.copy(uid = userDao.insertUsers(it).first()) }
+
         val groupEntity = GroupEntity(
             id = null,
             vipUid = null,
-            managerUid = mangerInformation.uid,
+            managerUid = managerUserEntity.uid,
             inviteCode = Random.nextLong(10000, 99999).toString()
-        )
-        groupDao.insertGroups(groupEntity)
+        ).let { it.copy(id = groupDao.insertGroups(it).first()) }
+
+        userDao.updateUser(managerUserEntity.copy(groupId = groupEntity.id))
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -15,7 +15,7 @@ class GetFamilyInfoUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<FamilyInfo>> = userRepository.getUserInfo().mapLatest { me ->
-        val userGroups = groupManagementRepository.getUserGroupList(me.uid)
-        userGroups.first { it.groupId.toInt() == me.groupId }.members
+        groupManagementRepository.getUserGroupList(me.uid)
+            .first { it.groupId.toInt() == me.groupId }.members
     }
 }
