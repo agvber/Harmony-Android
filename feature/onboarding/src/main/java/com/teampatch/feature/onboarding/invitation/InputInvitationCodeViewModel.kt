@@ -2,7 +2,7 @@ package com.teampatch.feature.onboarding.invitation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.teampatch.core.domain.usecase.group.JoinFamilyGroupUseCase
+import com.teampatch.core.domain.usecase.group.CheckGroupInvitationUseCase
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class InputInvitationCodeViewModel @Inject constructor(
-    private val joinFamilyGroupUseCase: JoinFamilyGroupUseCase,
+    private val checkGroupInvitationUseCase: CheckGroupInvitationUseCase
 ) : ViewModel() {
 
     private val _event: Channel<InputInvitationCodeEvent> = Channel()
@@ -31,9 +31,7 @@ internal class InputInvitationCodeViewModel @Inject constructor(
     }
 
     fun confirmInviteCode() = viewModelScope.launch {
-        runCatching {
-            joinFamilyGroupUseCase(uiState.value.inviteCode)
-        }
+        runCatching { checkGroupInvitationUseCase(uiState.value.inviteCode) }
             .onSuccess { _event.send(InputInvitationCodeEvent.Success) }
             .onFailure { e ->
                 e.printStackTrace()

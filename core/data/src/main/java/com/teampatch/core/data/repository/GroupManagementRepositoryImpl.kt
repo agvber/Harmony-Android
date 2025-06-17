@@ -68,6 +68,15 @@ class GroupManagementRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun joinGroup(
+        memberName: String,
+        vipRelation: String,
+        memberProfileImageUri: String?,
+        inviteCode: String
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation {
         TODO("Not yet implemented")
     }
