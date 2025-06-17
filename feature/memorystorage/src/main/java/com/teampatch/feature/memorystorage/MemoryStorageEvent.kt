@@ -1,5 +1,5 @@
 package com.teampatch.feature.memorystorage
 
-sealed class MemoryStorageEvent {
-    object LoadError : MemoryStorageEvent()
+sealed interface MemoryStorageEvent {
+    data class InitLoadError(val t: Throwable) : MemoryStorageEvent
 }

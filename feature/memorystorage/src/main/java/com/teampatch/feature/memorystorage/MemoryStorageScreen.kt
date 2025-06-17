@@ -1,5 +1,6 @@
 package com.teampatch.feature.memorystorage
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -39,7 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -54,40 +57,34 @@ import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.model.MemoryCard
-import java.time.LocalDateTime
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDateTime
 
 @Composable
-internal fun MemoryStorageRoute(
+internal fun MemoryStorageWithViewModel(
     onDetailPageRequest: () -> Unit,
     memoryStorageViewModel: MemoryStorageViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val memoryStorageUiState by memoryStorageViewModel.memoryStorageUiState.collectAsStateWithLifecycle()
+    val context: Context = LocalContext.current
+    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val memoryCards: LazyPagingItems<MemoryCard> =
         memoryStorageViewModel.memoryCards.collectAsLazyPagingItems()
 
-    when (memoryStorageUiState) {
-        is MemoryStorageUiState.Loading -> {
-            // 로딩 화면 표시
-        }
+    MemoryStorageScreen(
+        onDetailPageRequest = onDetailPageRequest,
+        memoryCardsLazyItems = memoryCards
+    )
 
-        is MemoryStorageUiState.Success -> {
-            MemoryStorageScreen(
-                onDetailPageRequest = onDetailPageRequest,
-                memoryCardsLazyItems = memoryCards
-            )
-        }
-
-        is MemoryStorageUiState.Error -> {
-            LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {
+        memoryStorageViewModel.memoryStorageEvent
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect {
                 Toast.makeText(
                     context,
-                    (memoryStorageUiState as MemoryStorageUiState.Error).message,
+                    context.getString(R.string.toast_init_load_error),
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        }
     }
 }
 

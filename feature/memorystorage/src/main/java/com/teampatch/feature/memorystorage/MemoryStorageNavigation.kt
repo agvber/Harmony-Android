@@ -21,7 +21,7 @@ fun NavGraphBuilder.addMemoryStorageScreen(
     onDetailPageRequest: () -> Unit,
 ) {
     composable<MemoryStorageRoute> {
-        MemoryStorageRoute(
+        MemoryStorageWithViewModel(
             onDetailPageRequest = onDetailPageRequest
         )
     }

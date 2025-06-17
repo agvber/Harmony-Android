@@ -4,4 +4,6 @@
         <item>여정&#160;</item>
         <item>님의 추억 저장소</item>
     </string-array>
+
+    <string name="toast_init_load_error">추억 저장소 데이터를 불러오지 못하였습니다.</string>
 </resources>
