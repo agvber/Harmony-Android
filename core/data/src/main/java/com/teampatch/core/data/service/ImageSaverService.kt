@@ -2,12 +2,10 @@ package com.teampatch.core.data.service
 
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.InputStream
-import java.nio.file.Path
 import javax.inject.Inject
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
@@ -18,24 +16,12 @@ class ImageSaverService @Inject constructor(
 ) {
 
     fun saveProfileImage(inputStream: InputStream, fileFormat: String): Uri {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            val path: String = Path(appContext.dataDir.absolutePath, PROFILE_IMAGE_SUB_PATH)
-                .also { it.createDirectories() }
-                .pathString
-            return File(path).writeBytes(inputStream)
-        }
-
-        val profilePath: Path = Path(
-            appContext.dataDir.absolutePath,
-            PROFILE_IMAGE_SUB_PATH,
-            "$PROFILE_IMAGE_FILE_NAME.$fileFormat"
-        )
+        val path: String = Path(appContext.dataDir.absolutePath, PROFILE_IMAGE_SUB_PATH)
             .also { it.createDirectories() }
-        return profilePath.toFile().writeBytes(inputStream)
-    }
+            .pathString
 
-    private fun File.writeBytes(inputStream: InputStream): Uri {
-        return also { it.writeBytes(inputStream.readBytes()) }
+        return File(path, "$PROFILE_IMAGE_FILE_NAME.$fileFormat")
+            .also { it.writeBytes(inputStream.readBytes()) }
             .toUri()
     }
 
