@@ -16,8 +16,11 @@ import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
 import com.teampatch.feature.daily.expand.addDailyExpandScreen
 import com.teampatch.feature.family.info.addFamilyInfoScreen
 import com.teampatch.feature.family.info.navigateToFamilyInfoScreen
+import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.addHomeScreen
 import com.teampatch.feature.home.navigateToHomeScreen
+import com.teampatch.feature.login.LoginRoute
+import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.memorycard.registration.addMemoryCardRegistrationScreen
 import com.teampatch.feature.memorycard.registration.navigateToMemoryCardRegistrationScreen
 import com.teampatch.feature.memorystorage.addMemoryStorageScreen
@@ -25,8 +28,6 @@ import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScr
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.invitation.addOnboardingInputInvitationScreen
 import com.teampatch.feature.onboarding.invitation.navigateToOnboardingInputInvitationScreen
-import com.teampatch.feature.login.LoginRoute
-import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.onboarding.management.OnboardingGroupManagementRoute
 import com.teampatch.feature.onboarding.management.addOnboardingGroupManagementScreen
 import com.teampatch.feature.onboarding.management.navigateToOnboardingGroupManagementScreen
@@ -65,7 +66,7 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = OnboardingGroupManagementRoute
+        startDestination = getStartDestination(mainUiState)
     ) {
         addLoginScreen(
             onHomeScreenRequest = navController::navigateToHomeScreenWithBackStackClear,
@@ -106,7 +107,7 @@ fun MainNavHost(
 
         addOnboardingInputInvitationScreen(
             onBackRequest = navController::navigateUp,
-            onNextPageRequest = navController::navigateToOnboardingGroupAdmissionScreen
+            onNextPageRequest = navController::navigateToOnboardingInputManagerInformationScreen
         )
 
         addOnboardingGroupAdmissionScreen(
@@ -199,10 +200,17 @@ fun MainNavHost(
 private fun NavHostController.navigateToHomeScreenWithBackStackClear() {
     navigateToHomeScreen(
         navOptions = navOptions {
-            popUpTo(LoginRoute) {
-                inclusive = true
-            }
-            launchSingleTop = true
+            popUpTo(graph.id) { inclusive = true }
         }
     )
+}
+
+private fun getStartDestination(mainUiState: MainUiState): Any {
+    return if (mainUiState.isFirstUser) {
+        LoginRoute
+    } else if (!mainUiState.isOnboardingComplete) {
+        OnboardingGroupManagementRoute
+    } else {
+        HomeRoute
+    }
 }
