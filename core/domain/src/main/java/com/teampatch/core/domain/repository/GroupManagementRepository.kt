@@ -36,6 +36,13 @@ interface GroupManagementRepository {
         managerProfileImageUri: String?
     )
 
+    suspend fun joinGroup(
+        memberName: String,
+        vipRelation: String,
+        memberProfileImageUri: String?,
+        inviteCode: String
+    )
+
     suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation
 
     suspend fun isGroupExist(inviteCode: String): Boolean

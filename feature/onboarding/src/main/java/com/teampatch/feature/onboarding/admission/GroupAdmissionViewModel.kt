@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teampatch.core.domain.usecase.group.CreateGroupUseCase
 import com.teampatch.core.domain.usecase.group.GetGroupInformationUseCase
-import com.teampatch.core.domain.usecase.group.JoinFamilyGroupUseCase
+import com.teampatch.core.domain.usecase.group.JoinGroupUseCase
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionUiState
 import com.teampatch.feature.onboarding.admission.model.toPresentation
@@ -20,9 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class GroupAdmissionViewModel @Inject constructor(
-    private val joinFamilyGroupUseCase: JoinFamilyGroupUseCase,
     private val createGroupUseCase: CreateGroupUseCase,
     private val getGroupInformationUseCase: GetGroupInformationUseCase,
+    private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
 
     private val _event: Channel<GroupAdmissionEvent> = Channel<GroupAdmissionEvent>()
@@ -76,7 +76,7 @@ internal class GroupAdmissionViewModel @Inject constructor(
                 vipAlias = vipAlias,
                 managerName = managerName,
                 managerRelation = managerRelation,
-                managerProfileImageUri = profileImageUri.toString()
+                managerProfileImageUri = profileImageUri.takeIf { it != Uri.EMPTY }?.toString()
             )
         }
             .onSuccess { _event.send(GroupAdmissionEvent.Success) }
@@ -86,8 +86,21 @@ internal class GroupAdmissionViewModel @Inject constructor(
             }
     }
 
-    fun joinGroup(inviteCode: String) = viewModelScope.launch {
-        runCatching { joinFamilyGroupUseCase(inviteCode) }
+    fun joinGroup(
+        memberName: String,
+        vipRelation: String,
+        memberProfileImageUri: Uri,
+        inviteCode: String
+    ) = viewModelScope.launch {
+        runCatching {
+            joinGroupUseCase(
+                memberName = memberName,
+                vipRelation = vipRelation,
+                memberProfileImageUri = memberProfileImageUri.takeIf { it != Uri.EMPTY }
+                    ?.toString(),
+                inviteCode = inviteCode
+            )
+        }
             .onSuccess { _event.send(GroupAdmissionEvent.Success) }
             .onFailure {
                 it.printStackTrace()

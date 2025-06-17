@@ -72,20 +72,26 @@ internal fun GroupAdmissionWithViewModel(
     GroupAdmissionScreen(
         onBackRequest = onBackRequest,
         onHomeRouteRequest = {
-            val uiState: OnboardingCommonUiState = uiStateHelper.uiState.value
-
-            when (uiState.action) {
-                OnboardingAction.JOIN -> viewModel.joinGroup(uiState.inviteCode)
-                OnboardingAction.CREATE ->
-                    viewModel.createGroup(
-                        vipName = uiState.vipName,
-                        vipAlias = uiState.vipAlias,
-                        managerName = uiState.managerName,
-                        managerRelation = uiState.managerRelation,
-                        profileImageUri = uiState.profileImageUri
+            with(uiStateHelper.uiState.value) {
+                when (action) {
+                    OnboardingAction.JOIN -> viewModel.joinGroup(
+                        inviteCode = inviteCode,
+                        memberName = managerName,
+                        vipRelation = managerRelation,
+                        memberProfileImageUri = profileImageUri
                     )
 
-                OnboardingAction.INIT -> context?.handleInitLoadError()
+                    OnboardingAction.CREATE ->
+                        viewModel.createGroup(
+                            vipName = vipName,
+                            vipAlias = vipAlias,
+                            managerName = managerName,
+                            managerRelation = managerRelation,
+                            profileImageUri = profileImageUri
+                        )
+
+                    OnboardingAction.INIT -> context?.handleInitLoadError()
+                }
             }
         },
         uiState = uiState
