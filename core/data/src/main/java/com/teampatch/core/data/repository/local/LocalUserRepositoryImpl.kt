@@ -1,9 +1,7 @@
 package com.teampatch.core.data.repository.local
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.core.net.toUri
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.model.UserEntity
@@ -12,32 +10,29 @@ import com.teampatch.core.data.di.annotation.HarmonyDispatcher
 import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.VIP
 import com.teampatch.core.data.mapper.toDomain
+import com.teampatch.core.data.service.ImageCompressorService
+import com.teampatch.core.data.service.ImageFormatTransferService
+import com.teampatch.core.data.service.ImageSaverService
+import com.teampatch.core.data.utils.FileFormat
 import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
-import com.teampatch.core.data.utils.getMediaStoreInfo
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
 
 internal class LocalUserRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val userDao: UserDao,
-    @ApplicationContext private val appContext: Context,
     @HarmonyDispatcher(DispatchersContext.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val imageCompressorService: ImageCompressorService,
+    private val imageFormatTransferService: ImageFormatTransferService,
+    private val imageSaverService: ImageSaverService
 ) : UserRepository {
-
-    private val profileImageFolder: File by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        File("${appContext.dataDir.absolutePath}/profile_image")
-            .also { it.mkdirs() }
-    }
 
     override fun getUserInfo(): Flow<User> {
         val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
@@ -46,23 +41,8 @@ internal class LocalUserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editProfile(name: String?, profileImageUri: String?) {
-        val processedProfileImageUri: Uri? = profileImageUri?.toUri()?.let {
-            withContext(ioDispatcher) {
-                val contentResolver = appContext.contentResolver
-                val mediaStoreInfo = contentResolver.getMediaStoreInfo(it)
-                val mimeTypeMap = MimeTypeMap.getSingleton()
-                val fileExtension = mimeTypeMap.getExtensionFromMimeType(mediaStoreInfo?.mimType)
-
-                contentResolver.openInputStream(it)?.use { profileImageInputStream ->
-                    val file =
-                        File.createTempFile("profile_image", ".$fileExtension", profileImageFolder)
-                    FileOutputStream(file).use {
-                        it.write(profileImageInputStream.readBytes())
-                    }
-                    file.toUri()
-                }
-            }
-        }
+        val processedProfileImageUri: Uri? =
+            profileImageUri?.toUri()?.let { processProfileImage(it) }
         val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
         val userEntity = userDao.getUserBySnsId(socialLoginId).first()
         val updateUserEntity = userEntity.copy(
@@ -86,7 +66,7 @@ internal class LocalUserRepositoryImpl @Inject constructor(
             groupId = null,
             name = name,
             relation = relation,
-            profileImageUri = role.name,
+            profileImageUri = profileImageUrl?.let { processProfileImage(it.toUri()).toString() },
             role = when (role) {
                 Role.VIP -> VIP
                 Role.MEMBER -> MEMBER
@@ -94,5 +74,13 @@ internal class LocalUserRepositoryImpl @Inject constructor(
             snsId = snsId,
         )
         userDao.insertUsers(userEntity)
+    }
+
+    private suspend fun processProfileImage(contentResolverUri: Uri): Uri {
+        return withContext(ioDispatcher) {
+            imageFormatTransferService.getBitmapFormat(contentResolverUri)
+                .let { imageCompressorService.compressImageWithTransferFormatJpeg(it) }
+                .let { imageSaverService.saveProfileImage(it, FileFormat.JPEG) }
+        }
     }
 }
