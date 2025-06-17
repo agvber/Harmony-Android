@@ -45,5 +45,5 @@ interface GroupManagementRepository {
 
     suspend fun searchGroup(inviteCode: String): AdmissionGroupInformation
 
-    suspend fun isGroupExist(inviteCode: String): Boolean
+    suspend fun isGroupExist(inviteCode: String)
 }

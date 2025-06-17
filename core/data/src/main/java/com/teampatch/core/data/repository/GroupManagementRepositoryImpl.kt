@@ -10,8 +10,8 @@ import com.teampatch.core.domain.repository.UserRepository
 import com.teampatch.core.network.GroupRemoteDataSource
 import com.teampatch.core.network.model.group.request.GroupCreationRequestBody
 import com.teampatch.core.network.model.group.request.GroupJoinRequestBody
-import javax.inject.Inject
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 class GroupManagementRepositoryImpl @Inject constructor(
     private val tokenManager: TokenManager,
@@ -81,7 +81,7 @@ class GroupManagementRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun isGroupExist(inviteCode: String): Boolean {
+    override suspend fun isGroupExist(inviteCode: String) {
         TODO("Not yet implemented")
     }
 }

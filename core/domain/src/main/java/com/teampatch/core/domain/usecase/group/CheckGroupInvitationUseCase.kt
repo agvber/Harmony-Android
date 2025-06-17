@@ -8,9 +8,8 @@ class CheckGroupInvitationUseCase @Inject constructor(
     private val group: Group,
     private val groupManagementRepository: GroupManagementRepository
 ) {
-    suspend operator fun invoke(inviteCode: String): Boolean = runCatching {
+    suspend operator fun invoke(inviteCode: String) {
         group.checkInviteCode(inviteCode.toInt())
         groupManagementRepository.isGroupExist(inviteCode)
     }
-        .getOrNull() != null
 }

@@ -187,7 +187,8 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
             .first()
     }
 
-    override suspend fun isGroupExist(inviteCode: String): Boolean {
-        return groupDao.queryGroupByInviteCode(inviteCode).firstOrNull() != null
+    override suspend fun isGroupExist(inviteCode: String) {
+        groupDao.queryGroupByInviteCode(inviteCode).first()
+            .also { if (it.id == null) throw IllegalArgumentException() }
     }
 }
