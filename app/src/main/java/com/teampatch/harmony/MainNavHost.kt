@@ -52,6 +52,7 @@ import com.teampatch.feature.settings.navigateToSettingsScreen
 import com.teampatch.harmony.model.MainUiState
 import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailConversationScreen
 import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailScreen
+import com.teampatch.memorystorage.feature.detail.navigateToMemoryStorageDetailScreen
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(InternalCoroutinesApi::class)
@@ -123,7 +124,7 @@ fun MainNavHost(
         )
 
         addMemoryStorageScreen(
-            onDetailPageRequest = {}
+            onDetailPageRequest = navController::navigateToMemoryStorageDetailScreen
         )
 
         addQuestionScreen(
