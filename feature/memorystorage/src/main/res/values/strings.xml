@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="text_title_appbar">
-        <item>여정&#160;</item>
-        <item>님의 추억 저장소</item>
-    </string-array>
-
+    <string name="text_title_appbar">님의 추억 저장소</string>
     <string name="toast_init_load_error">추억 저장소 데이터를 불러오지 못하였습니다.</string>
+    <string name="toast_item_empty_error">해당 아이템은 존재하지 않습니다.</string>
+    <string name="text_memory_card_date_format">%d년 %d월 %d일</string>
+
+    <string name="text_item_sort_oldest">오래된순</string>
+    <string name="text_item_sort_latest">최신순</string>
+    <string name="text_item_sort_name">이름순</string>
+
+    <string name="text_field_search_hint">검색어를 입력하여주세요.</string>
+    <string name="button_search_cancel">취소</string>
 </resources>

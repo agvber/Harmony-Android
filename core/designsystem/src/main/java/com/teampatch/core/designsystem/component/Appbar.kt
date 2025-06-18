@@ -2,6 +2,7 @@ package com.teampatch.core.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +21,7 @@ import com.teampatch.core.designsystem.theme.PretendardFontFamily
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    navigation: @Composable () -> Unit = {},
+    navigation: @Composable (BoxScope.() -> Unit) = {},
     title: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
 ) {
