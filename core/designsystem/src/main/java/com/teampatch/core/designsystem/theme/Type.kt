@@ -1,32 +1,24 @@
 package com.teampatch.core.designsystem.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = androidx.compose.ui.text.TextStyle(
-        fontFamily = PretendardFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+val Typography = Typography().let {
+    it.copy(
+        displayLarge = it.displayLarge.copy(fontFamily = PretendardFontFamily),
+        displayMedium = it.displayMedium.copy(fontFamily = PretendardFontFamily),
+        displaySmall = it.displaySmall.copy(fontFamily = PretendardFontFamily),
+        headlineLarge = it.headlineLarge.copy(fontFamily = PretendardFontFamily),
+        headlineMedium = it.headlineMedium.copy(fontFamily = PretendardFontFamily),
+        headlineSmall = it.headlineSmall.copy(fontFamily = PretendardFontFamily),
+        titleLarge = it.titleLarge.copy(fontFamily = PretendardFontFamily),
+        titleMedium = it.titleMedium.copy(fontFamily = PretendardFontFamily),
+        titleSmall = it.titleSmall.copy(fontFamily = PretendardFontFamily),
+        bodyLarge = it.bodyLarge.copy(fontFamily = PretendardFontFamily),
+        bodyMedium = it.bodyMedium.copy(fontFamily = PretendardFontFamily),
+        bodySmall = it.bodySmall.copy(fontFamily = PretendardFontFamily),
+        labelLarge = it.labelLarge.copy(fontFamily = PretendardFontFamily),
+        labelMedium = it.labelMedium.copy(fontFamily = PretendardFontFamily),
+        labelSmall = it.labelSmall.copy(fontFamily = PretendardFontFamily),
     )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-     */
-)
+}
