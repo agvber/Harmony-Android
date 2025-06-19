@@ -1,12 +1,12 @@
 package com.teampatch.core.domain.usecase.authentication
 
-import com.teampatch.core.domain.entities.TokenManager
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class IsLoginRequiredUseCase @Inject constructor(
-    private val tokenManager: TokenManager,
-) {
+class IsLoginRequiredUseCase @Inject constructor() {
 
-    operator fun invoke(): Flow<Boolean> = tokenManager.isTokenInvalidListener
+    operator fun invoke(): Flow<Boolean> {
+        return flowOf(false)
+    }
 }
