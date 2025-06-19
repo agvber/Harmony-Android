@@ -27,6 +27,7 @@ import com.teampatch.feature.memory.detail.navigateToMemoryDetailScreen
 import com.teampatch.feature.memory.registration.addMemoryRegistrationScreen
 import com.teampatch.feature.memory.registration.navigateToMemoryRegistrationScreen
 import com.teampatch.feature.memory.storage.addMemoryStorageScreen
+import com.teampatch.feature.memory.storage.navigateToMemoryStorageScreen
 import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.invitation.addOnboardingInputInvitationScreen
@@ -127,7 +128,7 @@ fun MainNavHost(
 
         addMemoryRegistrationScreen(
             onDismissRequest = navController::navigateUp,
-            onMemoryStorePageRequest = { }
+            onMemoryStorePageRequest = navController::navigateToMemoryStorageScreen
         )
 
         addMemoryDetailScreen(onBackRequest = navController::navigateUp, onDetailPageRequest = {})
