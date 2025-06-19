@@ -131,6 +131,8 @@ dependencies {
     implementation(project(":feature:memorystorage-detail"))
     androidTestImplementation(project(":core:ui-test"))
 
+    implementation(libs.coil.compose)
+
     androidTestImplementation(libs.hilt.android)
     androidTestImplementation(libs.hilt.android.test)
     kspAndroidTest(libs.hilt.compiler)
