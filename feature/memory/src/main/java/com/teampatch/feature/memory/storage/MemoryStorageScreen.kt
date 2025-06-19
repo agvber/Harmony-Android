@@ -1,4 +1,4 @@
-package com.teampatch.feature.memorystorage
+package com.teampatch.feature.memory.storage
 
 import android.content.Context
 import android.widget.Toast
@@ -73,8 +73,9 @@ import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.model.MemoryCard
-import com.teampatch.feature.memorystorage.model.MemoryCardSort
-import com.teampatch.feature.memorystorage.model.MemoryStorageUiState
+import com.teampatch.feature.memory.R
+import com.teampatch.feature.memory.storage.model.MemoryCardSort
+import com.teampatch.feature.memory.storage.model.MemoryStorageUiState
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 

@@ -27,8 +27,8 @@ import com.teampatch.core.designsystem.component.DefaultBottomNavigation
 import com.teampatch.core.designsystem.component.NavigationItem
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.navigateToHomeScreen
-import com.teampatch.feature.memorystorage.MemoryStorageRoute
-import com.teampatch.feature.memorystorage.navigateToMemoryStorageScreen
+import com.teampatch.feature.memory.storage.MemoryStorageRoute
+import com.teampatch.feature.memory.storage.navigateToMemoryStorageScreen
 import com.teampatch.feature.login.navigateToLoginScreen
 import com.teampatch.feature.question.QuestionRoute
 import com.teampatch.feature.question.navigateToQuestionScreen

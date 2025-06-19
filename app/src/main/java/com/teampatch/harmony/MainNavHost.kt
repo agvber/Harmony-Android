@@ -23,7 +23,7 @@ import com.teampatch.feature.login.LoginRoute
 import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.memorycard.registration.addMemoryCardRegistrationScreen
 import com.teampatch.feature.memorycard.registration.navigateToMemoryCardRegistrationScreen
-import com.teampatch.feature.memorystorage.addMemoryStorageScreen
+import com.teampatch.feature.memory.storage.addMemoryStorageScreen
 import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.invitation.addOnboardingInputInvitationScreen

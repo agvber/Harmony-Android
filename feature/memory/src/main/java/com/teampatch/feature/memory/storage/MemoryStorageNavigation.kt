@@ -1,4 +1,4 @@
-package com.teampatch.feature.memorystorage
+package com.teampatch.feature.memory.storage
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

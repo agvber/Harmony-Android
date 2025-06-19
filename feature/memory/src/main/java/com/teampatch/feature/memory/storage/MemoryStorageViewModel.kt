@@ -1,4 +1,4 @@
-package com.teampatch.feature.memorystorage
+package com.teampatch.feature.memory.storage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,9 +7,9 @@ import com.teampatch.core.common.flowErrorCatch
 import com.teampatch.core.domain.model.MemoryCard
 import com.teampatch.core.domain.usecase.memory.GetMemoryCardsUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
-import com.teampatch.feature.memorystorage.model.MemoryCardSort
-import com.teampatch.feature.memorystorage.model.MemoryStorageEvent
-import com.teampatch.feature.memorystorage.model.MemoryStorageUiState
+import com.teampatch.feature.memory.storage.model.MemoryCardSort
+import com.teampatch.feature.memory.storage.model.MemoryStorageEvent
+import com.teampatch.feature.memory.storage.model.MemoryStorageUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
