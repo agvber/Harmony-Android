@@ -21,8 +21,11 @@ import com.teampatch.feature.home.addHomeScreen
 import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.login.LoginRoute
 import com.teampatch.feature.login.addLoginScreen
-import com.teampatch.feature.memorycard.registration.addMemoryCardRegistrationScreen
-import com.teampatch.feature.memorycard.registration.navigateToMemoryCardRegistrationScreen
+import com.teampatch.feature.memory.chat.addMemoryChatScreen
+import com.teampatch.feature.memory.detail.addMemoryDetailScreen
+import com.teampatch.feature.memory.detail.navigateToMemoryDetailScreen
+import com.teampatch.feature.memory.registration.addMemoryRegistrationScreen
+import com.teampatch.feature.memory.registration.navigateToMemoryRegistrationScreen
 import com.teampatch.feature.memory.storage.addMemoryStorageScreen
 import com.teampatch.feature.onboarding.admission.addOnboardingGroupAdmissionScreen
 import com.teampatch.feature.onboarding.admission.navigateToOnboardingGroupAdmissionScreen
@@ -50,9 +53,6 @@ import com.teampatch.feature.question.expand.navigateToQuestionExpandScreen
 import com.teampatch.feature.settings.addSettingsScreen
 import com.teampatch.feature.settings.navigateToSettingsScreen
 import com.teampatch.harmony.model.MainUiState
-import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailConversationScreen
-import com.teampatch.memorystorage.feature.detail.addMemoryStorageDetailScreen
-import com.teampatch.memorystorage.feature.detail.navigateToMemoryStorageDetailScreen
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(InternalCoroutinesApi::class)
@@ -120,12 +120,21 @@ fun MainNavHost(
             onUserPageRequest = navController::navigateToFamilyInfoScreen,
             onDailyRoutineClick = { },
             onDailyRoutineRegisterPageRequest = { },
-            onMemoryCardClick = navController::navigateToMemoryCardRegistrationScreen
+            onMemoryCardClick = navController::navigateToMemoryRegistrationScreen
         )
 
         addMemoryStorageScreen(
-            onDetailPageRequest = navController::navigateToMemoryStorageDetailScreen
+            onDetailPageRequest = { navController.navigateToMemoryDetailScreen() }
         )
+
+        addMemoryRegistrationScreen(
+            onDismissRequest = navController::navigateUp,
+            onMemoryStorePageRequest = { }
+        )
+
+        addMemoryDetailScreen()
+
+        addMemoryChatScreen()
 
         addQuestionScreen(
             questionDetailPageRequest = navController::navigateToQuestionDetailScreen,
@@ -167,11 +176,6 @@ fun MainNavHost(
             onProfileEditClick = navController::navigateToProfileEditScreen
         )
 
-        addMemoryCardRegistrationScreen(
-            onDismissRequest = navController::navigateUp,
-            onMemoryStorePageRequest = { } // TODO: 메모리 저장소 페이지 가기
-        )
-
         addProfileEditScreen(
             onCompleteRequest = navController::navigateUp
         )
@@ -184,16 +188,6 @@ fun MainNavHost(
             onBackRequest = navController::navigateUp,
             dailyEditPageRequest = { navController.navigateToDailyEditScreen() },
             onDeleteClick = {} // 임시
-        )
-
-        addMemoryStorageDetailScreen(
-            onBackRequest = navController::navigateUp,
-            onRestartConversation = { navController.navigateToMemoryCardRegistrationScreen("memoryCardId") }
-        )
-
-        addMemoryStorageDetailConversationScreen(
-            onDismiss = navController::navigateUp,
-            onRestartConversation = { navController.navigateToMemoryCardRegistrationScreen("memoryCardId") }
         )
     }
 }

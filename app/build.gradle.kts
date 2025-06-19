@@ -121,14 +121,12 @@ dependencies {
     implementation(project(":feature:daily"))
     implementation(project(":feature:daily-edit"))
     implementation(project(":feature:daily-expand"))
-    implementation(project(":feature:memorycard-registration"))
     implementation(project(":feature:question"))
     implementation(project(":feature:question-expand"))
     implementation(project(":feature:question-detail"))
     implementation(project(":feature:answer"))
     implementation(project(":feature:memory"))
 
-    implementation(project(":feature:memorystorage-detail"))
     androidTestImplementation(project(":core:ui-test"))
 
     implementation(libs.coil.compose)
