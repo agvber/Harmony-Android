@@ -9,14 +9,15 @@ fun MemoryCardEntity.toDomain(
     writerName: String,
 ): MemoryCard = MemoryCard(
     id = id.toString(),
-    writerTitle = "",
+    writerTitle = title,
     writerName = writerName,
-    text = title,
+    text = content,
     imageUrl = imageUrl,
     dateTime = LocalDateTime.parse(
         /* text = */
         modifiedAt,
         /* formatter = */
         LOCAL_DB_DATE_TIME_FORMATTER
-    )
+    ),
+    tags = tags
 )

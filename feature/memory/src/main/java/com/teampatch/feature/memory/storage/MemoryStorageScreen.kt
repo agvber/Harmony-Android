@@ -72,6 +72,7 @@ import com.teampatch.core.designsystem.theme.SubRed
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
+import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.MemoryCard
 import com.teampatch.feature.memory.R
 import com.teampatch.feature.memory.storage.model.MemoryCardSort
@@ -370,42 +371,7 @@ private fun MemoryStorageScreenPreview() {
             onSortOptionChange = {},
             uiState = MemoryStorageUiState("여정"),
             memoryCardsLazyItems = flowOf(
-                PagingData.from(
-                    listOf(
-                        MemoryCard(
-                            id = "1",
-                            writerTitle = "손자",
-                            writerName = "김민준",
-                            text = "title",
-                            imageUrl = "",
-                            dateTime = LocalDateTime.now()
-                        ),
-                        MemoryCard(
-                            id = "2",
-                            writerTitle = "할머니",
-                            writerName = "이영희",
-                            text = "어릴 적 사진",
-                            imageUrl = "",
-                            dateTime = LocalDateTime.now()
-                        ),
-                        MemoryCard(
-                            id = "3",
-                            writerTitle = "할머니",
-                            writerName = "이영희",
-                            text = "어릴 적 사진",
-                            imageUrl = "",
-                            dateTime = LocalDateTime.now()
-                        ),
-                        MemoryCard(
-                            id = "4",
-                            writerTitle = "할머니",
-                            writerName = "이영희",
-                            text = "어릴 적 사진",
-                            imageUrl = "",
-                            dateTime = LocalDateTime.now()
-                        )
-                    )
-                )
+                PagingData.from(FakeMemoryCard().get())
             ).collectAsLazyPagingItems()
         )
     }

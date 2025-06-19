@@ -11,7 +11,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Alice",
             text = "This was one of the best days of my life!",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now()
+            dateTime = LocalDateTime.now(),
+            tags = setOf("happy", "moments", "memories")
         ),
         MemoryCard(
             id = "2",
@@ -19,7 +20,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Bob",
             text = "Enjoying the sun at the beach.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(1)
+            dateTime = LocalDateTime.now().minusDays(1),
+            tags = setOf("beach", "vacation", "fun")
         ),
         MemoryCard(
             id = "3",
@@ -27,7 +29,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Charlie",
             text = "Great dinner with family.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(2)
+            dateTime = LocalDateTime.now().minusDays(2),
+            tags = setOf("family", "dinner", "time")
         ),
         MemoryCard(
             id = "4",
@@ -35,7 +38,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Dave",
             text = "Hiking in the mountains.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(3)
+            dateTime = LocalDateTime.now().minusDays(3),
+            tags = setOf("hiking", "mountains", "adventure")
         ),
         MemoryCard(
             id = "5",
@@ -43,7 +47,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Eve",
             text = "Celebrating my birthday with friends.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(4)
+            dateTime = LocalDateTime.now().minusDays(4),
+            tags = setOf("birthday", "celebration", "friends")
         ),
         MemoryCard(
             id = "6",
@@ -51,7 +56,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Frank",
             text = "Started my new job today!",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(5)
+            dateTime = LocalDateTime.now().minusDays(5),
+            tags = setOf("new", "job", "today")
         ),
         MemoryCard(
             id = "7",
@@ -59,7 +65,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Grace",
             text = "Amazing night at the concert.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(6)
+            dateTime = LocalDateTime.now().minusDays(6),
+            tags = setOf("concert", "night", "amazing")
         ),
         MemoryCard(
             id = "8",
@@ -67,7 +74,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Hank",
             text = "Cuddling with my dog.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(7)
+            dateTime = LocalDateTime.now().minusDays(7),
+            tags = setOf("pet", "love", "cuddle")
         ),
         MemoryCard(
             id = "9",
@@ -75,7 +83,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Ivy",
             text = "Exploring a new city.",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(8)
+            dateTime = LocalDateTime.now().minusDays(8),
+            tags = setOf("travel", "diaries", "new city")
         ),
         MemoryCard(
             id = "10",
@@ -83,7 +92,8 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Jack",
             text = "Finally graduated!",
             imageUrl = FAKE_IMAGE_URL,
-            dateTime = LocalDateTime.now().minusDays(9)
+            dateTime = LocalDateTime.now().minusDays(9),
+            tags = setOf("graduation", "finally", "today")
         )
     )
 }

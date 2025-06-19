@@ -53,11 +53,11 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.utils.noRippleClickable
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.home.model.MemoryCardUiState
-import java.time.LocalDateTime
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDateTime
 
 @Composable
 internal fun MemberHomeScreen(
@@ -141,8 +141,8 @@ internal fun MemberHomeScreen(
                                     memoryCardUiState.data.text,
                                     memoryCardUiState.data.dateTime.let {
                                         "${it.year}${stringResource(R.string.year)} " +
-                                            "${it.monthValue}${stringResource(R.string.month)} " +
-                                            "${it.dayOfMonth}${stringResource(R.string.day)}"
+                                                "${it.monthValue}${stringResource(R.string.month)} " +
+                                                "${it.dayOfMonth}${stringResource(R.string.day)}"
                                     },
                                     painter = painterResource(img_test_memory_card)
                                 )
@@ -203,7 +203,7 @@ internal fun MemberHomeScreen(
                                     withStyle(style = SpanStyle(color = MainGreen)) {
                                         append(
                                             "${it.monthValue}${stringResource(R.string.month)} " +
-                                                "${it.dayOfMonth}${stringResource(R.string.day)}"
+                                                    "${it.dayOfMonth}${stringResource(R.string.day)}"
                                         )
                                     }
                                 }
@@ -259,14 +259,7 @@ private fun MemberHomeScreenPreview(
             onDailyRoutineCheckChanged = { _, _ -> },
             uploadMemoryCardRequest = { memories, date, uri -> },
             memoryCardUiState = MemoryCardUiState.Success(
-                MemoryCard(
-                    id = "1",
-                    writerTitle = "손자",
-                    writerName = "김민준",
-                    text = "title",
-                    imageUrl = "",
-                    dateTime = LocalDateTime.now()
-                )
+                FakeMemoryCard().get()[0]
             ),
             dailyRoutine = flowOf(
                 PagingData.from(

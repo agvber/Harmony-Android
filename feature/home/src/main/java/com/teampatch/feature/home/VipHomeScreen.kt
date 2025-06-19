@@ -54,6 +54,7 @@ import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.MemoryCard
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.home.model.MemoryCardUiState
@@ -261,14 +262,7 @@ private fun VipHomeScreenPreview(
             onMemoryCardClick = {},
             onDailyRoutineCheckChanged = { _, _ -> },
             memoryCardUiState = MemoryCardUiState.Success(
-                MemoryCard(
-                    id = "1",
-                    writerTitle = "손자",
-                    writerName = "김민준",
-                    text = "title",
-                    imageUrl = "",
-                    dateTime = LocalDateTime.now()
-                )
+                FakeMemoryCard().get()[0]
             ),
             dailyRoutine = flowOf(
                 PagingData.from(

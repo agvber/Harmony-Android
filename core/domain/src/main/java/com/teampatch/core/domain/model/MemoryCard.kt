@@ -9,4 +9,5 @@ data class MemoryCard(
     val text: String,
     val imageUrl: String?,
     val dateTime: LocalDateTime,
+    val tags: Set<String>,
 )
