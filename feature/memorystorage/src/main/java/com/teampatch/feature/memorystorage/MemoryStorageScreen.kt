@@ -55,6 +55,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import coil.compose.AsyncImage
 import com.teampatch.core.designsystem.R.drawable.btn_search
 import com.teampatch.core.designsystem.R.drawable.ic_chevron_memory_storage
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
@@ -70,6 +71,7 @@ import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.SubRed
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.model.MemoryCard
 import com.teampatch.feature.memorystorage.model.MemoryCardSort
 import com.teampatch.feature.memorystorage.model.MemoryStorageUiState
@@ -192,10 +194,11 @@ internal fun MemoryStorageScreen(
                                 ).show()
                         }
                 ) {
-                    Image(
-                        painter = painterResource(img_test_memory_card),
+                    AsyncImage(
+                        model = currentItem?.imageUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
+                        placeholder = previewPlaceholder(img_test_memory_card),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(114.dp)
