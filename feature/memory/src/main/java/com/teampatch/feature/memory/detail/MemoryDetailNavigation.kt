@@ -13,14 +13,25 @@ data class MemoryDetailRoute(
 )
 
 fun NavController.navigateToMemoryDetailScreen(
+    memoryCardId: String,
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
 ) {
-
+    navigate(
+        route = MemoryDetailRoute(memoryCardId),
+        navOptions = navOptions,
+        navigatorExtras = navigatorExtras
+    )
 }
 
-fun NavGraphBuilder.addMemoryDetailScreen() {
+fun NavGraphBuilder.addMemoryDetailScreen(
+    onBackRequest: () -> Unit,
+    onDetailPageRequest: (String) -> Unit,
+) {
     composable<MemoryDetailRoute> {
-
+        MemoryDetailScreenWithViewModel(
+            onBackRequest = onBackRequest,
+            onDetailPageRequest = onDetailPageRequest
+        )
     }
 }

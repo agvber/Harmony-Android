@@ -17,6 +17,11 @@
     <string name="dropdown_edit_answer">다시 대화하기</string>
     <string name="dropdown_delete_answer">다시 대화하기</string>
     <string name="btn_look_all_answer">대화 전체 보기</string>
+    <string name="image_memory_content_description">추억 카드 이미지</string>
+    <string name="image_more_description">추억 카드 이미지"</string>
+    <string name="text_retry_settings">다시 대화하기</string>
+    <string name="text_delete_settings">삭제하기</string>
+    <string name="toast_load_error">추억 카드 데이터를 불러오지 못하였습니다.</string>
 
     <!--registration-->
     <string name="btn_communication_start">대화 시작</string>

@@ -123,16 +123,14 @@ fun MainNavHost(
             onMemoryCardClick = navController::navigateToMemoryRegistrationScreen
         )
 
-        addMemoryStorageScreen(
-            onDetailPageRequest = { navController.navigateToMemoryDetailScreen() }
-        )
+        addMemoryStorageScreen(onDetailPageRequest = navController::navigateToMemoryDetailScreen)
 
         addMemoryRegistrationScreen(
             onDismissRequest = navController::navigateUp,
             onMemoryStorePageRequest = { }
         )
 
-        addMemoryDetailScreen()
+        addMemoryDetailScreen(onBackRequest = navController::navigateUp, onDetailPageRequest = {})
 
         addMemoryChatScreen()
 

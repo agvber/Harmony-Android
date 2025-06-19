@@ -1,4 +1,5 @@
 package com.teampatch.feature.memory.detail.model
 
-class MemoryDetailEvent {
+internal sealed interface MemoryDetailEvent {
+    data object LoadError : MemoryDetailEvent
 }
