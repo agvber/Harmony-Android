@@ -1,6 +1,6 @@
 package com.teampatch.core.data.repository
 
-import com.agvber.core.authentication.kakao.KakaoLoginService
+import com.teampatch.core.data.service.authentication.KakaoLoginService
 import com.teampatch.core.data.utils.toServerDateFormat
 import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.model.LoginResult

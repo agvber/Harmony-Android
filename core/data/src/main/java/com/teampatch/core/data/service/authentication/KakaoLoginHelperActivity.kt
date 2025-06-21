@@ -1,14 +1,14 @@
-package com.agvber.core.authentication.kakao
+package com.teampatch.core.data.service.authentication
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.agvber.core.authentication.model.Token
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.User
+import com.teampatch.core.data.model.Token
 
 internal class KakaoLoginHelperActivity : Activity() {
 

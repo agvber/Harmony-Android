@@ -1,6 +1,7 @@
 plugins {
     id("teampatch.android.library")
     id("teampatch.android.hilt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -12,8 +13,9 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
-    implementation(project(":core:authentication"))
     implementation(project(":core:database"))
+
+    implementation(libs.kakao.sdk.v2.user)
 
     implementation(libs.google.play.app.update)
 
