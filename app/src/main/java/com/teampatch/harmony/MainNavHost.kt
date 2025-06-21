@@ -22,6 +22,7 @@ import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.login.LoginRoute
 import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.memory.chat.addMemoryChatScreen
+import com.teampatch.feature.memory.chat.navigateToMemoryChatScreen
 import com.teampatch.feature.memory.detail.addMemoryDetailScreen
 import com.teampatch.feature.memory.detail.navigateToMemoryDetailScreen
 import com.teampatch.feature.memory.registration.addMemoryRegistrationScreen
@@ -131,9 +132,15 @@ fun MainNavHost(
             onMemoryStorePageRequest = navController::navigateToMemoryStorageScreen
         )
 
-        addMemoryDetailScreen(onBackRequest = navController::navigateUp, onDetailPageRequest = {})
+        addMemoryDetailScreen(
+            onBackRequest = navController::navigateUp,
+            onDetailPageRequest = navController::navigateToMemoryChatScreen
+        )
 
-        addMemoryChatScreen()
+        addMemoryChatScreen(
+            onCloseRequest = navController::navigateUp,
+            onReplyChat = navController::navigateToMemoryRegistrationScreen,
+        )
 
         addQuestionScreen(
             questionDetailPageRequest = navController::navigateToQuestionDetailScreen,

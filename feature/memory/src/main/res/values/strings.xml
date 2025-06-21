@@ -34,4 +34,10 @@
     <string name="toast_audio_permission_request">녹음 권한이 필요합니다.</string>
     <string name="toast_audio_recording_error">녹음 과정에서 에러가 발생하였습니다.</string>
     <string name="toast_network_error">녹음 데이터를 업로드 하는 과정에서 에러가 발생하였습니다.</string>
+
+    <!--chat-->
+    <string name="button_chat_retry">다시 대화하기</string>
+    <string name="image_question_content_description">질문 참고 이미지</string>
+    <string name="button_close_content_description">종료</string>
+    <string name="image_profile_content_description">하모니 프로필</string>
 </resources>
