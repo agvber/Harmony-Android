@@ -1,6 +1,5 @@
 package com.teampatch.harmony
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,8 +14,6 @@ import com.kakao.sdk.common.util.Utility
 import com.teampatch.core.common.ActivitySavedInstanceHelper
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,7 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setKeepOnSplashScreenCondition()
-        onboardingStateRestore(savedInstanceState)
+        restoreActivitySavedInstanceHelper(savedInstanceState)
         initView()
         showHashKey()
     }
@@ -41,9 +38,11 @@ class MainActivity : ComponentActivity() {
         val preDrawListener: ViewTreeObserver.OnPreDrawListener =
             object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
-                    runBlocking { viewModel.uiState.first { !it.isLoading } }
-                    content.viewTreeObserver.removeOnPreDrawListener(this)
-                    return true
+                    if (!viewModel.uiState.value.isLoading) {
+                        content.viewTreeObserver.removeOnPreDrawListener(this)
+                        return true
+                    }
+                    return false
                 }
             }
         content.viewTreeObserver.addOnPreDrawListener(preDrawListener)
@@ -52,13 +51,13 @@ class MainActivity : ComponentActivity() {
     private fun initView(): Unit = setContent {
         HarmonyTheme {
             val mainUiState by viewModel.uiState.collectAsStateWithLifecycle()
-            MainApp(mainUiState)
+            MainApp(mainUiState = mainUiState)
         }
     }
 
-    fun onboardingStateRestore(bundle: Bundle?) {
+    private fun restoreActivitySavedInstanceHelper(bundle: Bundle?) {
         bundle?.let { activitySavedInstanceHelper.restoreState(it) }
-            ?: Log.d(TAG, "SavedInstanceState is null")
+            ?: Log.d(TAG, "SavedInstanceStateHelper is null")
     }
 
     private fun showHashKey() {
@@ -71,13 +70,6 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         activitySavedInstanceHelper.saveState(outState)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun recreate() {
-        Intent(this, MainActivity::class.java).apply {
-            startActivity(this)
-        }
-        finish()
     }
 
     companion object {

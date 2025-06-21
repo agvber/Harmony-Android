@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +30,6 @@ import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.memory.storage.MemoryStorageRoute
 import com.teampatch.feature.memory.storage.navigateToMemoryStorageScreen
-import com.teampatch.feature.login.navigateToLoginScreen
 import com.teampatch.feature.question.main.QuestionMainRoute
 import com.teampatch.feature.question.main.navigateToQuestionMainScreen
 import com.teampatch.harmony.model.MainUiState
@@ -120,11 +118,5 @@ fun MainApp(
             navController = navController,
             modifier = Modifier.padding(scaffoldPaddingValue)
         )
-    }
-
-    LaunchedEffect(mainUiState.isLoginRequired) {
-        if (mainUiState.isLoginRequired) {
-            navController.navigateToLoginScreen()
-        }
     }
 }

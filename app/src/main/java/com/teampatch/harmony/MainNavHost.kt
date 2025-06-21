@@ -13,7 +13,6 @@ import com.teampatch.core.common.findActivity
 import com.teampatch.feature.daily.edit.addDailyEditScreen
 import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
 import com.teampatch.feature.daily.main.addDailyMainScreen
-import com.teampatch.feature.daily.main.navigateToDailyMainScreen
 import com.teampatch.feature.daily.management.addDailyManagementScreen
 import com.teampatch.feature.daily.management.navigateToDailyManagementScreen
 import com.teampatch.feature.home.HomeRoute
@@ -73,7 +72,7 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = getStartDestination(mainUiState)
+        startDestination = mainUiState.getStartDestination()
     ) {
         addLoginScreen(
             onHomeScreenRequest = navController::navigateToHomeScreenWithBackStackClear,
@@ -214,10 +213,10 @@ private fun NavHostController.navigateToHomeScreenWithBackStackClear() {
     )
 }
 
-private fun getStartDestination(mainUiState: MainUiState): Any {
-    return if (mainUiState.isFirstUser) {
+private fun MainUiState.getStartDestination(): Any {
+    return if (isLoginRequired) {
         LoginRoute
-    } else if (!mainUiState.isOnboardingComplete) {
+    } else if (!isExistGroup) {
         OnboardingGroupManagementRoute
     } else {
         HomeRoute

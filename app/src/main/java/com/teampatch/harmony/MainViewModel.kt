@@ -4,20 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teampatch.core.common.flowErrorCatch
 import com.teampatch.core.domain.usecase.authentication.IsLoginRequiredUseCase
-import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
+import com.teampatch.core.domain.usecase.group.CheckIfGroupExistsUseCase
 import com.teampatch.harmony.model.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val isLoginRequiredUseCase: IsLoginRequiredUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val checkIfGroupExistsUseCase: CheckIfGroupExistsUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MainUiState> = MutableStateFlow(MainUiState())
@@ -30,8 +29,7 @@ class MainViewModel @Inject constructor(
                 action = {
                     _uiState.update { state ->
                         state.copy(
-                            isFirstUser = true,
-                            isLoginRequired = false,
+                            isLoginRequired = true,
                             isLoading = false
                         )
                     }
@@ -41,10 +39,9 @@ class MainViewModel @Inject constructor(
                 .collect { isLoginRequired ->
                     _uiState.update { state ->
                         state.copy(
-                            isFirstUser = if (uiState.value.isLoading) isLoginRequired else state.isFirstUser,
                             isLoginRequired = isLoginRequired,
                             isLoading = false,
-                            isOnboardingComplete = if (isLoginRequired) false else getUserInfoUseCase().firstOrNull()?.groupId != -1
+                            isExistGroup = if (isLoginRequired) false else checkIfGroupExistsUseCase()
                         )
                     }
                 }
