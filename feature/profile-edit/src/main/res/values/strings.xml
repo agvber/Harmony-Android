@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="btn_edit_bottom">수정하기</string>
-    <string name="text_relation_title">관계</string>
-    <string name="tf_relation_hint">예) 손녀</string>
-    <string name="text_name_title">이름</string>
-    <string name="tf_name_hint">이름을 입력해 주세요.</string>
-</resources>

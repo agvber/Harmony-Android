@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="text_title_appbar">가족 정보</string>
-    <string name="btn_edit_profile">프로필 수정</string>
-    <string name="text_title_family">우리가족</string>
-    <string name="btn_invite_family">가족 초대하기</string>
-</resources>

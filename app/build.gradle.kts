@@ -116,8 +116,6 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:settings"))
-    implementation(project(":feature:family-info"))
-    implementation(project(":feature:profile-edit"))
     implementation(project(":feature:daily"))
     implementation(project(":feature:daily-edit"))
     implementation(project(":feature:daily-expand"))

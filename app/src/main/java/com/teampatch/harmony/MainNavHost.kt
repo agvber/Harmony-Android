@@ -12,8 +12,6 @@ import androidx.navigation.navOptions
 import com.teampatch.core.common.findActivity
 import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
 import com.teampatch.feature.daily.expand.addDailyExpandScreen
-import com.teampatch.feature.family.info.addFamilyInfoScreen
-import com.teampatch.feature.family.info.navigateToFamilyInfoScreen
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.addHomeScreen
 import com.teampatch.feature.home.navigateToHomeScreen
@@ -42,8 +40,6 @@ import com.teampatch.feature.onboarding.relation.addOnboardingInputManagerInform
 import com.teampatch.feature.onboarding.relation.navigateToOnboardingInputManagerInformationScreen
 import com.teampatch.feature.onboarding.vip.addOnboardingInputVipInformationScreen
 import com.teampatch.feature.onboarding.vip.navigateToOnboardingInputVipInformationScreen
-import com.teampatch.feature.profile.edit.addProfileEditScreen
-import com.teampatch.feature.profile.edit.navigateToProfileEditScreen
 import com.teampatch.feature.question.answer.addAnswerScreen
 import com.teampatch.feature.question.answer.navigateToAnswerScreen
 import com.teampatch.feature.question.detail.QuestionDetailParams
@@ -52,8 +48,12 @@ import com.teampatch.feature.question.detail.navigateToQuestionDetailScreen
 import com.teampatch.feature.question.expand.addQuestionExpandScreen
 import com.teampatch.feature.question.expand.navigateToQuestionExpandScreen
 import com.teampatch.feature.question.main.addQuestionMainScreen
-import com.teampatch.feature.settings.addSettingsScreen
-import com.teampatch.feature.settings.navigateToSettingsScreen
+import com.teampatch.feature.settings.group.addSettingsGroupScreen
+import com.teampatch.feature.settings.group.navigateToSettingsGroupScreen
+import com.teampatch.feature.settings.preferences.addSettingsPreferencesScreen
+import com.teampatch.feature.settings.preferences.navigateToSettingsPreferencesScreen
+import com.teampatch.feature.settings.profile.addSettingsProfileScreen
+import com.teampatch.feature.settings.profile.navigateToSettingsProfileScreen
 import com.teampatch.harmony.model.MainUiState
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -119,7 +119,7 @@ fun MainNavHost(
         )
 
         addHomeScreen(
-            onUserPageRequest = navController::navigateToFamilyInfoScreen,
+            onUserPageRequest = navController::navigateToSettingsGroupScreen,
             onDailyRoutineClick = { },
             onDailyRoutineRegisterPageRequest = { },
             onMemoryCardClick = navController::navigateToMemoryRegistrationScreen
@@ -169,20 +169,20 @@ fun MainNavHost(
             }
         )
 
-        addSettingsScreen(
+        addSettingsPreferencesScreen(
             onBackRequest = navController::navigateUp,
             onExitAppRequest = { context.findActivity()?.finishAffinity() },
             onPrivacyPolicyClick = { },
             onTosClick = { }
         )
 
-        addFamilyInfoScreen(
+        addSettingsGroupScreen(
             onBackRequest = navController::navigateUp,
-            onSettingsClick = navController::navigateToSettingsScreen,
-            onProfileEditClick = navController::navigateToProfileEditScreen
+            onSettingsClick = navController::navigateToSettingsPreferencesScreen,
+            onProfileEditClick = navController::navigateToSettingsProfileScreen
         )
 
-        addProfileEditScreen(
+        addSettingsProfileScreen(
             onCompleteRequest = navController::navigateUp
         )
 

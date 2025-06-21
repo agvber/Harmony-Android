@@ -15,6 +15,8 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:designsystem"))
 
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
