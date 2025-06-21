@@ -30,14 +30,14 @@ import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.memory.storage.MemoryStorageRoute
 import com.teampatch.feature.memory.storage.navigateToMemoryStorageScreen
 import com.teampatch.feature.login.navigateToLoginScreen
-import com.teampatch.feature.question.QuestionRoute
-import com.teampatch.feature.question.navigateToQuestionScreen
+import com.teampatch.feature.question.main.QuestionMainRoute
+import com.teampatch.feature.question.main.navigateToQuestionMainScreen
 import com.teampatch.harmony.model.MainUiState
 
 private val BottomNavigationEnableScreens: Set<String?> = setOf(
     HomeRoute::class.qualifiedName,
     MemoryStorageRoute::class.qualifiedName,
-    QuestionRoute::class.qualifiedName,
+    QuestionMainRoute::class.qualifiedName,
     DailyRoute::class.qualifiedName
 )
 
@@ -65,7 +65,7 @@ fun MainApp(
                     }
                 }
 
-                QuestionRoute::class.qualifiedName -> {
+                QuestionMainRoute::class.qualifiedName -> {
                     NavigationItem.QUESTION.apply {
                         previousNavigationItem = this
                     }
@@ -99,7 +99,7 @@ fun MainApp(
                         when (it) {
                             NavigationItem.HOME -> navController.navigateToHomeScreen()
                             NavigationItem.STORE -> navController.navigateToMemoryStorageScreen()
-                            NavigationItem.QUESTION -> navController.navigateToQuestionScreen()
+                            NavigationItem.QUESTION -> navController.navigateToQuestionMainScreen()
                             NavigationItem.DAILY -> navController.navigateToDailyScreen()
                         }
                     },

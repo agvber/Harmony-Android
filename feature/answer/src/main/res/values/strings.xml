@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="btn_complete_answer">답변 완료</string>
-    <string name="text_per_question">%d번째 질문</string>
-    <string name="text_datetime_question">%d년 %d월 %d일</string>
-    <string name="text_count_answer">%d/200자</string>
-</resources>

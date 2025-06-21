@@ -122,9 +122,6 @@ dependencies {
     implementation(project(":feature:daily-edit"))
     implementation(project(":feature:daily-expand"))
     implementation(project(":feature:question"))
-    implementation(project(":feature:question-expand"))
-    implementation(project(":feature:question-detail"))
-    implementation(project(":feature:answer"))
     implementation(project(":feature:memory"))
 
     androidTestImplementation(project(":core:ui-test"))

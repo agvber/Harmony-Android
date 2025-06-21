@@ -10,8 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.teampatch.core.common.findActivity
-import com.teampatch.feature.answer.addAnswerScreen
-import com.teampatch.feature.answer.navigateToAnswerScreen
 import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
 import com.teampatch.feature.daily.expand.addDailyExpandScreen
 import com.teampatch.feature.family.info.addFamilyInfoScreen
@@ -46,12 +44,14 @@ import com.teampatch.feature.onboarding.vip.addOnboardingInputVipInformationScre
 import com.teampatch.feature.onboarding.vip.navigateToOnboardingInputVipInformationScreen
 import com.teampatch.feature.profile.edit.addProfileEditScreen
 import com.teampatch.feature.profile.edit.navigateToProfileEditScreen
-import com.teampatch.feature.question.addQuestionScreen
+import com.teampatch.feature.question.answer.addAnswerScreen
+import com.teampatch.feature.question.answer.navigateToAnswerScreen
 import com.teampatch.feature.question.detail.QuestionDetailParams
 import com.teampatch.feature.question.detail.addQuestionDetailScreen
 import com.teampatch.feature.question.detail.navigateToQuestionDetailScreen
 import com.teampatch.feature.question.expand.addQuestionExpandScreen
 import com.teampatch.feature.question.expand.navigateToQuestionExpandScreen
+import com.teampatch.feature.question.main.addQuestionMainScreen
 import com.teampatch.feature.settings.addSettingsScreen
 import com.teampatch.feature.settings.navigateToSettingsScreen
 import com.teampatch.harmony.model.MainUiState
@@ -142,7 +142,7 @@ fun MainNavHost(
             onReplyChat = navController::navigateToMemoryRegistrationScreen,
         )
 
-        addQuestionScreen(
+        addQuestionMainScreen(
             questionDetailPageRequest = navController::navigateToQuestionDetailScreen,
             answerPageRequest = navController::navigateToAnswerScreen,
             questionExpandPageRequest = navController::navigateToQuestionExpandScreen
