@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("teampatch.android.hilt")
     id("teampatch.android.feature")
 }
@@ -51,9 +52,6 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
