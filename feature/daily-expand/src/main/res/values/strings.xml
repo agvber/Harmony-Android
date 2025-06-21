@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="text_title_appbar">일과 관리</string>
-    <string name="dropdown_edit_daily">일과 수정</string>
-    <string name="dropdown_delete_daily">일과 삭제</string>
-
-
-</resources>

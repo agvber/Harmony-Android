@@ -117,22 +117,21 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:daily"))
-    implementation(project(":feature:daily-edit"))
-    implementation(project(":feature:daily-expand"))
     implementation(project(":feature:question"))
     implementation(project(":feature:memory"))
 
     androidTestImplementation(project(":core:ui-test"))
 
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.coil.compose)
+    implementation(libs.kakao.sdk.v2.user)
 
     androidTestImplementation(libs.hilt.android)
     androidTestImplementation(libs.hilt.android.test)
     kspAndroidTest(libs.hilt.compiler)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -140,7 +139,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    coreLibraryDesugaring(libs.android.tools.desugar)
 
-    implementation(libs.kakao.sdk.v2.user)
+    coreLibraryDesugaring(libs.android.tools.desugar)
 }

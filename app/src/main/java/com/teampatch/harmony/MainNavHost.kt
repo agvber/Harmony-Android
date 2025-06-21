@@ -10,8 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.teampatch.core.common.findActivity
+import com.teampatch.feature.daily.edit.addDailyEditScreen
 import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
-import com.teampatch.feature.daily.expand.addDailyExpandScreen
+import com.teampatch.feature.daily.main.addDailyMainScreen
+import com.teampatch.feature.daily.main.navigateToDailyMainScreen
+import com.teampatch.feature.daily.management.addDailyManagementScreen
+import com.teampatch.feature.daily.management.navigateToDailyManagementScreen
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.addHomeScreen
 import com.teampatch.feature.home.navigateToHomeScreen
@@ -186,14 +190,18 @@ fun MainNavHost(
             onCompleteRequest = navController::navigateUp
         )
 
-        addDailyScreen(
-            dailyExpandPageRequest = { navController.navigateToDailyScreen() }
+        addDailyMainScreen(
+            onEditPageRequest = navController::navigateToDailyManagementScreen
         )
 
-        addDailyExpandScreen(
+        addDailyManagementScreen(
             onBackRequest = navController::navigateUp,
-            dailyEditPageRequest = { navController.navigateToDailyEditScreen() },
-            onDeleteClick = {} // 임시
+            onEditPageRequest = navController::navigateToDailyEditScreen,
+        )
+
+        addDailyEditScreen(
+            onDismissRequest = navController::navigateUp,
+            onCompleteRequest = { navController.navigateToDailyManagementScreen() },
         )
     }
 }

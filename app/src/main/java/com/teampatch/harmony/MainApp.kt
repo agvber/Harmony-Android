@@ -25,6 +25,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.teampatch.core.designsystem.component.DefaultBottomNavigation
 import com.teampatch.core.designsystem.component.NavigationItem
+import com.teampatch.feature.daily.main.DailyMainRoute
+import com.teampatch.feature.daily.main.navigateToDailyMainScreen
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.memory.storage.MemoryStorageRoute
@@ -38,7 +40,7 @@ private val BottomNavigationEnableScreens: Set<String?> = setOf(
     HomeRoute::class.qualifiedName,
     MemoryStorageRoute::class.qualifiedName,
     QuestionMainRoute::class.qualifiedName,
-    DailyRoute::class.qualifiedName
+    DailyMainRoute::class.qualifiedName
 )
 
 @Composable
@@ -71,7 +73,7 @@ fun MainApp(
                     }
                 }
 
-                DailyRoute::class.qualifiedName -> {
+                DailyMainRoute::class.qualifiedName -> {
                     NavigationItem.DAILY.apply {
                         previousNavigationItem = this
                     }
@@ -100,7 +102,7 @@ fun MainApp(
                             NavigationItem.HOME -> navController.navigateToHomeScreen()
                             NavigationItem.STORE -> navController.navigateToMemoryStorageScreen()
                             NavigationItem.QUESTION -> navController.navigateToQuestionMainScreen()
-                            NavigationItem.DAILY -> navController.navigateToDailyScreen()
+                            NavigationItem.DAILY -> navController.navigateToDailyMainScreen()
                         }
                     },
                     navigationItem = navigationItem
