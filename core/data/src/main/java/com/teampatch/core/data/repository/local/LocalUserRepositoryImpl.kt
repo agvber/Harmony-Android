@@ -1,10 +1,10 @@
 package com.teampatch.core.data.repository.local
 
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.net.toUri
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.model.UserEntity
+import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.data.di.annotation.DispatchersContext
 import com.teampatch.core.data.di.annotation.HarmonyDispatcher
 import com.teampatch.core.data.mapper.MEMBER
@@ -14,7 +14,6 @@ import com.teampatch.core.data.service.ImageCompressorService
 import com.teampatch.core.data.service.ImageFormatTransferService
 import com.teampatch.core.data.service.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
-import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository
@@ -26,7 +25,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class LocalUserRepositoryImpl @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
+    private val authenticationLocalDatasource: AuthenticationLocalDatasource,
     private val userDao: UserDao,
     @HarmonyDispatcher(DispatchersContext.IO) private val ioDispatcher: CoroutineDispatcher,
     private val imageCompressorService: ImageCompressorService,
@@ -35,7 +34,7 @@ internal class LocalUserRepositoryImpl @Inject constructor(
 ) : UserRepository {
 
     override fun getUserInfo(): Flow<User> {
-        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val socialLoginId = authenticationLocalDatasource.getSocialLoginId()
         return userDao.getUserBySnsId(socialLoginId)
             .map { it.toDomain() }
     }
@@ -43,7 +42,7 @@ internal class LocalUserRepositoryImpl @Inject constructor(
     override suspend fun editProfile(name: String?, profileImageUri: String?) {
         val processedProfileImageUri: Uri? =
             profileImageUri?.toUri()?.let { processProfileImage(it) }
-        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val socialLoginId = authenticationLocalDatasource.getSocialLoginId()
         val userEntity = userDao.getUserBySnsId(socialLoginId).first()
         val updateUserEntity = userEntity.copy(
             name = name ?: userEntity.name,
@@ -58,8 +57,7 @@ internal class LocalUserRepositoryImpl @Inject constructor(
         profileImageUrl: String?,
         role: Role,
     ) {
-        val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
-            .also { require(it.isNotBlank()) }
+        val snsId = authenticationLocalDatasource.getSocialLoginId()
 
         val userEntity = UserEntity(
             uid = null,

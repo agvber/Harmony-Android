@@ -1,10 +1,8 @@
 package com.teampatch.core.data.repository.local
 
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import com.agvber.core.authentication.kakao.KakaoLoginService
 import com.harmony.core.database.dao.UserDao
-import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
+import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.domain.model.LoginResult
 import com.teampatch.core.domain.repository.AuthenticationRepository
 import kotlinx.coroutines.flow.firstOrNull
@@ -13,19 +11,19 @@ import javax.inject.Inject
 internal class LocalAuthenticationRepositoryImpl @Inject constructor(
     private val kakaoLoginService: KakaoLoginService,
     private val userDao: UserDao,
-    private val sharedPreferences: SharedPreferences
+    private val authenticationLocalDatasource: AuthenticationLocalDatasource
 ) : AuthenticationRepository {
 
     override suspend fun loginKakao(): LoginResult {
         val token = kakaoLoginService.login()
-        sharedPreferences.edit { putString(SOCIAL_LOGIN_ID, token.userId) }
+        authenticationLocalDatasource.setSocialLoginId(token.userId)
         val user = userDao.getUserBySnsId(token.userId).firstOrNull()
         val groupId = user?.groupId ?: return LoginResult(groupId = EMPTY_GROUP_CODE)
         return LoginResult(groupId = groupId.toString())
     }
 
     override suspend fun logout() {
-        sharedPreferences.edit { remove(SOCIAL_LOGIN_ID) }
+        authenticationLocalDatasource.deleteSocialLoginId()
     }
 
     companion object {

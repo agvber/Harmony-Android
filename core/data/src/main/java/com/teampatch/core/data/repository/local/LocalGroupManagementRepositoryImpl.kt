@@ -1,12 +1,12 @@
 package com.teampatch.core.data.repository.local
 
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.net.toUri
 import com.harmony.core.database.dao.GroupDao
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.model.GroupEntity
 import com.harmony.core.database.model.UserEntity
+import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.roleStringMapper
 import com.teampatch.core.data.mapper.toDomain
@@ -14,7 +14,6 @@ import com.teampatch.core.data.service.ImageCompressorService
 import com.teampatch.core.data.service.ImageFormatTransferService
 import com.teampatch.core.data.service.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
-import com.teampatch.core.data.utils.SOCIAL_LOGIN_ID
 import com.teampatch.core.domain.model.AdmissionGroupInformation
 import com.teampatch.core.domain.model.FamilyInfo
 import com.teampatch.core.domain.model.InvitedGroup
@@ -32,14 +31,14 @@ import kotlin.random.Random
 internal class LocalGroupManagementRepositoryImpl @Inject constructor(
     private val groupDao: GroupDao,
     private val userDao: UserDao,
-    private val sharedPreferences: SharedPreferences,
+    private val authenticationLocalDatasource: AuthenticationLocalDatasource,
     private val imageFormatTransferService: ImageFormatTransferService,
     private val imageCompressorService: ImageCompressorService,
     private val imageSaverService: ImageSaverService
 ) : GroupManagementRepository {
 
     override suspend fun createFamilyGroup(): String {
-        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val socialLoginId = authenticationLocalDatasource.getSocialLoginId()
         val myUserData = userDao.getUserBySnsId(socialLoginId).first()
         val inviteCode = Random.nextLong(10000, 99999).toString()
         val groupEntity = GroupEntity(
@@ -54,7 +53,7 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
     }
 
     override suspend fun generateInviteCode(): String {
-        val socialLoginId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "")!!
+        val socialLoginId = authenticationLocalDatasource.getSocialLoginId()
         val myUserData = userDao.getUserBySnsId(socialLoginId).first()
         val groupEntity = groupDao.queryGroupById(myUserData.groupId!!)
         return groupEntity.first().inviteCode
@@ -114,9 +113,7 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
         managerRelation: String,
         managerProfileImageUri: String?
     ) {
-        val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
-            .also { require(it.isNotBlank()) }
-
+        val snsId = authenticationLocalDatasource.getSocialLoginId()
         val managerUserEntity = UserEntity(
             uid = null,
             groupId = null,
@@ -144,9 +141,7 @@ internal class LocalGroupManagementRepositoryImpl @Inject constructor(
         memberProfileImageUri: String?,
         inviteCode: String
     ) {
-        val snsId = sharedPreferences.getString(SOCIAL_LOGIN_ID, "") ?: ""
-            .also { require(it.isNotBlank()) }
-
+        val snsId = authenticationLocalDatasource.getSocialLoginId()
         val processedImageUri: Uri? = memberProfileImageUri?.let {
             imageFormatTransferService.getBitmapFormat(it.toUri())
                 .let { imageCompressorService.compressImageWithTransferFormatJpeg(it) }

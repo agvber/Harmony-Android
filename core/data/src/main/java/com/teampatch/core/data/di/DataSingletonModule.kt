@@ -1,5 +1,7 @@
 package com.teampatch.core.data.di
 
+import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
+import com.teampatch.core.data.datasource.AuthenticationLocalDatasourceImpl
 import com.teampatch.core.data.entity.TokenManagerImpl
 import com.teampatch.core.data.repository.AnswerRepositoryImpl
 import com.teampatch.core.data.repository.AppManagementRepositoryImpl
@@ -31,6 +33,11 @@ internal abstract class DataSingletonModule {
     abstract fun bindsTokenManager(
         tokenManagerImpl: TokenManagerImpl,
     ): TokenManager
+
+    @Binds
+    abstract fun bindsAuthenticationLocalDatasource(
+        authenticationLocalDatasourceImpl: AuthenticationLocalDatasourceImpl,
+    ): AuthenticationLocalDatasource
 
     @Binds
     abstract fun bindsMemoryCardRepository(
