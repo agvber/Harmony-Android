@@ -2,7 +2,7 @@ package com.teampatch.core.data.mapper
 
 import com.teampatch.core.domain.model.FamilyInfo
 import com.teampatch.core.domain.model.UserGroup
-import com.teampatch.core.network.model.group.response.UserGroupListQueryResponse
+import com.teampatch.core.data.network.model.group.response.UserGroupListQueryResponse
 
 internal fun UserGroupListQueryResponse.Groups.toDomain(): UserGroup = UserGroup(
     groupId = groupId.toString(),

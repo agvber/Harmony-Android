@@ -1,8 +1,8 @@
 package com.teampatch.core.data.repository
 
 import com.teampatch.core.domain.repository.AnswerRepository
-import com.teampatch.core.network.QuestionRemoteDataSource
-import com.teampatch.core.network.model.question.request.QuestionCardAnswerRequestBody
+import com.teampatch.core.data.network.QuestionRemoteDataSource
+import com.teampatch.core.data.network.model.question.request.QuestionCardAnswerRequestBody
 import javax.inject.Inject
 
 class AnswerRepositoryImpl @Inject constructor(

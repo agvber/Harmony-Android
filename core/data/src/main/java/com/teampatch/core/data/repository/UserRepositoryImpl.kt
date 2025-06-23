@@ -6,9 +6,9 @@ import com.teampatch.core.data.service.ImageUriCompressor
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository
-import com.teampatch.core.network.UserRemoteDataSource
-import com.teampatch.core.network.model.FileUploadRequest
-import com.teampatch.core.network.model.user.ProfileResponse
+import com.teampatch.core.data.network.UserRemoteDataSource
+import com.teampatch.core.data.network.model.FileUploadRequest
+import com.teampatch.core.data.network.model.user.ProfileResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers

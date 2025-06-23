@@ -7,9 +7,9 @@ import com.teampatch.core.domain.model.InvitedGroup
 import com.teampatch.core.domain.model.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import com.teampatch.core.domain.repository.UserRepository
-import com.teampatch.core.network.GroupRemoteDataSource
-import com.teampatch.core.network.model.group.request.GroupCreationRequestBody
-import com.teampatch.core.network.model.group.request.GroupJoinRequestBody
+import com.teampatch.core.data.network.GroupRemoteDataSource
+import com.teampatch.core.data.network.model.group.request.GroupCreationRequestBody
+import com.teampatch.core.data.network.model.group.request.GroupJoinRequestBody
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

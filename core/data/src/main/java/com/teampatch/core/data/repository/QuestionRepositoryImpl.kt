@@ -7,9 +7,9 @@ import com.teampatch.core.domain.model.QuestionComment
 import com.teampatch.core.domain.model.QuestionDetail
 import com.teampatch.core.domain.repository.QuestionRepository
 import com.teampatch.core.domain.repository.UserRepository
-import com.teampatch.core.network.QuestionRemoteDataSource
-import com.teampatch.core.network.model.question.request.CommentRequestBody
-import com.teampatch.core.network.model.question.request.QuestionCardCommentRequestBody
+import com.teampatch.core.data.network.QuestionRemoteDataSource
+import com.teampatch.core.data.network.model.question.request.CommentRequestBody
+import com.teampatch.core.data.network.model.question.request.QuestionCardCommentRequestBody
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

@@ -12,7 +12,6 @@ dependencies {
 
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
-    implementation(project(":core:network"))
 
     // Room
     implementation(libs.androidx.room.runtime)
@@ -21,6 +20,11 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.androidx.room.testing)
     implementation(libs.androidx.room.paging)
+
+    // Network
+    implementation(libs.squareup.retrofit2)
+    implementation(libs.squareup.retrofit2.converter.moshi)
+    implementation(libs.logging.interceptor)
 
     // Serializable
     implementation(libs.squareup.moshi.kotlin)

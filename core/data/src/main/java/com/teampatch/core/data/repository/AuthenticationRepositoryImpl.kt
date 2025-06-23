@@ -5,8 +5,8 @@ import com.teampatch.core.data.utils.toServerDateFormat
 import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.model.LoginResult
 import com.teampatch.core.domain.repository.AuthenticationRepository
-import com.teampatch.core.network.UserRemoteDataSource
-import com.teampatch.core.network.model.user.SignupOrLoginRequestBody
+import com.teampatch.core.data.network.UserRemoteDataSource
+import com.teampatch.core.data.network.model.user.SignupOrLoginRequestBody
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
