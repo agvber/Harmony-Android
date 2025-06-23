@@ -3,28 +3,19 @@ import com.android.tools.build.jetifier.core.utils.Log
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.compose.compiler)
+    id("teampatch.android.application")
     id("teampatch.android.hilt")
     id("teampatch.android.feature")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.teampatch.harmony"
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.teampatch.harmony"
-        minSdk = 24
-        targetSdk = 34
         versionCode = rootProject.ext["versionCode"].toString().toInt()
         versionName = rootProject.ext["versionName"].toString()
-
-        testInstrumentationRunner = "com.harmony.core.ui.test.HiltTestRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
         initVariable()
     }
 
@@ -40,23 +31,9 @@ android {
             initWith(getByName("debug"))
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-
-        isCoreLibraryDesugaringEnabled = true
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         buildConfig = true
         compose = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 

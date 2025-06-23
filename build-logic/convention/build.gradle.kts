@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,12 +8,12 @@ plugins {
 group = "com.teampatch.convention.buildlogic"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -26,6 +27,14 @@ dependencies {
 
 gradlePlugin {
     plugins {
+        register("kotlinLibrary") {
+            id = "teampatch.kotlin.library"
+            implementationClass = "KotlinLibraryConventionPlugin"
+        }
+        register("androidApplication") {
+            id = "teampatch.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
         register("androidLibrary") {
             id = "teampatch.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
