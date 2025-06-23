@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Daily Main  -->
+    <string-array name="appbar_daily_title">
+        <item>2024년 6월 13일&#160;</item>
+        <item>일과</item>
+    </string-array>
+
+    <!--  Daily Edit  -->
+    <string name="appbar_daily_title">일과 수정</string>
+    <string name="button_daily_complete">수정하기</string>
+    <string name="text_daily_question">무슨 일과인가요?</string>
+    <string name="text_daily_select_time">몇 시로 설정할까요?</string>
+    <string name="text_daily_select_week_days">무슨 요일마다 하나요?</string>
+
+    <!--  Daily Management  -->
+    <string name="text_management_appbar">일과 관리</string>
+    <string name="dropdown_management_edit_daily">일과 수정</string>
+    <string name="dropdown_management_delete_daily">일과 삭제</string>
+
+    <!--  Home  -->
+    <string name="am">오전</string>
+    <string name="pm">오후</string>
+    <string name="year">년</string>
+    <string name="month">월</string>
+    <string name="day">일</string>
+    <string name="hour">시</string>
+
+    <string name="text_daily_routine_time_stamp">의 일과</string>
+    <string name="text_daily_routine_empty_title">아직 일과가 없어요.\n
+        새로운 일과를 만들어볼까요?</string>
+    <string name="btn_daily_routine_empty">일과 만들러 가기 -></string>
+
+    <string name="text_vip_home_collapse_memory_card_title1">오늘의</string>
+    <string name="text_vip_home_collapse_memory_card_title2">추억카드</string>
+    <string name="text_vip_home_collapse_memory_card_title3">가 도착했어요</string>
+    <string name="text_vip_home_collapse_memory_card_content">어떤 추억인지 확인해 볼까요?</string>
+
+    <string name="text_member_home_collapse_memory_card_title1">오늘의</string>
+    <string name="text_member_home_collapse_memory_card_title2">추억카드</string>
+    <string name="text_member_home_collapse_memory_card_title3">가 공유됐어요!</string>
+    <string name="text_member_home_collapse_memory_card_content">어떤 추억인지 확인해 볼까요?</string>
+
+    <string name="text_member_home_addition_memory_card_title1">할머니의</string>
+    <string name="text_member_home_addition_memory_card_title2">추억</string>
+    <string name="text_member_home_addition_memory_card_title3">을 들어볼까요?</string>
+    <string name="text_member_home_addition_memory_card_content">아래를 클릭해 카드를 보내드려요.</string>
+
+    <!--Memory storage-->
+    <string name="text_title_appbar">님의 추억 저장소</string>
+    <string name="toast_init_load_error">추억 저장소 데이터를 불러오지 못하였습니다.</string>
+    <string name="toast_item_empty_error">해당 아이템은 존재하지 않습니다.</string>
+    <string name="text_memory_card_date_format">%d년 %d월 %d일</string>
+
+    <string name="text_item_sort_oldest">오래된순</string>
+    <string name="text_item_sort_latest">최신순</string>
+    <string name="text_item_sort_name">이름순</string>
+
+    <string name="text_field_search_hint">검색어를 입력하여주세요.</string>
+    <string name="button_search_cancel">취소</string>
+
+    <!--Memory detail-->
+    <string name="dropdown_edit_answer">다시 대화하기</string>
+    <string name="dropdown_delete_answer">다시 대화하기</string>
+    <string name="btn_look_all_answer">대화 전체 보기</string>
+    <string name="image_memory_content_description">추억 카드 이미지</string>
+    <string name="image_more_description">추억 카드 이미지"</string>
+    <string name="text_retry_settings">다시 대화하기</string>
+    <string name="text_delete_settings">삭제하기</string>
+    <string name="toast_load_error">추억 카드 데이터를 불러오지 못하였습니다.</string>
+
+    <!--Memory registration-->
+    <string name="btn_communication_start">대화 시작</string>
+    <string name="btn_communication_end">대화 종료</string>
+    <string name="btn_communication_complete">추억 보러가기</string>
+    <string name="text_speechbuble_init">안녕하세요! 추억을 기록하러 오셨군요. 아래 버튼을 누르면 기록을 시작합니다.</string>
+    <string name="text_speechbuble_complete">좋아요! 그럼 지금까지 나눈 추억 대화를 저장하겠습니다.</string>
+
+    <string name="toast_data_load_error">데이터 로드를 실패하였습니다.</string>
+    <string name="toast_audio_permission_request">녹음 권한이 필요합니다.</string>
+    <string name="toast_audio_recording_error">녹음 과정에서 에러가 발생하였습니다.</string>
+    <string name="toast_network_error">녹음 데이터를 업로드 하는 과정에서 에러가 발생하였습니다.</string>
+
+    <!--Memory chat-->
+    <string name="button_chat_retry">다시 대화하기</string>
+    <string name="image_question_content_description">질문 참고 이미지</string>
+    <string name="button_close_content_description">종료</string>
+    <string name="image_profile_content_description">하모니 프로필</string>
+
+    <!--  Onboarding  -->
+    <string-array name="title_onboarding_make_space">
+        <item>"먼저 "</item>
+        <item>"가족공간"</item>
+        <item>"을\n만들어 주세요."</item>
+    </string-array>
+    <string-array name="title_onboarding_enter_grandparents_name">
+        <item>"누구"</item>
+        <item>"를 위해\n"</item>
+        <item>"만드시나요"</item>
+    </string-array>
+    <string-array name="title_onboarding_enter_my_name">
+        <item>"할머니와\n"</item>
+        <item>"어떤 관계"</item>
+        <item>"인가요?"</item>
+    </string-array>
+    <string-array name="title_onboarding_setting_prfile_image">
+        <item>"조다은"</item>
+        <item>"님을 위한\n"</item>
+        <item>"공간이에요."</item>
+    </string-array>
+    <string-array name="title_onboarding_invite_grandparents">
+        <item>"윤여정 할머니"</item>
+        <item>"를\n"</item>
+        <item>"초대 해주세요."</item>
+    </string-array>
+    <string-array name="title_onboarding_enter_code">
+        <item>"초대코드"</item>
+        <item>"를\n"</item>
+        <item>"입력해 주세요."</item>
+    </string-array>
+    <string-array name="title_onboarding_enter_space">
+        <item>"손녀 조다은님"</item>
+        <item>"이\n"</item>
+        <item>"만든 가족 공간이에요."</item>
+    </string-array>
+
+
+    <string name="subtext_onboarding_make_space">"가족 공간을 만든 사람이\n우리 가족의 매니저가 돼요."</string>
+    <string name="subtext_onboarding_enter_grandparents_name">"할머니나 할아버지의 성함을\n" +"입력해 주세요."</string>
+    <string name="subtext_onboarding_enter_my_name">"할머니에게 보여질\n닉네임을 입력해 주세요."</string>
+    <string name="subtext_onboarding_setting_prfile_image">"할머니에게 보여질\n" + "프로필 사진을 설정해 주세요."</string>
+    <string name="subtext_onboarding_invite_grandparents">"할머니를 초대해야\n" + "하모니를 시작할 수 있어요"</string>
+    <string name="subtext_onboarding_enter_code">"전달 받은 5자리 코드를\n" + "입력해 주세요."</string>
+
+    <string name="text_onboarding_start_harmony">"하모니 시작하기"</string>
+
+    <string-array name="title_onboarding_enter_invitation">
+        <item>"초대코드"</item>
+        <item>"를\n"</item>
+        <item>"입력해 주세요."</item>
+    </string-array>
+
+
+    <string-array name="title_onboarding_enter_relation">
+        <item>"할머니와\n"</item>
+        <item>"어떤 관계"</item>
+        <item>"인가요?"</item>
+    </string-array>
+
+    <string-array name="title_onboarding_enter_profile">
+        <item>"마지막으로\n"</item>
+        <item>"프로필 사진"</item>
+        <item>"을 설정해요."</item>
+    </string-array>
+
+    <string name="subtext_onboarding_enter_invitation">"가족 매니저가 전송한\n5자리 코드를 입력해 주세요."</string>
+
+    <string name="text_onboarding_enter_speech_bubble">"가족과 함께\n소중한 추억을 기록해볼까요?"</string>
+
+    <string name="subtext_onboarding_enter_relation">"할머니에게 보여질\n닉네임을 입력해 주세요."</string>
+
+    <string name="subtext_onboarding_enter_profile">"할머니에게 보여질\n프로필 사진을 설정해 주세요."</string>
+
+    <string name="subtext_onboarding_enter_name">"할머니나 할아버지의 성함을\n입력해 주세요."</string>
+
+
+    <string name="text_onboarding_enter_next">"다음"</string>
+    <string name="text_onboarding_enter_space">"다음"</string>
+    <string name="text_onboarding_enter_relation_title">"관계"</string>
+    <string name="text_onboarding_enter_grandson">"예) 손녀"</string>
+    <string name="text_onboarding_enter_name_title">"이름"</string>
+    <string name="text_onboarding_enter_name_placeholder">"예) 손녀"</string>
+    <string name="text_onboarding_enter_enter_space">"가족 공간 입장하기"</string>
+
+    <string name="text_admission_bottom_button">가족 공간 입장하기</string>
+    <string name="text_admission_speech_bubble">가족과 함께\n소중한 추억을 기록해볼까요?</string>
+    <string name="text_admission_title1">%s님</string>
+    <string name="text_admission_title2">이\n만든 가족 공간이에요.</string>
+    <string name="text_admission_group_count">%d명의 구성원</string>
+    <string name="toast_admission_init_load_error">이전에 입력하신 정보가 존재하지 않습니다.\n다시 시도해주세요.</string>
+    <string name="toast_admission_group_create_error">가족 공간 생성에 실패했습니다.</string>
+    <string name="toast_admission_group_join_error">가족 공간을 찾을 수 없습니다.</string>
+    <string name="toast_admission_group_information_load_error">초대된 가족 정보를 가져올 수 없습니다.</string>
+
+    <string name="text_input_manager_information_title1">할머니와</string>
+    <string name="text_input_manager_information_title2">어떤 관계</string>
+    <string name="text_input_manager_information_title3">인가요?</string>
+
+    <!-- Question Main  -->
+    <string-array name="text_title_appbar">
+        <item>오늘의&#160;</item>
+        <item>질문</item>
+    </string-array>
+
+    <string name="text_title_question">주고받은 질문들</string>
+    <string name="text_detail_question">전체 보기</string>
+    <string name="btn_answer_member">답변보러 가기 -></string>
+    <string name="btn_answer_vip">답변하러 가기 -></string>
+
+    <!-- Question detail  -->
+    <string name="text_title_add_comment">댓글 남기기</string>
+    <string name="btn_complete_add_comment">댓글 남기기</string>
+
+    <string name="text_title_edit_comment">댓글 수정</string>
+    <string name="btn_complete_edit_comment">댓글 완료</string>
+
+    <string name="dropdown_question_detail_edit_answer">답변 수정</string>
+    <string name="dropdown_question_detail_delete_answer">답변 삭제</string>
+    <string name="dropdown_edit_comment">댓글 수정</string>
+    <string name="dropdown_delete_comment">댓글 삭제</string>
+
+    <string name="float_add_comment">댓글 남기기</string>
+    <string name="text_number_question">번째 질문</string>
+
+    <string name="text_year_datetime">년</string>
+    <string name="text_month_datetime">월</string>
+    <string name="text_day_datetime">일</string>
+
+    <string name="text_count_comment">댓글</string>
+    <string name="text_per_comment">자</string>
+
+    <!-- Question expand  -->
+    <string name="appbar_question_expand_title">주고받은 질문 목록</string>
+
+    <!-- Question answer  -->
+    <string name="btn_complete_answer">답변 완료</string>
+    <string name="text_per_question">%d번째 질문</string>
+    <string name="text_datetime_question">%d년 %d월 %d일</string>
+    <string name="text_count_answer">%d/200자</string>
+
+    <!-- Question Preferences  -->
+    <string name="appbar_question_preferences_title">설정</string>
+    <string name="text_permission_title">권한 및 정보</string>
+    <string name="text_notification_item">알림 설정</string>
+    <string name="text_privacy_item">개인정보처리방침</string>
+    <string name="text_tos_item">이용 약관</string>
+    <string name="text_account_title">계정 관리</string>
+    <string name="text_logout_item">로그아웃</string>
+    <string name="text_withdraw_family_item">가족 탈퇴</string>
+    <string name="text_withdraw_item">회원 탈퇴</string>
+    <string name="text_version_latest">버전\n
+        최신 버전입니다.</string>
+    <string name="text_version_oldest">버전\n
+        업데이트가 필요합니다.</string>
+
+    <!-- Question Profile  -->
+    <string name="btn_edit_bottom">수정하기</string>
+    <string name="text_relation_title">관계</string>
+    <string name="tf_relation_hint">예) 손녀</string>
+    <string name="text_name_title">이름</string>
+    <string name="tf_name_hint">이름을 입력해 주세요.</string>
+
+    <!-- Question Group  -->
+    <string name="text_group_appbar">가족 정보</string>
+    <string name="btn_edit_profile">프로필 수정</string>
+    <string name="text_title_family">우리가족</string>
+    <string name="btn_invite_family">가족 초대하기</string>
+</resources>
