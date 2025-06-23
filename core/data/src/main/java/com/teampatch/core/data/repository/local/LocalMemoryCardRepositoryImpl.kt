@@ -2,8 +2,8 @@ package com.teampatch.core.data.repository.local
 
 import android.util.Log
 import androidx.paging.PagingData
-import com.harmony.core.database.dao.MemoryCardDao
-import com.harmony.core.database.dao.UserDao
+import com.teampatch.core.data.database.dao.MemoryCardDao
+import com.teampatch.core.data.database.dao.UserDao
 import com.teampatch.core.data.mapper.toDomain
 import com.teampatch.core.domain.fake.FakeMemoryCardQuestion
 import com.teampatch.core.domain.model.MemoryCard

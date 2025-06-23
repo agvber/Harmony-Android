@@ -88,8 +88,6 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":feature"))
 
-    androidTestImplementation(project(":core:ui-test"))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

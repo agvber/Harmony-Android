@@ -1,7 +1,7 @@
 package com.teampatch.core.data.mapper
 
-import com.harmony.core.database.LOCAL_DB_DATE_TIME_FORMATTER
-import com.harmony.core.database.model.MemoryCardEntity
+import com.teampatch.core.data.database.LOCAL_DB_DATE_TIME_FORMATTER
+import com.teampatch.core.data.database.model.MemoryCardEntity
 import com.teampatch.core.domain.model.MemoryCard
 import java.time.LocalDateTime
 

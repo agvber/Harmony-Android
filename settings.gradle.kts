@@ -26,11 +26,9 @@ gradle.startParameter.excludedTaskNames.apply {
 
 rootProject.name = "Harmony-Android"
 include(":app")
+include(":core:common")
 include(":core:designsystem")
 include(":core:domain")
 include(":core:data")
-include(":core:common")
 include(":core:network")
-include(":core:ui-test")
-include(":core:database")
 include(":feature")

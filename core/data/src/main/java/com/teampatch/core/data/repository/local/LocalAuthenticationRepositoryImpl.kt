@@ -1,6 +1,6 @@
 package com.teampatch.core.data.repository.local
 
-import com.harmony.core.database.dao.UserDao
+import com.teampatch.core.data.database.dao.UserDao
 import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.data.service.authentication.KakaoLoginService
 import com.teampatch.core.domain.model.LoginResult

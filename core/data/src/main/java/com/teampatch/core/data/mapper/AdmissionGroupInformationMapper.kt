@@ -1,6 +1,6 @@
 package com.teampatch.core.data.mapper
 
-import com.harmony.core.database.model.GroupEntity
+import com.teampatch.core.data.database.model.GroupEntity
 import com.teampatch.core.domain.model.AdmissionGroupInformation
 import com.teampatch.core.domain.model.User
 

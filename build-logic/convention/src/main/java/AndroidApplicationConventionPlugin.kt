@@ -24,7 +24,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 defaultConfig {
                     targetSdk = 34
                     minSdk = 24
-                    testInstrumentationRunner = "com.harmony.core.ui.test.HiltTestRunner"
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
 
                 compileOptions {
