@@ -18,6 +18,12 @@ interface TodoDao {
     @Query("SELECT * FROM todo WHERE id = :id")
     fun getTodoById(id: Long): Flow<TodoEntity>
 
+    @Query("SELECT COUNT(*) FROM todo WHERE is_finished = 1")
+    fun getFinishedCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM todo")
+    fun getTodoCount(): Flow<Int>
+
     @Insert
     suspend fun insertAll(vararg todos: TodoEntity)
 

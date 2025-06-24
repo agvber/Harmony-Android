@@ -9,4 +9,6 @@ interface TodoRepository {
     fun getAllTodos(): Flow<PagingData<Todo>>
 
     suspend fun toggleTodoStatus(id: String, isFinished: Boolean)
+
+    suspend fun getDailyRoutineProgress(): Flow<Float>
 }
