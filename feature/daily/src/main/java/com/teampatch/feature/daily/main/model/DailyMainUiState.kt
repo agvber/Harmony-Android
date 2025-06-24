@@ -1,14 +1,11 @@
 package com.teampatch.feature.daily.main.model
 
-import androidx.paging.PagingData
-import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.domain.model.Todo
-import com.teampatch.core.domain.model.User
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import com.teampatch.core.domain.model.Role
+import java.time.LocalDateTime
 
 internal data class DailyMainUiState(
-    val user: User = User.createEmptyUser(),
-    val daily: Flow<PagingData<CheckableData<Todo>>> = flowOf(PagingData.empty()),
+    val now: LocalDateTime = LocalDateTime.now(),
+    val progress: Float = 0f, // 0.0 - 1.0
+    val role: Role = Role.VIP,
     val isLoading: Boolean = true,
 )

@@ -1,13 +1,13 @@
 package com.teampatch.feature.daily.main
 
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,14 +18,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,66 +36,84 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.teampatch.core.common.getOrNull
 import com.teampatch.core.designsystem.R.drawable.ic_edit
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DailyRoutineCard
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.designsystem.preview.TodoPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G5
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.PretendardFontFamily
+import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.main.model.DailyMainEvent
 import com.teampatch.feature.daily.main.model.DailyMainUiState
 import kotlinx.coroutines.flow.flowOf
-import java.time.LocalDateTime
 
 @Composable
 internal fun DailyMainScreenWithViewModel(
     onEditPageRequest: () -> Unit,
+    onDetailPageRequest: (dailyId: String) -> Unit,
+    viewModel: DailyMainViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val dailyMainViewModel: DailyMainViewModel = hiltViewModel()
-    val uiState by dailyMainViewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    val context: Context = LocalContext.current
+    val todos: LazyPagingItems<CheckableData<Todo>> = viewModel.todos.collectAsLazyPagingItems()
+    val uiState: DailyMainUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (!uiState.isLoading) {
         DailyMainScreen(
-            progress = 0f,
-            onDailyRoutineClick = {},
+            onEditPageRequest = onEditPageRequest,
+            onDetailPageRequest = onDetailPageRequest,
             onDailyRoutineCheckChanged = { _, _ -> },
-            dailyRoutine = uiState.daily.collectAsLazyPagingItems(),
-            dailyExpandPageRequest = onEditPageRequest,
+            dailyRoutine = todos,
             uiState = uiState
         )
     }
+
     LaunchedEffect(Unit) {
-        dailyMainViewModel.event.collect { sideEffect ->
-            when (sideEffect) {
-                is DailyMainEvent.LoadError -> {
-                    Toast.makeText(context, "데이터를 불러오지 못하였습니다.", Toast.LENGTH_SHORT).show()
+        viewModel.event
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { event ->
+                when (event) {
+                    is DailyMainEvent.LoadError -> {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_main_load_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-        }
     }
 }
 
 @Composable
-internal fun DailyMainScreen(
-    progress: Float, // 진행률 (0f부터 1f까지의 값)
-    onDailyRoutineClick: (String) -> Unit, // id
-    onDailyRoutineCheckChanged: (String, Boolean) -> Unit, // id, checked
+private fun DailyMainScreen(
+    onEditPageRequest: () -> Unit,
+    onDetailPageRequest: (dailyId: String) -> Unit,
+    onDailyRoutineCheckChanged: (todoId: String, checked: Boolean) -> Unit,
     dailyRoutine: LazyPagingItems<CheckableData<Todo>>,
-    dailyExpandPageRequest: () -> Unit,
     uiState: DailyMainUiState,
 ) {
+    val context: Context = LocalContext.current
+    val progressIntFormat: Int by remember(uiState.progress) {
+        derivedStateOf {
+            (uiState.progress * 100).toInt()
+        }
+    }
     Scaffold(
         topBar = {
             AppBar(
@@ -101,13 +121,20 @@ internal fun DailyMainScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(style = SpanStyle(color = BL)) {
-                                append(stringArrayResource(id = R.array.text_title_appbar)[0])
+                                val now = with(uiState.now) {
+                                    stringResource(
+                                        R.string.date_format,
+                                        year,
+                                        monthValue,
+                                        dayOfMonth
+                                    )
+                                }
+                                append(now)
                             }
                             withStyle(style = SpanStyle(color = MainGreen)) {
-                                append(stringArrayResource(id = R.array.text_title_appbar)[1])
+                                append(stringResource(R.string.appbar_main_title))
                             }
                         },
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
@@ -115,85 +142,86 @@ internal fun DailyMainScreen(
                 actions = {
                     Image(
                         painter = painterResource(ic_edit),
-                        contentDescription = "edit",
-                        modifier = Modifier
-                            .padding(end = 21.dp)
-                            .clickable { dailyExpandPageRequest() }
+                        contentDescription = stringResource(R.string.image_edit_content_description),
+                        modifier = Modifier.noRippleClickable(onClick = onEditPageRequest)
                     )
                 },
                 modifier = Modifier
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
             )
         }
     ) { scaffoldPaddingValues ->
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(1.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(scaffoldPaddingValues)
+                .background(G1)
         ) {
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 17.dp) // 패딩 조정
+                        .padding(bottom = 4.dp)
+                        .background(WH)
+                        .padding(
+                            vertical = 16.dp,
+                            horizontal = dimensionResource(R.dimen.padding_root_20)
+                        )
                 ) {
                     Text(
-                        text = "완료된 일과에 응원의 한 마디를 남겨요!",
-                        fontFamily = PretendardFontFamily,
+                        text = stringResource(R.string.text_main_title),
                         fontWeight = FontWeight.Medium,
                         fontSize = 18.sp,
                         color = G5,
-                        modifier = Modifier.fillMaxWidth() // 가로 너비 최대 설정
+                        lineHeight = 30.sp
                     )
-                    Spacer(modifier = Modifier.height(4.dp)) // 간격 추가
                     Text(
-                        text = "33% 완료",
-                        fontFamily = PretendardFontFamily,
+                        text = stringResource(
+                            R.string.text_main_progress,
+                            progressIntFormat
+                        ),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
                         color = MainGreen,
-                        modifier = Modifier.fillMaxWidth()
+                        lineHeight = 30.sp
                     )
-                    Box(
+                    LinearProgressIndicator(
+                        progress = { uiState.progress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                            .height(8.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(Color.LightGray) // 배경 색상
-                    ) {
-                        LinearProgressIndicator(
-                            progress = { progress },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)),
-                            color = Color(0xFF4CAF50) // 프로그레스 바 색상
-                        )
-                    }
+                            .padding(top = 10.dp)
+                            .height(16.dp)
+                            .clip(RoundedCornerShape(dimensionResource(R.dimen.size_radius_999))),
+                        color = MainGreen,
+                        trackColor = G1
+                    )
                 }
             }
             items(dailyRoutine.itemCount) { index ->
-                val lastDateTime =
-                    if (index > 0) dailyRoutine.peek(index - 1)?.data?.dateTime else null
-                val dateTime = dailyRoutine.peek(index)?.data?.dateTime
-                val title = dailyRoutine[index]?.data?.title
+                val currentItem = dailyRoutine.getOrNull(index)?.data
+                    .also {
+                        if (it == null)
+                            Log.d(SCREEN_TAG, "DailyMainScreen: item is null. index: $index")
+                    }
+                    ?: return@items
                 DailyRoutineCard(
                     onCheckedChange = {
-                        val data = dailyRoutine[index]?.data ?: return@DailyRoutineCard
-                        dailyRoutine.itemSnapshotList.items[index].checked.value = it
-                        onDailyRoutineCheckChanged(data.id, it)
+                        dailyRoutine.itemSnapshotList.items.getOrNull(index)?.checked?.value = it
+                        onDailyRoutineCheckChanged(currentItem.id, it)
                     },
-                    checked = dailyRoutine[index]?.checked?.value ?: false,
-                    dateTime = dateTime?.stringHour() ?: "",
-                    text = title ?: "",
+                    title = {
+                        Text(
+                            text = context.convertHourStringFormat(currentItem.dateTime.hour),
+                            maxLines = 1
+                        )
+                    },
+                    content = { Text(text = currentItem.title, maxLines = 2) },
+                    checked = currentItem.isFinished,
                     modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .noRippleClickable {
-                            val data = dailyRoutine[index]?.data ?: return@noRippleClickable
-                            onDailyRoutineClick(data.id)
-                        }
+                        .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
+                        .background(WH)
+                        .noRippleClickable { onDetailPageRequest(currentItem.id) }
                 )
             }
             if (dailyRoutine.itemCount != 0) {
@@ -205,29 +233,29 @@ internal fun DailyMainScreen(
     }
 }
 
-internal fun LocalDateTime.stringHour(): String = when (hour) {
-    0 -> "오전 12시"
-    !in 0..12 -> "오후 ${hour - 12}시"
-    else -> "오전 ${hour}시"
+private const val SCREEN_TAG = "DailyMainScreen"
+
+internal fun Context.convertHourStringFormat(hour: Int) = when (hour) {
+    0 -> getString(R.string.text_date_am, 12)
+    in 1..12 -> getString(R.string.text_date_am, hour)
+    else -> getString(R.string.text_date_pm, hour - 12)
 }
 
 @Preview
 @Composable
 private fun DailyMainScreenPreview() {
     HarmonyTheme {
+        val todos = TodoPreviewParameterProvider().values.first()
+            .map { CheckableData(it, mutableStateOf(it.isFinished)) }
+            .let { flowOf(PagingData.from(it)) }
+            .collectAsLazyPagingItems()
+
         DailyMainScreen(
-            progress = 0f,
-            onDailyRoutineClick = {},
+            onEditPageRequest = {},
+            onDetailPageRequest = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            dailyRoutine = flowOf(
-                PagingData.from(
-                    data = TodoPreviewParameterProvider().values.first()
-                        .map { CheckableData(it, mutableStateOf(it.isFinished)) }
-                )
-            )
-                .collectAsLazyPagingItems(),
-            dailyExpandPageRequest = { },
-            uiState = DailyMainUiState()
+            dailyRoutine = todos,
+            uiState = DailyMainUiState(progress = .5f)
         )
     }
 }
