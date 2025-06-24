@@ -15,3 +15,13 @@ fun <T> flowErrorCatch(
     flow<T> { throw e }
         .catch(action)
 }
+
+inline fun <T> flowExceptionSafety(
+    block: () -> Flow<T>
+): Flow<T> {
+    return try {
+        block()
+    } catch (e: Exception) {
+        flow<T> { throw e }
+    }
+}
