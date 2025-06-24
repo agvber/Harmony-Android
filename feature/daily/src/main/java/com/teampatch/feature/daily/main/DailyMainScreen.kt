@@ -3,6 +3,7 @@ package com.teampatch.feature.daily.main
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -77,7 +78,7 @@ internal fun DailyMainScreenWithViewModel(
         DailyMainScreen(
             onEditPageRequest = onEditPageRequest,
             onDetailPageRequest = onDetailPageRequest,
-            onDailyRoutineCheckChanged = { _, _ -> },
+            onDailyRoutineCheckChanged = viewModel::toggleRoutineFinished,
             dailyRoutine = todos,
             uiState = uiState
         )
@@ -94,6 +95,14 @@ internal fun DailyMainScreenWithViewModel(
                             context.getString(R.string.toast_main_load_error),
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+
+                    is DailyMainEvent.RoutineTransferError -> {
+//                        Toast.makeText(
+//                            context,
+//                            context.getString(R.string.toast_main_routine_transfer_error),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                 }
             }
@@ -114,6 +123,7 @@ private fun DailyMainScreen(
             (uiState.progress * 100).toInt()
         }
     }
+    val animatedFloatProgress by animateFloatAsState(uiState.progress)
     Scaffold(
         topBar = {
             AppBar(
@@ -187,7 +197,7 @@ private fun DailyMainScreen(
                         lineHeight = 30.sp
                     )
                     LinearProgressIndicator(
-                        progress = { uiState.progress },
+                        progress = { animatedFloatProgress },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 10.dp)
@@ -199,6 +209,7 @@ private fun DailyMainScreen(
                 }
             }
             items(dailyRoutine.itemCount) { index ->
+                val checked = dailyRoutine.getOrNull(index)?.checked?.value == true
                 val currentItem = dailyRoutine.getOrNull(index)?.data
                     .also {
                         if (it == null)
@@ -207,7 +218,7 @@ private fun DailyMainScreen(
                     ?: return@items
                 DailyRoutineCard(
                     onCheckedChange = {
-                        dailyRoutine.itemSnapshotList.items.getOrNull(index)?.checked?.value = it
+                        dailyRoutine.getOrNull(index)?.checked?.value = it
                         onDailyRoutineCheckChanged(currentItem.id, it)
                     },
                     title = {
@@ -217,7 +228,7 @@ private fun DailyMainScreen(
                         )
                     },
                     content = { Text(text = currentItem.title, maxLines = 2) },
-                    checked = currentItem.isFinished,
+                    checked = checked,
                     modifier = Modifier
                         .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
                         .background(WH)
