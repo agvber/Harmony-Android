@@ -83,7 +83,7 @@ internal class DailyMainViewModel @Inject constructor(
         runCatching { toggleDailyRoutineUseCase(routineId, checked) }
             .onFailure {
                 it.printStackTrace()
-                _event.send(DailyMainEvent.RoutineTransferError(it))
+                _event.send(DailyMainEvent.RoutineStatusChangedError(it))
             }
     }
 }

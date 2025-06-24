@@ -97,12 +97,12 @@ internal fun DailyMainScreenWithViewModel(
                         ).show()
                     }
 
-                    is DailyMainEvent.RoutineTransferError -> {
-//                        Toast.makeText(
-//                            context,
-//                            context.getString(R.string.toast_main_routine_transfer_error),
-//                            Toast.LENGTH_SHORT
-//                        ).show()
+                    is DailyMainEvent.RoutineStatusChangedError -> {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_main_status_changed_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
