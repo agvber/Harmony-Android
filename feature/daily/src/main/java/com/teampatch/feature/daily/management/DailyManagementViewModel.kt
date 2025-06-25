@@ -1,42 +1,34 @@
 package com.teampatch.feature.daily.management
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.teampatch.core.domain.usecase.daily.GetDailyManageUseCase
+import androidx.paging.cachedIn
+import com.teampatch.core.common.flowExceptionSafety
+import com.teampatch.core.domain.usecase.daily.GetDailyRoutineUseCase
 import com.teampatch.feature.daily.management.model.DailyManagementEvent
-import com.teampatch.feature.daily.management.model.DailyManagementUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class DailyManagementViewModel @Inject constructor(
-    private val getDailyManageUseCase: GetDailyManageUseCase,
+    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
 ) : ViewModel() {
-    var dailyManagementUiState = mutableStateOf(DailyManagementUiState())
-        private set
 
-    private val _event = Channel<DailyManagementEvent>()
-    val event = _event.receiveAsFlow()
+    private val _event: Channel<DailyManagementEvent> = Channel<DailyManagementEvent>()
+    val event: Flow<DailyManagementEvent> = _event.receiveAsFlow()
 
-    init {
-        loadData()
-    }
-
-    private fun loadData() = viewModelScope.launch {
-        runCatching {
-            getDailyManageUseCase("someId") // 단일 데이터 반환
-        }.onSuccess { daily ->
-            dailyManagementUiState.value = DailyManagementUiState(
-                dailyManage = daily,
-                isLoading = false
-            )
-        }.onFailure {
-            _event.send(DailyManagementEvent.LoadError(it))
+    val todos = flowExceptionSafety { getDailyRoutineUseCase.invoke() }
+        .cachedIn(viewModelScope)
+        .catch {
             it.printStackTrace()
+            _event.send(DailyManagementEvent.LoadError(it))
         }
+
+    fun deleteTodo(todoId: String) {
+
     }
 }

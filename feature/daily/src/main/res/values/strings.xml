@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="date_format">%d년 %d월 %d일</string>
+    <string name="everyday">매일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="sunday">일</string>
+    <string name="am">오전</string>
+    <string name="pm">오후</string>
+    <string name="hour">시</string>
+    <string name="minutes">분</string>
+    <string name="coma">,</string>
 
     <!--  Main  -->
     <string name="appbar_main_title">&#160;일과</string>
@@ -24,4 +37,7 @@
     <string name="text_management_appbar">일과 관리</string>
     <string name="dropdown_edit_daily">일과 수정</string>
     <string name="dropdown_delete_daily">일과 삭제</string>
+    <string name="toast_management_load_error">일과 목록을 불러오지 못하였습니다.</string>
+    <string name="toast_management_item_select_error">아이템 정보를 불러오는 과정에서 에러가 발생하였습니다.</string>
+    <string name="text_management_date_format">%d / $d</string>
 </resources>
