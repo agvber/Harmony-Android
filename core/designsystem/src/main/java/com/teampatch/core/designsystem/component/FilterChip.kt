@@ -1,5 +1,6 @@
 package com.teampatch.core.designsystem.component
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +38,9 @@ fun FilterChip(
     shape: Shape = RoundedCornerShape10,
     content: @Composable () -> Unit
 ) {
-    val backgroundColor = if (isSelected) color.containerColor else color.disableContainerColor
-    val strokeColor = if (isSelected) color.strokeColor else color.disableStrokeColor
-    val contentColor = if (isSelected) color.contentColor else color.disableContentColor
+    val backgroundColor by animateColorAsState(if (isSelected) color.containerColor else color.disableContainerColor)
+    val strokeColor by animateColorAsState(if (isSelected) color.strokeColor else color.disableStrokeColor)
+    val contentColor by animateColorAsState(if (isSelected) color.contentColor else color.disableContentColor)
 
     Box(
         contentAlignment = Alignment.Center,
