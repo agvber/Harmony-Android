@@ -10,6 +10,7 @@ import com.teampatch.core.data.repository.local.LocalAuthenticationRepositoryImp
 import com.teampatch.core.data.repository.local.LocalGroupManagementRepositoryImpl
 import com.teampatch.core.data.repository.local.LocalMemoryCardRepositoryImpl
 import com.teampatch.core.data.repository.local.LocalQuestionRepositoryImpl
+import com.teampatch.core.data.repository.local.LocalRoutineRepositoryImpl
 import com.teampatch.core.data.repository.local.LocalUserRepositoryImpl
 import com.teampatch.core.domain.entities.TokenManager
 import com.teampatch.core.domain.repository.AnswerRepository
@@ -18,6 +19,7 @@ import com.teampatch.core.domain.repository.AuthenticationRepository
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import com.teampatch.core.domain.repository.MemoryCardRepository
 import com.teampatch.core.domain.repository.QuestionRepository
+import com.teampatch.core.domain.repository.RoutineRepository
 import com.teampatch.core.domain.repository.TodoRepository
 import com.teampatch.core.domain.repository.UserRepository
 import dagger.Binds
@@ -78,4 +80,9 @@ internal abstract class DataSingletonModule {
     abstract fun bindsUserRepository(
         userOfflineRepositoryImpl: LocalUserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    abstract fun bindsRoutineRepository(
+        localRoutineRepositoryImpl: LocalRoutineRepositoryImpl
+    ): RoutineRepository
 }
