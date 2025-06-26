@@ -65,6 +65,7 @@ import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.domain.fake.FakeTodos
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.daily.R
+import com.teampatch.core.designsystem.theme.RoundedCornerShape10
 import com.teampatch.feature.daily.management.component.DailyManagementDropDown
 import com.teampatch.feature.daily.management.model.DailyManagementEvent
 import com.teampatch.feature.daily.management.model.DropDownOption
