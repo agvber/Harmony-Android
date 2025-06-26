@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.teampatch.core.common.findActivity
 import com.teampatch.feature.daily.edit.addDailyEditScreen
+import com.teampatch.feature.daily.edit.model.DailyEditMode
 import com.teampatch.feature.daily.edit.navigateToDailyEditScreen
 import com.teampatch.feature.daily.main.addDailyMainScreen
 import com.teampatch.feature.daily.management.addDailyManagementScreen
@@ -196,13 +197,12 @@ fun MainNavHost(
 
         addDailyManagementScreen(
             onBackRequest = navController::navigateUp,
-            onEditPageRequest = navController::navigateToDailyEditScreen,
+            onEditPageRequest = {
+                navController.navigateToDailyEditScreen(it, DailyEditMode.ADD)
+            },
         )
 
-        addDailyEditScreen(
-            onDismissRequest = navController::navigateUp,
-            onCompleteRequest = { navController.navigateToDailyManagementScreen() },
-        )
+        addDailyEditScreen(onDismissRequest = navController::navigateUp)
     }
 }
 

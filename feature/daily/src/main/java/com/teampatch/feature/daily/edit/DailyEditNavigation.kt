@@ -5,27 +5,28 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.compose.composable
+import com.teampatch.feature.daily.edit.model.DailyEditMode
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DailyEditRoute(val dailyId: String)
+data class DailyEditRoute(val dailyId: String, val dailyEditMode: DailyEditMode)
 
 fun NavController.navigateToDailyEditScreen(
     dailyId: String,
+    dailyEditMode: DailyEditMode,
     navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
 ) {
-    navigate(DailyEditRoute(dailyId), navOptions, navigatorExtras)
+    val route = DailyEditRoute(dailyId, dailyEditMode)
+    navigate(route, navOptions, navigatorExtras)
 }
 
 fun NavGraphBuilder.addDailyEditScreen(
     onDismissRequest: () -> Unit,
-    onCompleteRequest: (String) -> Unit,
 ) {
     composable<DailyEditRoute> {
         DailyEditScreenWithViewModel(
             onDismissRequest = onDismissRequest,
-            onCompleteRequest = onCompleteRequest
         )
     }
 }

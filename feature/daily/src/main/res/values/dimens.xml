@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_root_20">20.dp</dimen>
+    <dimen name="padding_content_horizontal20">20.dp</dimen>
     <dimen name="size_radius_999">999.dp</dimen>
+    <dimen name="size_stroke_1">1.dp</dimen>
 </resources>
