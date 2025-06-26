@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.teampatch.core.common.flowExceptionSafety
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutineUseCase
+import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
 import com.teampatch.feature.daily.management.model.DailyManagementEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -15,13 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class DailyManagementViewModel @Inject constructor(
-    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
+    private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
 ) : ViewModel() {
 
     private val _event: Channel<DailyManagementEvent> = Channel<DailyManagementEvent>()
     val event: Flow<DailyManagementEvent> = _event.receiveAsFlow()
 
-    val todos = flowExceptionSafety { getDailyRoutineUseCase.invoke() }
+    val todos = flowExceptionSafety { getDailyRoutinesUseCase.invoke() }
         .cachedIn(viewModelScope)
         .catch {
             it.printStackTrace()

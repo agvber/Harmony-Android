@@ -6,7 +6,7 @@ import com.teampatch.core.domain.repository.TodoRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class GetDailyRoutineUseCase @Inject constructor(
+class GetDailyRoutinesUseCase @Inject constructor(
     private val todoRepository: TodoRepository,
 ) {
 

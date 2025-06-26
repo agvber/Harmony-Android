@@ -10,7 +10,7 @@ import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.core.domain.usecase.daily.GetDailyRoutineProgressUseCase
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutineUseCase
+import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
 import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
 import com.teampatch.feature.daily.main.model.DailyMainEvent
@@ -33,7 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class DailyMainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
+    private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
     private val getDailyRoutineProgressUseCase: GetDailyRoutineProgressUseCase,
     private val toggleDailyRoutineUseCase: ToggleDailyRoutineStatusUseCase,
 ) : ViewModel() {
@@ -47,7 +47,7 @@ internal class DailyMainViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val todos: Flow<PagingData<CheckableData<Todo>>> =
-        flowExceptionSafety { getDailyRoutineUseCase.invoke() }
+        flowExceptionSafety { getDailyRoutinesUseCase.invoke() }
             .map { pagingData ->
                 pagingData.map {
                     CheckableData(it, mutableStateOf(it.isFinished))

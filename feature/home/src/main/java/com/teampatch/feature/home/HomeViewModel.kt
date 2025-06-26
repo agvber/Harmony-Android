@@ -13,7 +13,7 @@ import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.domain.model.Image
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.core.domain.model.User
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutineUseCase
+import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
 import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
 import com.teampatch.core.domain.usecase.memory.AddMemoryCardUseCase
 import com.teampatch.core.domain.usecase.memory.GetLatestMemoryCardUseCase
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
+    private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
     private val getLatestMemoryCardUseCase: GetLatestMemoryCardUseCase,
     private val toggleDailyRoutineStatusUseCase: ToggleDailyRoutineStatusUseCase,
     private val addMemoryCardUseCase: AddMemoryCardUseCase,
@@ -58,7 +58,7 @@ internal class HomeViewModel @Inject constructor(
     val dailyRoutine: Flow<PagingData<CheckableData<Todo>>> =
         flowErrorCatch(
             block = {
-                getDailyRoutineUseCase()
+                getDailyRoutinesUseCase()
                     .map { pagingData ->
                         pagingData.map {
                             CheckableData(it, mutableStateOf(it.isFinished))
