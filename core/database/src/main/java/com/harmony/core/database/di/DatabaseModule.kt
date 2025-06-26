@@ -8,6 +8,7 @@ import com.harmony.core.database.HarmonyDatabase
 import com.harmony.core.database.dao.GroupDao
 import com.harmony.core.database.dao.MemoryCardDao
 import com.harmony.core.database.dao.QuestionDao
+import com.harmony.core.database.dao.RoutineDao
 import com.harmony.core.database.dao.TodoDao
 import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.model.preload.MemoryCardPreloadData
@@ -76,4 +77,9 @@ internal object DatabaseModule {
     fun providesMemoryCardDao(
         harmonyDatabase: HarmonyDatabase,
     ): MemoryCardDao = harmonyDatabase.memoryCardDao()
+
+    @Provides
+    fun providesRoutineDao(
+        harmonyDatabase: HarmonyDatabase,
+    ): RoutineDao = harmonyDatabase.routineDao()
 }
