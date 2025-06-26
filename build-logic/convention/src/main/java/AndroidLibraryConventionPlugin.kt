@@ -20,7 +20,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     version = CURRENT_JAVA_VERSION
                 }
 
-                compileSdk = 34
+                compileSdk = 35
 
                 buildTypes {
                     release {

@@ -19,10 +19,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 kotlinExtension.apply {
                     version = CURRENT_JAVA_VERSION
                 }
-                compileSdk = 34
+                compileSdk = 35
 
                 defaultConfig {
-                    targetSdk = 34
+                    targetSdk = 35
                     minSdk = 24
                     testInstrumentationRunner = "com.harmony.core.ui.test.HiltTestRunner"
                 }
