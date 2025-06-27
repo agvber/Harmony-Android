@@ -53,5 +53,6 @@
     <string name="dropdown_delete_daily">일과 삭제</string>
     <string name="toast_management_load_error">일과 목록을 불러오지 못하였습니다.</string>
     <string name="toast_management_item_select_error">아이템 정보를 불러오는 과정에서 에러가 발생하였습니다.</string>
-    <string name="text_management_date_format">%d / $d</string>
+    <string name="toast_management_item_delete_error">일과 삭제 과정에서 에러가 발생하였습니다.\n 다시 시도 해주세요.</string>
+    <string name="text_management_date_format">%s / %s</string>
 </resources>

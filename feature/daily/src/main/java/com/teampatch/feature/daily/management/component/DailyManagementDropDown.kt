@@ -43,7 +43,10 @@ internal fun DailyManagementDropDown(
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = stringResource(R.string.dropdown_edit_daily),
+                        text = when (option) {
+                            DropDownOption.EDIT -> stringResource(R.string.dropdown_edit_daily)
+                            DropDownOption.DELETE -> stringResource(R.string.dropdown_delete_daily)
+                        },
                         style = DropDownTextStyle.copy(
                             color = when (option) {
                                 DropDownOption.EDIT -> BL
@@ -54,7 +57,7 @@ internal fun DailyManagementDropDown(
                             .fillMaxWidth()
                     )
                 },
-                onClick = { onSelectItem(DropDownOption.EDIT) }
+                onClick = { onSelectItem(option) }
             )
         }
     }

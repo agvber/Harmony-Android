@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,34 +42,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import com.teampatch.core.common.getOrNull
 import com.teampatch.core.designsystem.R.drawable.ic_more_question
 import com.teampatch.core.designsystem.component.BackButtonAppBar
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP26
+import com.teampatch.core.designsystem.theme.DP4
+import com.teampatch.core.designsystem.theme.DP8
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G2
 import com.teampatch.core.designsystem.theme.G4
 import com.teampatch.core.designsystem.theme.G5
 import com.teampatch.core.designsystem.theme.HarmonyTheme
-import com.teampatch.core.designsystem.theme.WH
-import com.teampatch.core.domain.fake.FakeTodos
-import com.teampatch.core.domain.model.Todo
-import com.teampatch.feature.daily.R
 import com.teampatch.core.designsystem.theme.RoundedCornerShape10
+import com.teampatch.core.designsystem.theme.SP20
+import com.teampatch.core.designsystem.theme.SP21
+import com.teampatch.core.designsystem.theme.SP24
+import com.teampatch.core.designsystem.theme.WH
+import com.teampatch.core.domain.fake.FakeRoutines
+import com.teampatch.core.domain.model.DayOfWeek
+import com.teampatch.core.domain.model.Routine
+import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.management.component.DailyManagementDropDown
 import com.teampatch.feature.daily.management.model.DailyManagementEvent
 import com.teampatch.feature.daily.management.model.DropDownOption
-import kotlinx.coroutines.flow.flowOf
+import java.time.LocalTime
 
 @Composable
 internal fun DailyManagementScreenWithViewModel(
@@ -79,13 +82,13 @@ internal fun DailyManagementScreenWithViewModel(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val todos: LazyPagingItems<Todo> = viewModel.todos.collectAsLazyPagingItems()
+    val routines by viewModel.routines.collectAsStateWithLifecycle()
 
     DailyManagementScreen(
         onBackRequest = onBackRequest,
         onEditDailyRequest = onEditPageRequest,
-        onDeleteDailyRequest = viewModel::deleteTodo,
-        todos = todos
+        onDeleteDailyRequest = viewModel::deleteRoutine,
+        todos = routines
     )
 
     LaunchedEffect(Unit) {
@@ -97,6 +100,17 @@ internal fun DailyManagementScreenWithViewModel(
                         context.getString(R.string.toast_management_load_error),
                         Toast.LENGTH_SHORT
                     ).show()
+
+                DailyManagementEvent.RoutineDeleteFailure -> {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_management_item_delete_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    onBackRequest()
+                }
+
+                DailyManagementEvent.RoutineDeleteSuccess -> onBackRequest()
             }
         }
     }
@@ -107,7 +121,7 @@ internal fun DailyManagementScreen(
     onBackRequest: () -> Unit,
     onEditDailyRequest: (dailyId: String) -> Unit,
     onDeleteDailyRequest: (dailyId: String) -> Unit,
-    todos: LazyPagingItems<Todo>,
+    todos: List<Routine>,
 ) {
     val context: Context = LocalContext.current
     val density: Density = LocalDensity.current
@@ -141,69 +155,77 @@ internal fun DailyManagementScreen(
                         DropDownOption.EDIT -> onEditDailyRequest(it.id)
                         DropDownOption.DELETE -> onDeleteDailyRequest(it.id)
                     }
-                } ?: showToastItemIndexOutOfBoundsError(context)
+                }
+                .also { isDropDownMenuShow = false }
+                ?: showToastItemIndexOutOfBoundsError(context)
         },
         isDropDownMenuShow = isDropDownMenuShow,
         offset = dropDownOffset,
         modifier = Modifier.onSizeChanged { dropDownLayoutSize = it }
     )
 
-    Scaffold(
-        topBar = {
-            BackButtonAppBar(
-                onBackRequest = onBackRequest,
-                title = { Text(stringResource(R.string.text_management_appbar)) }
-            )
-        }
-    ) { scaffoldPaddingValues ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WH)
+    ) {
+        BackButtonAppBar(
+            onBackRequest = { isDropDownMenuShow = false; onBackRequest() },
+            title = { Text(stringResource(R.string.text_management_appbar)) }
+        )
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPaddingValues)
                 .background(G1)
                 .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
         ) {
-            item { Box(modifier = Modifier.height(8.dp)) }
+            item { Box(modifier = Modifier.height(DP8)) }
 
-            items(count = todos.itemCount, key = todos.itemKey()) { index ->
-                val currentItem = todos[index] ?: return@items
+            items(items = todos, key = { it.id }) { currentItem ->
                 Box {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, G2, RoundedCornerShape10)
+                            .border(
+                                dimensionResource(R.dimen.size_stroke_1),
+                                G2,
+                                RoundedCornerShape10
+                            )
                             .background(WH, RoundedCornerShape10)
                             .clip(RoundedCornerShape10)
                             .padding(dimensionResource(R.dimen.padding_root_20))
                     ) {
                         Text(
-                            text = "월,수,금 / 오전 11시",
+                            text = context.periodStringFormat(
+                                currentItem.daysOfWeekPeriod,
+                                currentItem.periodTime
+                            ),
                             fontWeight = FontWeight.Medium,
-                            fontSize = 20.sp,
+                            fontSize = SP20,
                             color = G4,
                             maxLines = 1,
-                            lineHeight = 21.sp
+                            lineHeight = SP21
                         )
                         Text(
-                            text = currentItem.title,
+                            text = currentItem.name,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 24.sp,
+                            fontSize = SP24,
                             color = BL,
                             lineHeight = 1.4.em,
                             maxLines = 2,
-                            modifier = Modifier.padding(top = 4.dp)
+                            modifier = Modifier.padding(top = DP4)
                         )
                     }
                     IconButton(
                         onClick = {
-                            with(density) { dropDownIndex = index }
+                            with(density) { dropDownIndex = todos.indexOf(currentItem) }
                             isDropDownMenuShow = true
                         },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(16.dp)
-                            .size(26.dp)
+                            .padding(DP16)
+                            .size(DP26)
                     ) {
                         Icon(
                             painter = painterResource(ic_more_question),
@@ -212,11 +234,11 @@ internal fun DailyManagementScreen(
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->
                                     dropDownItemLayoutOffset.put(
-                                        index,
+                                        todos.indexOf(currentItem),
                                         coordinates.positionInRoot()
                                     )
                                 }
-                                .size(4.dp, 16.dp)
+                                .size(DP4, DP16)
                         )
                     }
                 }
@@ -234,6 +256,35 @@ private fun showToastItemIndexOutOfBoundsError(context: Context) {
         .show()
 }
 
+private fun Context.periodStringFormat(
+    daysOfWeek: Set<DayOfWeek>,
+    time: LocalTime
+): String {
+
+    val daysOfWeek: String = if (daysOfWeek.size == 7) getString(R.string.everyday)
+    else daysOfWeek.joinToString(", ") { it.toStringFormat(this) }
+
+    val hour: String = if (time.hour <= 12) {
+        getString(R.string.am)
+    } else {
+        getString(R.string.pm)
+    }
+        .let { it + " " + time.hour + getString(R.string.hour) }
+
+    return getString(R.string.text_management_date_format, daysOfWeek, hour)
+}
+
+private fun DayOfWeek.toStringFormat(context: Context): String = when (this) {
+    DayOfWeek.MONDAY -> context.getString(R.string.monday)
+    DayOfWeek.TUESDAY -> context.getString(R.string.tuesday)
+    DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday)
+    DayOfWeek.THURSDAY -> context.getString(R.string.thursday)
+    DayOfWeek.FRIDAY -> context.getString(R.string.friday)
+    DayOfWeek.SATURDAY -> context.getString(R.string.saturday)
+    DayOfWeek.SUNDAY -> context.getString(R.string.sunday)
+}
+
+
 @Preview
 @Composable
 private fun DailyManagementScreenPreview() {
@@ -242,8 +293,7 @@ private fun DailyManagementScreenPreview() {
             onBackRequest = {},
             onEditDailyRequest = {},
             onDeleteDailyRequest = {},
-            todos = flowOf(PagingData.from(FakeTodos().get()))
-                .collectAsLazyPagingItems()
+            todos = FakeRoutines().get()
         )
     }
 }
