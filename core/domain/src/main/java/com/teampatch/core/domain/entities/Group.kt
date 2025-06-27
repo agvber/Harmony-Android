@@ -14,6 +14,6 @@ class Group @Inject constructor() {
 
     companion object {
         private const val INVITE_CODE_LENGTH: Int = 5
-        private const val IS_NOT_GROUP_CODE: Int = -1
+        const val IS_NOT_GROUP_CODE: Int = -1
     }
 }
