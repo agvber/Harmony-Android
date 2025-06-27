@@ -24,6 +24,8 @@ dependencies {
 
     implementation(libs.androidx.security.crypto)
 
+    implementation(libs.squareup.moshi.kotlin)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
