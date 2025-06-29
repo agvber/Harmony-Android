@@ -3,15 +3,13 @@ package com.teampatch.feature.daily.main
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
+import com.teampatch.core.common.SHARING_STARTED_TIME
 import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.core.domain.usecase.daily.GetDailyRoutineProgressUseCase
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
 import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
+import com.teampatch.core.domain.usecase.todo.GetTodosUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
 import com.teampatch.feature.daily.main.model.DailyMainEvent
 import com.teampatch.feature.daily.main.model.DailyMainUiState
@@ -20,12 +18,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,9 +34,9 @@ import javax.inject.Inject
 @HiltViewModel
 internal class DailyMainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
     private val getDailyRoutineProgressUseCase: GetDailyRoutineProgressUseCase,
     private val toggleDailyRoutineUseCase: ToggleDailyRoutineStatusUseCase,
+    private val getTodosUseCase: GetTodosUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<DailyMainUiState> =
@@ -46,18 +47,27 @@ internal class DailyMainViewModel @Inject constructor(
     val event: Flow<DailyMainEvent> = _event.receiveAsFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val todos: Flow<PagingData<CheckableData<Todo>>> =
-        flowExceptionSafety { getDailyRoutinesUseCase.invoke() }
-            .map { pagingData ->
-                pagingData.map {
+    val todos: StateFlow<List<CheckableData<Todo>>> =
+        flowExceptionSafety {
+            getTodosUseCase.invoke(uiState.value.now.toLocalDate())
+        }
+            .onEach { todo ->
+                _uiState.update { it.copy(progress = todo.progress) }
+            }
+            .map { todos ->
+                todos.todos.map {
                     CheckableData(it, mutableStateOf(it.isFinished))
                 }
             }
-            .cachedIn(viewModelScope)
             .catch {
                 it.printStackTrace()
                 _event.send(DailyMainEvent.LoadError(it))
             }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME),
+                initialValue = emptyList()
+            )
 
     init {
         loadData()

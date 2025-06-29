@@ -1,7 +1,6 @@
 package com.teampatch.feature.daily.main
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -41,10 +41,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.teampatch.core.common.getOrNull
 import com.teampatch.core.designsystem.R.drawable.ic_edit
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DailyRoutineCard
@@ -61,7 +57,6 @@ import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.main.model.DailyMainEvent
 import com.teampatch.feature.daily.main.model.DailyMainUiState
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
 internal fun DailyMainScreenWithViewModel(
@@ -71,7 +66,7 @@ internal fun DailyMainScreenWithViewModel(
 ) {
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val context: Context = LocalContext.current
-    val todos: LazyPagingItems<CheckableData<Todo>> = viewModel.todos.collectAsLazyPagingItems()
+    val todos: List<CheckableData<Todo>> by viewModel.todos.collectAsStateWithLifecycle()
     val uiState: DailyMainUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (!uiState.isLoading) {
@@ -114,7 +109,7 @@ private fun DailyMainScreen(
     onEditPageRequest: () -> Unit,
     onDetailPageRequest: (dailyId: String) -> Unit,
     onDailyRoutineCheckChanged: (todoId: String, checked: Boolean) -> Unit,
-    dailyRoutine: LazyPagingItems<CheckableData<Todo>>,
+    dailyRoutine: List<CheckableData<Todo>>,
     uiState: DailyMainUiState,
 ) {
     val context: Context = LocalContext.current
@@ -208,34 +203,28 @@ private fun DailyMainScreen(
                     )
                 }
             }
-            items(dailyRoutine.itemCount) { index ->
-                val checked = dailyRoutine.getOrNull(index)?.checked?.value == true
-                val currentItem = dailyRoutine.getOrNull(index)?.data
-                    .also {
-                        if (it == null)
-                            Log.d(SCREEN_TAG, "DailyMainScreen: item is null. index: $index")
-                    }
-                    ?: return@items
+            items(dailyRoutine) { currentItem ->
                 DailyRoutineCard(
                     onCheckedChange = {
+                        val index = dailyRoutine.indexOf(currentItem)
                         dailyRoutine.getOrNull(index)?.checked?.value = it
-                        onDailyRoutineCheckChanged(currentItem.id, it)
+                        onDailyRoutineCheckChanged(currentItem.data.id, it)
                     },
                     title = {
                         Text(
-                            text = context.convertHourStringFormat(currentItem.dateTime.hour),
+                            text = context.convertHourStringFormat(currentItem.data.dateTime.hour),
                             maxLines = 1
                         )
                     },
-                    content = { Text(text = currentItem.title, maxLines = 2) },
-                    checked = checked,
+                    content = { Text(text = currentItem.data.title, maxLines = 2) },
+                    checked = currentItem.checked.value,
                     modifier = Modifier
                         .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
                         .background(WH)
-                        .noRippleClickable { onDetailPageRequest(currentItem.id) }
+                        .noRippleClickable { onDetailPageRequest(currentItem.data.id) }
                 )
             }
-            if (dailyRoutine.itemCount != 0) {
+            if (dailyRoutine.isNotEmpty()) {
                 item {
                     Box(modifier = Modifier.height(20.dp))
                 }
@@ -243,8 +232,6 @@ private fun DailyMainScreen(
         }
     }
 }
-
-private const val SCREEN_TAG = "DailyMainScreen"
 
 internal fun Context.convertHourStringFormat(hour: Int) = when (hour) {
     0 -> getString(R.string.text_date_am, 12)
@@ -258,8 +245,8 @@ private fun DailyMainScreenPreview() {
     HarmonyTheme {
         val todos = TodoPreviewParameterProvider().values.first()
             .map { CheckableData(it, mutableStateOf(it.isFinished)) }
-            .let { flowOf(PagingData.from(it)) }
-            .collectAsLazyPagingItems()
+//            .let { flowOf(PagingData.from(it)) }
+//            .collectAsLazyPagingItems()
 
         DailyMainScreen(
             onEditPageRequest = {},
