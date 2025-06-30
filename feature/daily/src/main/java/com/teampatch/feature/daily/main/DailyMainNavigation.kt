@@ -19,11 +19,13 @@ fun NavController.navigateToDailyMainScreen(
 }
 
 fun NavGraphBuilder.addDailyMainScreen(
+    onCreationPageRequest: () -> Unit,
     onEditPageRequest: () -> Unit,
     onDetailPageRequest: (dailyId: String) -> Unit,
 ) {
     composable<DailyMainRoute> {
         DailyMainScreenWithViewModel(
+            onCreationPageRequest = onCreationPageRequest,
             onEditPageRequest = onEditPageRequest,
             onDetailPageRequest = onDetailPageRequest
         )

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,8 +43,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.teampatch.core.designsystem.R.drawable.ic_edit
+import com.teampatch.core.designsystem.R.drawable.ic_fab_plus
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DailyRoutineCard
+import com.teampatch.core.designsystem.component.ItemFloatingButton
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.designsystem.preview.TodoPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
@@ -60,6 +63,7 @@ import com.teampatch.feature.daily.main.model.DailyMainUiState
 
 @Composable
 internal fun DailyMainScreenWithViewModel(
+    onCreationPageRequest: () -> Unit,
     onEditPageRequest: () -> Unit,
     onDetailPageRequest: (dailyId: String) -> Unit,
     viewModel: DailyMainViewModel = hiltViewModel()
@@ -71,6 +75,7 @@ internal fun DailyMainScreenWithViewModel(
 
     if (!uiState.isLoading) {
         DailyMainScreen(
+            onCreationPageRequest = onCreationPageRequest,
             onEditPageRequest = onEditPageRequest,
             onDetailPageRequest = onDetailPageRequest,
             onDailyRoutineCheckChanged = viewModel::toggleRoutineFinished,
@@ -106,6 +111,7 @@ internal fun DailyMainScreenWithViewModel(
 
 @Composable
 private fun DailyMainScreen(
+    onCreationPageRequest: () -> Unit,
     onEditPageRequest: () -> Unit,
     onDetailPageRequest: (dailyId: String) -> Unit,
     onDailyRoutineCheckChanged: (todoId: String, checked: Boolean) -> Unit,
@@ -152,9 +158,20 @@ private fun DailyMainScreen(
                     )
                 },
                 modifier = Modifier
-                    .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
+                    .padding(horizontal = dimensionResource(R.dimen.padding_root_20)),
             )
-        }
+        },
+        floatingActionButton = {
+            ItemFloatingButton(
+                modifier = Modifier.noRippleClickable(onClick = onCreationPageRequest)
+            ) {
+                Image(
+                    painter = painterResource(ic_fab_plus),
+                    contentDescription = stringResource(R.string.image_add_description)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { scaffoldPaddingValues ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -249,6 +266,7 @@ private fun DailyMainScreenPreview() {
 //            .collectAsLazyPagingItems()
 
         DailyMainScreen(
+            onCreationPageRequest = {},
             onEditPageRequest = {},
             onDetailPageRequest = {},
             onDailyRoutineCheckChanged = { _, _ -> },

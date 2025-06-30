@@ -27,6 +27,7 @@
     <string name="text_date_pm">오후 %d시</string>
     <string name="toast_main_load_error">오늘의 일과 데이터를 불러오지 못하였습니다.</string>
     <string name="toast_main_status_changed_error">데이터를 변경할 수 없습니다.\n앱을 다시시작해주세요.</string>
+    <string name="image_add_description">아이템 추가</string>
 
     <!--  Add  -->
     <string name="appbar_daily_add">새로운 일과</string>

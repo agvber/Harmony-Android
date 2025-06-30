@@ -191,6 +191,7 @@ fun MainNavHost(
         )
 
         addDailyMainScreen(
+            onCreationPageRequest = { navController.navigateToDailyEditScreen("0", DailyEditMode.ADD) },
             onEditPageRequest = navController::navigateToDailyManagementScreen,
             onDetailPageRequest = {}
         )
