@@ -19,10 +19,12 @@ fun NavController.navigateToMemoryStorageScreen(
 }
 
 fun NavGraphBuilder.addMemoryStorageScreen(
+    onCreationPageRequest: () -> Unit,
     onDetailPageRequest: (memoryCardId: String) -> Unit,
 ) {
     composable<MemoryStorageRoute> {
         MemoryStorageWithViewModel(
+            onCreationPageRequest = onCreationPageRequest,
             onDetailPageRequest = onDetailPageRequest
         )
     }

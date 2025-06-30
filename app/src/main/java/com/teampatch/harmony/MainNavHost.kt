@@ -129,7 +129,10 @@ fun MainNavHost(
             onMemoryCardClick = navController::navigateToMemoryRegistrationScreen
         )
 
-        addMemoryStorageScreen(onDetailPageRequest = navController::navigateToMemoryDetailScreen)
+        addMemoryStorageScreen(
+            onCreationPageRequest = { },
+            onDetailPageRequest = navController::navigateToMemoryDetailScreen
+        )
 
         addMemoryRegistrationScreen(
             onDismissRequest = navController::navigateUp,
@@ -191,7 +194,12 @@ fun MainNavHost(
         )
 
         addDailyMainScreen(
-            onCreationPageRequest = { navController.navigateToDailyEditScreen("0", DailyEditMode.ADD) },
+            onCreationPageRequest = {
+                navController.navigateToDailyEditScreen(
+                    "0",
+                    DailyEditMode.ADD
+                )
+            },
             onEditPageRequest = navController::navigateToDailyManagementScreen,
             onDetailPageRequest = {}
         )

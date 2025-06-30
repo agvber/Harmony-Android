@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,9 +59,11 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.teampatch.core.designsystem.R.drawable.btn_search
 import com.teampatch.core.designsystem.R.drawable.ic_chevron_memory_storage
+import com.teampatch.core.designsystem.R.drawable.ic_fab_plus
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DefaultTextField
+import com.teampatch.core.designsystem.component.ItemFloatingButton
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G2
@@ -82,6 +85,7 @@ import java.time.LocalDateTime
 
 @Composable
 internal fun MemoryStorageWithViewModel(
+    onCreationPageRequest: () -> Unit,
     onDetailPageRequest: (memoryCardId: String) -> Unit,
     viewModel: MemoryStorageViewModel = hiltViewModel(),
 ) {
@@ -91,6 +95,7 @@ internal fun MemoryStorageWithViewModel(
     val uiState: MemoryStorageUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MemoryStorageScreen(
+        onCreationPageRequest = onCreationPageRequest,
         onDetailPageRequest = onDetailPageRequest,
         onSearchTextChange = viewModel::updateMemoryCardSearchText,
         onSortOptionChange = viewModel::updateMemoryCardSortOption,
@@ -113,6 +118,7 @@ internal fun MemoryStorageWithViewModel(
 
 @Composable
 internal fun MemoryStorageScreen(
+    onCreationPageRequest: () -> Unit,
     onDetailPageRequest: (memoryCardId: String) -> Unit,
     onSearchTextChange: (String) -> Unit,
     onSortOptionChange: (MemoryCardSort) -> Unit,
@@ -166,6 +172,17 @@ internal fun MemoryStorageScreen(
                 )
             }
         },
+        floatingActionButton = {
+            ItemFloatingButton(
+                modifier = Modifier.noRippleClickable(onClick = onCreationPageRequest)
+            ) {
+                Image(
+                    painter = painterResource(id = ic_fab_plus),
+                    contentDescription = stringResource(R.string.fab_memory_add)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { scaffoldPaddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -366,6 +383,7 @@ private fun MemoryStorageTextFieldPreview() {
 private fun MemoryStorageScreenPreview() {
     HarmonyTheme {
         MemoryStorageScreen(
+            onCreationPageRequest = {},
             onDetailPageRequest = { },
             onSearchTextChange = {},
             onSortOptionChange = {},

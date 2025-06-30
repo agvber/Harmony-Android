@@ -12,6 +12,7 @@
 
     <string name="text_field_search_hint">검색어를 입력하여주세요.</string>
     <string name="button_search_cancel">취소</string>
+    <string name="fab_memory_add">추억카드 등록하기</string>
 
     <!--detail-->
     <string name="dropdown_edit_answer">다시 대화하기</string>
