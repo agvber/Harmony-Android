@@ -102,11 +102,11 @@ internal class HomeViewModel @Inject constructor(
         image: Uri,
     ) = viewModelScope.launch {
         try {
-            addMemoryCardUseCase(
-                memories = memories,
-                dateTime = dateTime,
-                image = Image.Uri(image.toString())
-            )
+//            addMemoryCardUseCase(
+//                memories = memories,
+//                dateTime = dateTime,
+//                image = Image.Uri(image.toString())
+//            )
         } catch (e: Exception) {
             e.printStackTrace()
             _errorHandler.emit(HomeErrorHandler.MemoryCardAdditionError(e))

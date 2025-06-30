@@ -3,6 +3,10 @@ package com.teampatch.harmony
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -23,6 +27,7 @@ import com.teampatch.feature.login.LoginRoute
 import com.teampatch.feature.login.addLoginScreen
 import com.teampatch.feature.memory.chat.addMemoryChatScreen
 import com.teampatch.feature.memory.chat.navigateToMemoryChatScreen
+import com.teampatch.feature.memory.creation.MemoryCreationDialog
 import com.teampatch.feature.memory.detail.addMemoryDetailScreen
 import com.teampatch.feature.memory.detail.navigateToMemoryDetailScreen
 import com.teampatch.feature.memory.registration.addMemoryRegistrationScreen
@@ -69,6 +74,11 @@ fun MainNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
     val context: Context = LocalContext.current
+    var isMemoryCreationDialogShow by rememberSaveable { mutableStateOf(false) }
+
+    if (isMemoryCreationDialogShow) {
+        MemoryCreationDialog { isMemoryCreationDialogShow = false }
+    }
 
     NavHost(
         modifier = modifier,
@@ -124,13 +134,14 @@ fun MainNavHost(
 
         addHomeScreen(
             onUserPageRequest = navController::navigateToSettingsGroupScreen,
+            onMemoryCardCreationPageRequest = { isMemoryCreationDialogShow = true },
             onDailyRoutineClick = { },
             onDailyRoutineRegisterPageRequest = { },
             onMemoryCardClick = navController::navigateToMemoryRegistrationScreen
         )
 
         addMemoryStorageScreen(
-            onCreationPageRequest = { },
+            onCreationPageRequest = { isMemoryCreationDialogShow = true },
             onDetailPageRequest = navController::navigateToMemoryDetailScreen
         )
 
@@ -195,10 +206,7 @@ fun MainNavHost(
 
         addDailyMainScreen(
             onCreationPageRequest = {
-                navController.navigateToDailyEditScreen(
-                    "0",
-                    DailyEditMode.ADD
-                )
+                navController.navigateToDailyEditScreen("0", DailyEditMode.ADD)
             },
             onEditPageRequest = navController::navigateToDailyManagementScreen,
             onDetailPageRequest = {}

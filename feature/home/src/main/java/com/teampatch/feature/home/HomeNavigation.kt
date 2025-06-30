@@ -20,6 +20,7 @@ fun NavController.navigateToHomeScreen(
 
 fun NavGraphBuilder.addHomeScreen(
     onUserPageRequest: () -> Unit,
+    onMemoryCardCreationPageRequest: () -> Unit,
     onDailyRoutineRegisterPageRequest: () -> Unit,
     onDailyRoutineClick: (dailyRoutineId: String) -> Unit,
     onMemoryCardClick: (memoryCardId: String) -> Unit,
@@ -27,6 +28,7 @@ fun NavGraphBuilder.addHomeScreen(
     composable<HomeRoute> {
         HomeRoute(
             onUserPageRequest = onUserPageRequest,
+            onMemoryCardCreationPageRequest = onMemoryCardCreationPageRequest,
             onDailyRoutineRegisterPageRequest = onDailyRoutineRegisterPageRequest,
             onDailyRoutineClick = onDailyRoutineClick,
             onMemoryCardClick = onMemoryCardClick

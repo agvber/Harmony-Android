@@ -19,6 +19,7 @@ import com.teampatch.feature.home.model.HomeErrorHandler
 @Composable
 internal fun HomeRoute(
     onUserPageRequest: () -> Unit,
+    onMemoryCardCreationPageRequest: () -> Unit,
     onDailyRoutineRegisterPageRequest: () -> Unit,
     onDailyRoutineClick: (dailyRoutineId: String) -> Unit,
     onMemoryCardClick: (memoryCardId: String) -> Unit,
@@ -55,10 +56,10 @@ internal fun HomeRoute(
         Role.MEMBER -> {
             MemberHomeScreen(
                 onUserPageRequest = onUserPageRequest,
+                onMemoryCardCreationPageRequest = onMemoryCardCreationPageRequest,
                 onDailyRoutineClick = onDailyRoutineClick,
                 onMemoryCardClick = onMemoryCardClick,
                 onDailyRoutineCheckChanged = homeViewModel::changeDailyRoutine,
-                uploadMemoryCardRequest = homeViewModel::addMemoryCard,
                 memoryCardUiState = memoryCardUiState,
                 dailyRoutine = dailyRoutine
             )

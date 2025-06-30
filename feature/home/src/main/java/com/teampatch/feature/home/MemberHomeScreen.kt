@@ -1,9 +1,5 @@
 package com.teampatch.feature.home
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberAsyncImagePainter
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
 import com.teampatch.core.designsystem.component.AdditionMemoryCard
@@ -44,7 +39,6 @@ import com.teampatch.core.designsystem.component.CollapseMemoryCard
 import com.teampatch.core.designsystem.component.DailyRoutineCard
 import com.teampatch.core.designsystem.component.ExpandMemoryCard
 import com.teampatch.core.designsystem.component.HomeAppBar
-import com.teampatch.core.designsystem.dialog.MemoryCardCreationDialog
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.designsystem.preview.TodoPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
@@ -57,44 +51,19 @@ import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.feature.home.model.MemoryCardUiState
 import kotlinx.coroutines.flow.flowOf
-import java.time.LocalDateTime
 
 @Composable
 internal fun MemberHomeScreen(
     onUserPageRequest: () -> Unit,
+    onMemoryCardCreationPageRequest: () -> Unit,
     onDailyRoutineClick: (String) -> Unit, // id
     onMemoryCardClick: (String) -> Unit, // id
     onDailyRoutineCheckChanged: (String, Boolean) -> Unit, // id, checked
-    uploadMemoryCardRequest: (String, LocalDateTime, Uri) -> Unit,
     memoryCardUiState: MemoryCardUiState,
     dailyRoutine: LazyPagingItems<CheckableData<Todo>>,
 ) {
-    var photoPickerUri by rememberSaveable { mutableStateOf(Uri.EMPTY) }
-    val photoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            photoPickerUri = uri
-        }
-    )
     var memoryCardExpanded by rememberSaveable { mutableStateOf(false) }
     var isMemoryCardCreationDialogShow by rememberSaveable { mutableStateOf(false) }
-
-    if (isMemoryCardCreationDialogShow) {
-        MemoryCardCreationDialog(
-            onDismissRequest = { isMemoryCardCreationDialogShow = false },
-            onCompleteRequest = { memories, date ->
-                uploadMemoryCardRequest(memories, date, photoPickerUri)
-                photoPickerUri = Uri.EMPTY
-                isMemoryCardCreationDialogShow = false
-            },
-            imageRequest = {
-                photoPicker.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            },
-            painter = rememberAsyncImagePainter(model = photoPickerUri)
-        )
-    }
 
     Scaffold(
         topBar = {
@@ -254,10 +223,10 @@ private fun MemberHomeScreenPreview(
     HarmonyTheme {
         MemberHomeScreen(
             onUserPageRequest = {},
+            onMemoryCardCreationPageRequest = {},
             onDailyRoutineClick = {},
             onMemoryCardClick = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            uploadMemoryCardRequest = { memories, date, uri -> },
             memoryCardUiState = MemoryCardUiState.Success(
                 FakeMemoryCard().get()[0]
             ),
@@ -281,10 +250,10 @@ private fun MemberHomeScreenEmptyPreview(
     HarmonyTheme {
         MemberHomeScreen(
             onUserPageRequest = {},
+            onMemoryCardCreationPageRequest = {},
             onDailyRoutineClick = {},
             onMemoryCardClick = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            uploadMemoryCardRequest = { memories, date, uri -> },
             memoryCardUiState = MemoryCardUiState.Wait,
             dailyRoutine = flowOf(PagingData.empty<CheckableData<Todo>>())
                 .collectAsLazyPagingItems()

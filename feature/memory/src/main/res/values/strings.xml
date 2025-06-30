@@ -41,4 +41,21 @@
     <string name="image_question_content_description">질문 참고 이미지</string>
     <string name="button_close_content_description">종료</string>
     <string name="image_profile_content_description">하모니 프로필</string>
+
+    <!--Dialog-->
+    <string name="memory_creation_text_title">추억 카드 만들기</string>
+    <string name="memory_creation_label_input_memory_title">어떤 추억인가요?</string>
+    <string name="memory_creation_label_input_memory_date">언제 일어난 일인가요?</string>
+    <string name="memory_creation_button_upload">추억 카드 보내기</string>
+    <string name="memory_creation_hint_input_memory_date">예) 손녀가 태어난 날</string>
+    <string name="memory_creation_description_memory_image">추억 카드 이미지</string>
+    <string name="memory_creation_description_empty_memory_image">빈 추억카드 이미지</string>
+    <string name="memory_creation_description_input_date_image">날짜 선택</string>
+    <string name="memory_creation_description_close_image">카드 등록 닫기</string>
+    <string name="memory_creation_toast_error_memory_upload">추억카드 등록과정에서 오류가 발생하였습니다.</string>
+    <string name="memory_creation_textfield_date_format">%d.%d.%d</string>
+
+    <string name="date_picker_text_ok">확인</string>
+    <string name="date_picker_text_cancel">취소</string>
+
 </resources>
