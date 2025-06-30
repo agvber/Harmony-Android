@@ -40,7 +40,6 @@ internal class DailyManagementViewModel @Inject constructor(
 
     fun deleteRoutine(routineId: String) = viewModelScope.launch {
         runCatching { deleteRoutineUseCase(routineId) }
-            .onSuccess { _event.send(DailyManagementEvent.RoutineDeleteSuccess) }
             .onFailure { _event.send(DailyManagementEvent.RoutineDeleteFailure) }
     }
 }
