@@ -3,7 +3,7 @@ package com.teampatch.core.data.repository.local
 import com.harmony.core.database.dao.RoutineDao
 import com.harmony.core.database.model.RoutineEntity
 import com.teampatch.core.data.mapper.RoutineMapper
-import com.teampatch.core.domain.model.DayOfWeek
+import java.time.DayOfWeek
 import com.teampatch.core.domain.model.Routine
 import com.teampatch.core.domain.repository.RoutineRepository
 import kotlinx.coroutines.flow.Flow

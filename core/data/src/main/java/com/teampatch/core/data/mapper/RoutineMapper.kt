@@ -5,7 +5,7 @@ import com.harmony.core.database.model.RoutineEntity
 import com.squareup.moshi.JsonAdapter
 import com.teampatch.core.data.di.annotation.MoshiAdapterType
 import com.teampatch.core.data.di.annotation.MoshiType
-import com.teampatch.core.domain.model.DayOfWeek
+import java.time.DayOfWeek
 import com.teampatch.core.domain.model.Routine
 import java.time.LocalTime
 import javax.inject.Inject

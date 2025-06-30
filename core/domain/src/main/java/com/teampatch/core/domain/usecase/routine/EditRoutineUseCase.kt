@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.usecase.routine
 
-import com.teampatch.core.domain.model.DayOfWeek
+import java.time.DayOfWeek
 import com.teampatch.core.domain.repository.RoutineRepository
 import java.time.LocalTime
 import javax.inject.Inject

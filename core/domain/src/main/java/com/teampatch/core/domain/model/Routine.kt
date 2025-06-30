@@ -1,6 +1,7 @@
 package com.teampatch.core.domain.model
 
 import java.time.LocalTime
+import java.time.DayOfWeek
 
 data class Routine(
     val id: String,

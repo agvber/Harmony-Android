@@ -66,7 +66,7 @@ import com.teampatch.core.designsystem.theme.SP21
 import com.teampatch.core.designsystem.theme.SP24
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.domain.fake.FakeRoutines
-import com.teampatch.core.domain.model.DayOfWeek
+import java.time.DayOfWeek
 import com.teampatch.core.domain.model.Routine
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.management.component.DailyManagementDropDown
@@ -109,8 +109,6 @@ internal fun DailyManagementScreenWithViewModel(
                     ).show()
                     onBackRequest()
                 }
-
-                DailyManagementEvent.RoutineDeleteSuccess -> onBackRequest()
             }
         }
     }
