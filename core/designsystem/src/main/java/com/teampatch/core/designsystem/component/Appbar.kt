@@ -26,6 +26,7 @@ import com.teampatch.core.designsystem.theme.PretendardFontFamily
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
+    divider: Boolean = false,
     navigation: @Composable (BoxScope.() -> Unit) = {},
     title: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
@@ -58,13 +59,15 @@ fun AppBar(
             content = actions
         )
 
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            thickness = 1.dp,
-            color = G3,
-        )
+        if (divider) {
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                thickness = 1.dp,
+                color = G3,
+            )
+        }
     }
 }
 
