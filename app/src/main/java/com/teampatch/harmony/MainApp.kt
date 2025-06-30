@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -46,45 +45,19 @@ fun MainApp(
     mainUiState: MainUiState,
     navController: NavHostController = rememberNavController(),
 ) {
-    val currentBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(
-        initialValue = null
-    )
+    val currentBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsStateWithLifecycle()
     var previousNavigationItem by rememberSaveable { mutableStateOf(NavigationItem.HOME) }
     val navigationItem: NavigationItem by remember(currentBackStackEntry) {
         mutableStateOf(
-            when (currentBackStackEntry?.destination?.route) {
-                HomeRoute::class.qualifiedName -> {
-                    NavigationItem.HOME.apply {
-                        previousNavigationItem = this
-                    }
-                }
-
-                MemoryStorageRoute::class.qualifiedName -> {
-                    NavigationItem.STORE.apply {
-                        previousNavigationItem = this
-                    }
-                }
-
-                QuestionMainRoute::class.qualifiedName -> {
-                    NavigationItem.QUESTION.apply {
-                        previousNavigationItem = this
-                    }
-                }
-
-                DailyMainRoute::class.qualifiedName -> {
-                    NavigationItem.DAILY.apply {
-                        previousNavigationItem = this
-                    }
-                }
-
-                else -> previousNavigationItem
-            }
+            handleNavigationItem(
+                route = currentBackStackEntry?.destination?.route,
+                previousNavigationItem = previousNavigationItem,
+                onNavigationItemChange = { previousNavigationItem = it }
+            )
         )
     }
     val isBottomNavigationShow: Boolean by remember(currentBackStackEntry) {
-        derivedStateOf {
-            currentBackStackEntry?.destination?.route in BottomNavigationEnableScreens
-        }
+        derivedStateOf { currentBackStackEntry?.destination?.route in BottomNavigationEnableScreens }
     }
 
     Scaffold(
@@ -119,4 +92,36 @@ fun MainApp(
             modifier = Modifier.padding(scaffoldPaddingValue)
         )
     }
+}
+
+private fun handleNavigationItem(
+    route: String?,
+    previousNavigationItem: NavigationItem,
+    onNavigationItemChange: (NavigationItem) -> Unit
+): NavigationItem = when (route) {
+    HomeRoute::class.qualifiedName -> {
+        NavigationItem.HOME.apply {
+            onNavigationItemChange(this)
+        }
+    }
+
+    MemoryStorageRoute::class.qualifiedName -> {
+        NavigationItem.STORE.apply {
+            onNavigationItemChange(this)
+        }
+    }
+
+    QuestionMainRoute::class.qualifiedName -> {
+        NavigationItem.QUESTION.apply {
+            onNavigationItemChange(this)
+        }
+    }
+
+    DailyMainRoute::class.qualifiedName -> {
+        NavigationItem.DAILY.apply {
+            onNavigationItemChange(this)
+        }
+    }
+
+    else -> previousNavigationItem
 }
