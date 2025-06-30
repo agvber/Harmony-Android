@@ -5,35 +5,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.teampatch.core.common.launchWithCatch
-import com.teampatch.core.domain.usecase.daily.AddDailyRoutineUseCase
-import com.teampatch.core.domain.usecase.daily.EditDailyRoutineUseCase
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutineUseCase
+import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.usecase.routine.AddRoutineUseCase
+import com.teampatch.core.domain.usecase.routine.EditRoutineUseCase
+import com.teampatch.core.domain.usecase.routine.GetRoutineUseCase
 import com.teampatch.feature.daily.edit.model.DailyEditEvent
 import com.teampatch.feature.daily.edit.model.DailyEditMode
 import com.teampatch.feature.daily.edit.model.DailyEditUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 @HiltViewModel
 internal class DailyEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
-    private val addDailyRoutineUseCase: AddDailyRoutineUseCase,
-    private val editDailyRoutineUseCase: EditDailyRoutineUseCase,
+    private val getRoutineUseCase: GetRoutineUseCase,
+    private val addRoutineUseCase: AddRoutineUseCase,
+    private val editRoutineUseCase: EditRoutineUseCase,
 ) : ViewModel() {
 
     private val route: DailyEditRoute = savedStateHandle.toRoute()
@@ -54,12 +49,10 @@ internal class DailyEditViewModel @Inject constructor(
         viewModelScope.launchWithCatch(
             catch = { _event.send(DailyEditEvent.LoadError(it)) }
         ) {
-            with(getDailyRoutineUseCase(route.dailyId)) {
-                _uiState.value = DailyEditUiState(
-                    title = title,
-                    dailyEditMode = DailyEditMode.EDIT,
-                )
-            }
+            val routine: Routine = getRoutineUseCase.invoke(route.dailyId)
+            _uiState.value = DailyEditUiState(
+                title = routine.name, dailyEditMode = DailyEditMode.EDIT
+            )
         }
     }
 
@@ -90,8 +83,13 @@ internal class DailyEditViewModel @Inject constructor(
     ) {
         with(uiState.value) {
             when (dailyEditMode) {
-                DailyEditMode.ADD -> addDailyRoutineUseCase(title, selectedDays, time)
-                DailyEditMode.EDIT -> editDailyRoutineUseCase(route.dailyId, title, selectedDays, time)
+                DailyEditMode.ADD -> addRoutineUseCase(title, selectedDays, time)
+                DailyEditMode.EDIT -> editRoutineUseCase(
+                    route.dailyId,
+                    title,
+                    selectedDays,
+                    time
+                )
             }
         }
         _event.send(DailyEditEvent.DailyEditSuccess)
