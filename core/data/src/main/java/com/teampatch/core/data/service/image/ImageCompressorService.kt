@@ -1,4 +1,4 @@
-package com.teampatch.core.data.service
+package com.teampatch.core.data.service.image
 
 import android.graphics.Bitmap
 import java.io.ByteArrayInputStream

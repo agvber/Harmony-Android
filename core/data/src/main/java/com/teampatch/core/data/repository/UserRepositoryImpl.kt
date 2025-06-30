@@ -2,7 +2,7 @@ package com.teampatch.core.data.repository
 
 import androidx.core.net.toUri
 import com.teampatch.core.data.mapper.toDomain
-import com.teampatch.core.data.service.ImageUriCompressor
+import com.teampatch.core.data.service.image.ImageUriCompressor
 import com.teampatch.core.domain.model.Role
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.repository.UserRepository
