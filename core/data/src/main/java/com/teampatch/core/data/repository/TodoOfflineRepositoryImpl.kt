@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.zip
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -36,12 +35,6 @@ internal class TodoOfflineRepositoryImpl @Inject constructor(
         val todo = todoDao.getTodoById(id.toLong()).first()
             .copy(isFinished = isFinished)
         todoDao.updateTodo(todo.copy(isFinished = isFinished))
-    }
-
-    override suspend fun getDailyRoutineProgress(): Flow<Float> {
-        return todoDao.getTodoCount().zip(todoDao.getFinishedCount()) { total, finished ->
-            finished.toFloat() / total
-        }
     }
 
     override fun getTodoProgress(date: LocalDate): Flow<TodoProgress> {

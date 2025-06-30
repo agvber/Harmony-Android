@@ -14,7 +14,5 @@ interface TodoRepository {
 
     suspend fun toggleTodoStatus(id: String, isFinished: Boolean)
 
-    suspend fun getDailyRoutineProgress(): Flow<Float>
-
     fun getTodoProgress(date: LocalDate): Flow<TodoProgress>
 }

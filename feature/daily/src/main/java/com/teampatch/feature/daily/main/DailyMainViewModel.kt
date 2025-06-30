@@ -7,7 +7,6 @@ import com.teampatch.core.common.SHARING_STARTED_TIME
 import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.domain.model.Todo
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutineProgressUseCase
 import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
 import com.teampatch.core.domain.usecase.todo.GetTodosUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
@@ -21,8 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,7 +32,6 @@ import javax.inject.Inject
 @HiltViewModel
 internal class DailyMainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getDailyRoutineProgressUseCase: GetDailyRoutineProgressUseCase,
     private val toggleDailyRoutineUseCase: ToggleDailyRoutineStatusUseCase,
     private val getTodosUseCase: GetTodosUseCase,
 ) : ViewModel() {
@@ -75,13 +72,9 @@ internal class DailyMainViewModel @Inject constructor(
 
     private fun loadData() = viewModelScope.launch {
         runCatching {
-            combine(
-                getUserInfoUseCase(),
-                getDailyRoutineProgressUseCase(),
-            ) { user, progress ->
-                _uiState.update { it.copy(progress = progress, role = it.role, isLoading = false) }
+            getUserInfoUseCase().collectLatest { user ->
+                _uiState.update { it.copy(role = user.role, isLoading = false) }
             }
-                .collect()
         }
             .onFailure {
                 it.printStackTrace()
