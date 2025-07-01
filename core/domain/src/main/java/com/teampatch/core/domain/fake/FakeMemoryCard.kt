@@ -11,6 +11,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Alice",
             text = "This was one of the best days of my life!",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now(),
             tags = setOf("happy", "moments", "memories")
         ),
@@ -20,6 +21,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Bob",
             text = "Enjoying the sun at the beach.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(1),
             tags = setOf("beach", "vacation", "fun")
         ),
@@ -29,6 +31,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Charlie",
             text = "Great dinner with family.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(2),
             tags = setOf("family", "dinner", "time")
         ),
@@ -38,6 +41,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Dave",
             text = "Hiking in the mountains.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(3),
             tags = setOf("hiking", "mountains", "adventure")
         ),
@@ -47,6 +51,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Eve",
             text = "Celebrating my birthday with friends.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(4),
             tags = setOf("birthday", "celebration", "friends")
         ),
@@ -56,6 +61,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Frank",
             text = "Started my new job today!",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(5),
             tags = setOf("new", "job", "today")
         ),
@@ -65,6 +71,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Grace",
             text = "Amazing night at the concert.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(6),
             tags = setOf("concert", "night", "amazing")
         ),
@@ -74,6 +81,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Hank",
             text = "Cuddling with my dog.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(7),
             tags = setOf("pet", "love", "cuddle")
         ),
@@ -83,6 +91,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Ivy",
             text = "Exploring a new city.",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(8),
             tags = setOf("travel", "diaries", "new city")
         ),
@@ -92,6 +101,7 @@ class FakeMemoryCard : FakeModel<List<MemoryCard>>() {
             writerName = "Jack",
             text = "Finally graduated!",
             imageUrl = FAKE_IMAGE_URL,
+            imageUri = null,
             dateTime = LocalDateTime.now().minusDays(9),
             tags = setOf("graduation", "finally", "today")
         )

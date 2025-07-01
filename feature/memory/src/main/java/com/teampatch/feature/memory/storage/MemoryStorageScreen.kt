@@ -214,7 +214,7 @@ internal fun MemoryStorageScreen(
                         }
                 ) {
                     AsyncImage(
-                        model = currentItem?.imageUrl,
+                        model = currentItem?.imageUrl ?: currentItem?.imageUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         placeholder = previewPlaceholder(img_test_memory_card),
@@ -226,7 +226,7 @@ internal fun MemoryStorageScreen(
                         modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp)
                     ) {
                         Text(
-                            text = currentItem?.text ?: "",
+                            text = currentItem?.writerTitle ?: "",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             color = BL,

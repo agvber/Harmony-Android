@@ -13,6 +13,7 @@ fun MemoryCardEntity.toDomain(
     writerName = writerName,
     text = content,
     imageUrl = imageUrl,
+    imageUri = imageUri,
     dateTime = LocalDateTime.parse(
         /* text = */
         modifiedAt,
