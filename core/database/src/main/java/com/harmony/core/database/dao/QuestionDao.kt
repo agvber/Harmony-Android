@@ -32,6 +32,9 @@ interface QuestionDao {
     @Query("SELECT * FROM question_comment WHERE id = :questionCommentId")
     fun getQuestionCommentById(questionCommentId: Long): Flow<QuestionCommentEntity>
 
+    @Insert(QuestionEntity::class)
+    suspend fun insertQuestion(vararg questionEntity: QuestionEntity): List<Long>
+
     @Insert(QuestionCommentEntity::class)
     suspend fun insertQuestionComment(vararg questionCommentEntity: QuestionCommentEntity): List<Long>
 

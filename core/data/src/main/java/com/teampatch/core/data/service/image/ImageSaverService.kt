@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.InputStream
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
@@ -25,8 +26,20 @@ class ImageSaverService @Inject constructor(
             .toUri()
     }
 
+    fun saveMemoryCardImage(inputStream: InputStream, fileFormat: String): Uri {
+        val path: String = Path(appContext.dataDir.absolutePath, MEMORY_CARD_IMAGE_SUB_PATH)
+            .also { it.createDirectories() }
+            .pathString
+
+        return File(path, "${UUID.randomUUID()}.$fileFormat")
+            .also { it.writeBytes(inputStream.readBytes()) }
+            .toUri()
+    }
+
     companion object {
         private const val PROFILE_IMAGE_SUB_PATH = "profile_image"
         private const val PROFILE_IMAGE_FILE_NAME = "profileImage"
+
+        private const val MEMORY_CARD_IMAGE_SUB_PATH = "memory_card_image"
     }
 }
