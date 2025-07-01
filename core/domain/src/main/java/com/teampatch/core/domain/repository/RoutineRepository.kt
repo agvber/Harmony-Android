@@ -8,12 +8,14 @@ import java.time.LocalTime
 interface RoutineRepository {
 
     suspend fun addRoutine(
+        groupId: Int,
         routineName: String,
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
     )
 
     suspend fun editRoutine(
+        groupId: Int,
         routineId: String,
         routineName: String,
         daysOfWeekPeriod: Set<DayOfWeek>,
