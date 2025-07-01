@@ -288,7 +288,7 @@ private fun MemoryCardCreationContent(
                     color = if (isBottomButtonEnable) MainGreen else G2,
                     shape = RoundedCornerShape10
                 )
-                .noRippleClickable(enabled = !isBottomButtonEnable, onClick = onCompleteRequest)
+                .noRippleClickable(enabled = isBottomButtonEnable, onClick = onCompleteRequest)
         ) {
             Text(
                 text = stringResource(R.string.memory_creation_button_upload),
