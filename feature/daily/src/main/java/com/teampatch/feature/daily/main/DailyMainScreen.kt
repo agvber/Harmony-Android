@@ -56,7 +56,7 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
-import com.teampatch.core.domain.model.Todo
+import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.main.model.DailyMainEvent
 import com.teampatch.feature.daily.main.model.DailyMainUiState
@@ -70,8 +70,8 @@ internal fun DailyMainScreenWithViewModel(
 ) {
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     val context: Context = LocalContext.current
-    val todos: List<CheckableData<Todo>> by viewModel.todos.collectAsStateWithLifecycle()
     val uiState: DailyMainUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val dailyRoutine: List<CheckableData<DailyRoutine>> by viewModel.dailyRoutine.collectAsStateWithLifecycle()
 
     if (!uiState.isLoading) {
         DailyMainScreen(
@@ -79,7 +79,7 @@ internal fun DailyMainScreenWithViewModel(
             onEditPageRequest = onEditPageRequest,
             onDetailPageRequest = onDetailPageRequest,
             onDailyRoutineCheckChanged = viewModel::toggleRoutineFinished,
-            dailyRoutine = todos,
+            dailyRoutine = dailyRoutine,
             uiState = uiState
         )
     }
@@ -115,7 +115,7 @@ private fun DailyMainScreen(
     onEditPageRequest: () -> Unit,
     onDetailPageRequest: (dailyId: String) -> Unit,
     onDailyRoutineCheckChanged: (todoId: String, checked: Boolean) -> Unit,
-    dailyRoutine: List<CheckableData<Todo>>,
+    dailyRoutine: List<CheckableData<DailyRoutine>>,
     uiState: DailyMainUiState,
 ) {
     val context: Context = LocalContext.current
@@ -225,20 +225,20 @@ private fun DailyMainScreen(
                     onCheckedChange = {
                         val index = dailyRoutine.indexOf(currentItem)
                         dailyRoutine.getOrNull(index)?.checked?.value = it
-                        onDailyRoutineCheckChanged(currentItem.data.id, it)
+                        onDailyRoutineCheckChanged(currentItem.data.routineId, it)
                     },
                     title = {
                         Text(
-                            text = context.convertHourStringFormat(currentItem.data.dateTime.hour),
+                            text = context.convertHourStringFormat(currentItem.data.time.hour),
                             maxLines = 1
                         )
                     },
-                    content = { Text(text = currentItem.data.title, maxLines = 2) },
+                    content = { Text(text = currentItem.data.name, maxLines = 2) },
                     checked = currentItem.checked.value,
                     modifier = Modifier
                         .padding(horizontal = dimensionResource(R.dimen.padding_root_20))
                         .background(WH)
-                        .noRippleClickable { onDetailPageRequest(currentItem.data.id) }
+                        .noRippleClickable { onDetailPageRequest(currentItem.data.routineId) }
                 )
             }
             if (dailyRoutine.isNotEmpty()) {
@@ -261,6 +261,7 @@ internal fun Context.convertHourStringFormat(hour: Int) = when (hour) {
 private fun DailyMainScreenPreview() {
     HarmonyTheme {
         val todos = TodoPreviewParameterProvider().values.first()
+            .map { DailyRoutine(it.id, it.title, it.dateTime.toLocalTime(), it.isFinished) }
             .map { CheckableData(it, mutableStateOf(it.isFinished)) }
 //            .let { flowOf(PagingData.from(it)) }
 //            .collectAsLazyPagingItems()

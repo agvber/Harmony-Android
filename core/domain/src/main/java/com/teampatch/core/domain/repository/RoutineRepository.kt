@@ -2,7 +2,10 @@ package com.teampatch.core.domain.repository
 
 import java.time.DayOfWeek
 import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.TaskProgress
+import com.teampatch.core.domain.model.routine.DailyRoutine
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalTime
 
 interface RoutineRepository {
@@ -27,6 +30,10 @@ interface RoutineRepository {
     fun getAllRoutines(): Flow<List<Routine>>
 
     fun getRoutineById(id: String): Flow<Routine>
+
+    fun getDailyRoutine(date: LocalDate): Flow<List<DailyRoutine>>
+
+    fun getDailyRoutineProgress(date: LocalDate): Flow<TaskProgress>
 
     suspend fun deleteRoutine(routineId: String)
 }

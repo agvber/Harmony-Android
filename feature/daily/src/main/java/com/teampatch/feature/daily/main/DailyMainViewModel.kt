@@ -42,28 +42,23 @@ internal class DailyMainViewModel @Inject constructor(
     private val _event: Channel<DailyMainEvent> = Channel<DailyMainEvent>()
     val event: Flow<DailyMainEvent> = _event.receiveAsFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val todos: StateFlow<List<CheckableData<Todo>>> =
-        flowExceptionSafety {
-            getTodosUseCase.invoke(uiState.value.now.toLocalDate())
+    val dailyRoutine: StateFlow<List<CheckableData<DailyRoutine>>> = flowExceptionSafety {
+        getDailyRoutineUseCase.invoke(uiState.value.now.toLocalDate())
+    }
+        .onEach { dailyRoutine -> _uiState.update { it.copy(progress = dailyRoutine.progress) } }
+        .map { routines ->
+            routines.dailyRoutines.map { CheckableData(it, mutableStateOf(it.isFinished)) }
         }
-            .onEach { todo ->
-                _uiState.update { it.copy(progress = todo.progress) }
-            }
-            .map { todos ->
-                todos.todos.map {
-                    CheckableData(it, mutableStateOf(it.isFinished))
-                }
-            }
-            .catch {
-                it.printStackTrace()
-                _event.send(DailyMainEvent.LoadError(it))
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME),
-                initialValue = emptyList()
-            )
+        .catch {
+            it.printStackTrace()
+            _event.send(DailyMainEvent.LoadError(it))
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME),
+            initialValue = emptyList()
+        )
+
 
     init {
         loadData()
