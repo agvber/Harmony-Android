@@ -1,6 +1,5 @@
 package com.teampatch.feature.home
 
-import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,19 +9,15 @@ import androidx.paging.map
 import com.teampatch.core.common.flowErrorCatch
 import com.teampatch.core.common.toPagingData
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.domain.model.Image
 import com.teampatch.core.domain.model.Todo
 import com.teampatch.core.domain.model.User
 import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
 import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
-import com.teampatch.core.domain.usecase.memory.AddMemoryCardUseCase
 import com.teampatch.core.domain.usecase.memory.GetLatestMemoryCardUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
 import com.teampatch.feature.home.model.HomeErrorHandler
 import com.teampatch.feature.home.model.MemoryCardUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.LocalDateTime
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,13 +27,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
     private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
     private val getLatestMemoryCardUseCase: GetLatestMemoryCardUseCase,
     private val toggleDailyRoutineStatusUseCase: ToggleDailyRoutineStatusUseCase,
-    private val addMemoryCardUseCase: AddMemoryCardUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
 ) : ViewModel() {
 
@@ -93,23 +88,6 @@ internal class HomeViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             _errorHandler.emit(HomeErrorHandler.ChangeDailyRoutineError(e))
-        }
-    }
-
-    fun addMemoryCard(
-        memories: String,
-        dateTime: LocalDateTime,
-        image: Uri,
-    ) = viewModelScope.launch {
-        try {
-//            addMemoryCardUseCase(
-//                memories = memories,
-//                dateTime = dateTime,
-//                image = Image.Uri(image.toString())
-//            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _errorHandler.emit(HomeErrorHandler.MemoryCardAdditionError(e))
         }
     }
 }
