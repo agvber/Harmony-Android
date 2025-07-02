@@ -3,91 +3,95 @@ package com.teampatch.feature.home
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
-import com.teampatch.core.common.flowErrorCatch
-import com.teampatch.core.common.toPagingData
+import com.teampatch.core.common.SHARING_STARTED_TIME
+import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.domain.model.Todo
-import com.teampatch.core.domain.model.User
-import com.teampatch.core.domain.usecase.daily.GetDailyRoutinesUseCase
-import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
+import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.core.domain.usecase.memory.GetLatestMemoryCardUseCase
+import com.teampatch.core.domain.usecase.routine.GetDailyRoutineUseCase
+import com.teampatch.core.domain.usecase.routine.SetCheckableDailyRoutineUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
-import com.teampatch.feature.home.model.HomeErrorHandler
-import com.teampatch.feature.home.model.MemoryCardUiState
+import com.teampatch.feature.home.model.HomeEvent
+import com.teampatch.feature.home.model.HomeUiState
+import com.teampatch.feature.home.model.MemoryCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val getDailyRoutinesUseCase: GetDailyRoutinesUseCase,
     private val getLatestMemoryCardUseCase: GetLatestMemoryCardUseCase,
-    private val toggleDailyRoutineStatusUseCase: ToggleDailyRoutineStatusUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val setCheckableDailyRoutineUseCase: SetCheckableDailyRoutineUseCase,
+    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
 ) : ViewModel() {
 
-    private val _errorHandler: MutableSharedFlow<HomeErrorHandler> = MutableSharedFlow()
-    val errorHandler: SharedFlow<HomeErrorHandler> = _errorHandler.asSharedFlow()
+    private val _event: MutableSharedFlow<HomeEvent> = MutableSharedFlow()
+    val event: SharedFlow<HomeEvent> = _event.asSharedFlow()
 
-    val user: StateFlow<User?> = flowErrorCatch({ getUserInfoUseCase() }) {
-        it.printStackTrace()
-        _errorHandler.emit(HomeErrorHandler.UserInfoLoadError(it))
-    }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null
-        )
+    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
-    val dailyRoutine: Flow<PagingData<CheckableData<Todo>>> =
-        flowErrorCatch(
-            block = {
-                getDailyRoutinesUseCase()
-                    .map { pagingData ->
-                        pagingData.map {
-                            CheckableData(it, mutableStateOf(it.isFinished))
-                        }
-                    }
-                    .cachedIn(viewModelScope)
+    val dailyRoutine: StateFlow<List<CheckableData<DailyRoutine>>> =
+        flowExceptionSafety { getDailyRoutineUseCase.invoke(uiState.value.now) }
+            .map { routines ->
+                routines.dailyRoutines.map { CheckableData(it, mutableStateOf(it.isFinished)) }
             }
-        ) {
-            it.printStackTrace()
-            emit(it.toPagingData())
-        }
-
-    val memoryCardUiState: StateFlow<MemoryCardUiState> =
-        flowErrorCatch<MemoryCardUiState>(
-            block = {
-                getLatestMemoryCardUseCase()
-                    .map { MemoryCardUiState.Success(it) }
+            .catch {
+                it.printStackTrace()
             }
-        ) {
-            it.printStackTrace()
-            emit(MemoryCardUiState.Error(it))
-        }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = MemoryCardUiState.Wait
+                started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME),
+                initialValue = emptyList()
             )
 
-    fun changeDailyRoutine(routineId: String, checked: Boolean) = viewModelScope.launch {
-        try {
-            toggleDailyRoutineStatusUseCase(routineId, checked)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _errorHandler.emit(HomeErrorHandler.ChangeDailyRoutineError(e))
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModelScope.launch {
+            runCatching {
+                getLatestMemoryCardUseCase.invoke().collectLatest { memoryCard ->
+                    _uiState.update { it.copy(memoryCardState = MemoryCardState.Success(memoryCard)) }
+                }
+            }
+                .onFailure { e ->
+                    e.printStackTrace()
+                    _uiState.update { it.copy(memoryCardState = MemoryCardState.Error(e)) }
+                }
         }
+
+        viewModelScope.launch {
+            runCatching {
+                getUserInfoUseCase.invoke().collectLatest { user ->
+                    _uiState.update { it.copy(role = user.role) }
+                }
+            }
+                .onFailure {
+                    it.printStackTrace()
+                    _event.emit(HomeEvent.UserInfoLoadError(it))
+                }
+        }
+    }
+
+    fun changeDailyRoutine(routineId: String, checked: Boolean) = viewModelScope.launch {
+        runCatching { setCheckableDailyRoutineUseCase(routineId, checked) }
+            .onFailure {
+                it.printStackTrace()
+                _event.emit(HomeEvent.ChangeDailyRoutineError(it))
+            }
     }
 }
