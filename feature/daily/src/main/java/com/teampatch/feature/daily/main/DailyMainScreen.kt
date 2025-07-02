@@ -48,7 +48,6 @@ import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DailyRoutineCard
 import com.teampatch.core.designsystem.component.ItemFloatingButton
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.designsystem.preview.TodoPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G5
@@ -56,6 +55,7 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.core.domain.fake.FakeDailyRoutine
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.main.model.DailyMainEvent
@@ -260,18 +260,13 @@ internal fun Context.convertHourStringFormat(hour: Int) = when (hour) {
 @Composable
 private fun DailyMainScreenPreview() {
     HarmonyTheme {
-        val todos = TodoPreviewParameterProvider().values.first()
-            .map { DailyRoutine(it.id, it.title, it.dateTime.toLocalTime(), it.isFinished) }
-            .map { CheckableData(it, mutableStateOf(it.isFinished)) }
-//            .let { flowOf(PagingData.from(it)) }
-//            .collectAsLazyPagingItems()
-
         DailyMainScreen(
             onCreationPageRequest = {},
             onEditPageRequest = {},
             onDetailPageRequest = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            dailyRoutine = todos,
+            dailyRoutine = FakeDailyRoutine().get()
+                .map { CheckableData(it, mutableStateOf(false)) },
             uiState = DailyMainUiState(progress = .5f)
         )
     }

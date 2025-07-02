@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.usecase.question
 
 import androidx.paging.PagingData
-import com.teampatch.core.domain.model.Question
+import com.teampatch.core.domain.model.question.Question
 import com.teampatch.core.domain.repository.QuestionRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

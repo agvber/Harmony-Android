@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.repository
 
-import com.teampatch.core.domain.model.Role
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.user.Role
+import com.teampatch.core.domain.model.user.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

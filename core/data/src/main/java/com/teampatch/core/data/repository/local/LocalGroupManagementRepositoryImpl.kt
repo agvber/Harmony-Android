@@ -14,10 +14,10 @@ import com.teampatch.core.data.service.image.ImageCompressorService
 import com.teampatch.core.data.service.image.ImageFormatTransferService
 import com.teampatch.core.data.service.image.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
-import com.teampatch.core.domain.model.AdmissionGroupInformation
-import com.teampatch.core.domain.model.FamilyInfo
-import com.teampatch.core.domain.model.InvitedGroup
-import com.teampatch.core.domain.model.UserGroup
+import com.teampatch.core.domain.model.group.AdmissionGroupInformation
+import com.teampatch.core.domain.model.group.FamilyInfo
+import com.teampatch.core.domain.model.group.InvitedGroup
+import com.teampatch.core.domain.model.group.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

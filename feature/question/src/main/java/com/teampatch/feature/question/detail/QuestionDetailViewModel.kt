@@ -11,7 +11,7 @@ import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.teampatch.core.common.PagingDataHelper
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.core.domain.usecase.question.AddQuestionCommentUseCase
 import com.teampatch.core.domain.usecase.question.DeleteQuestionCommentUseCase
 import com.teampatch.core.domain.usecase.question.EditQuestionCommentUseCase

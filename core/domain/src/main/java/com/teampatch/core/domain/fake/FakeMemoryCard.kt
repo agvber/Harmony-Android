@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.fake
 
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCard
 import java.time.LocalDateTime
 
 class FakeMemoryCard : FakeModel<List<MemoryCard>>() {

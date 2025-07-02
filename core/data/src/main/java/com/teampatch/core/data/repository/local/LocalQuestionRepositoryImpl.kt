@@ -7,9 +7,9 @@ import com.harmony.core.database.dao.UserDao
 import com.harmony.core.database.getCurrentTimeLocalDBFormat
 import com.harmony.core.database.model.QuestionCommentEntity
 import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
-import com.teampatch.core.domain.model.Question
-import com.teampatch.core.domain.model.QuestionComment
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.Question
+import com.teampatch.core.domain.model.question.QuestionComment
+import com.teampatch.core.domain.model.question.QuestionDetail
 import com.teampatch.core.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

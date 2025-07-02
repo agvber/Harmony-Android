@@ -67,7 +67,7 @@ import com.teampatch.core.designsystem.theme.SP24
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.domain.fake.FakeRoutines
 import java.time.DayOfWeek
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.feature.daily.R
 import com.teampatch.feature.daily.management.component.DailyManagementDropDown
 import com.teampatch.feature.daily.management.model.DailyManagementEvent

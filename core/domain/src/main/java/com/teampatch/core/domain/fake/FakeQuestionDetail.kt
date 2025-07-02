@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.fake
 
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.QuestionDetail
 import java.time.LocalDateTime
 
 class FakeQuestionDetail : FakeModel<QuestionDetail>() {

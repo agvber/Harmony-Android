@@ -1,8 +1,8 @@
 package com.teampatch.core.domain.repository
 
 import androidx.paging.PagingData
-import com.teampatch.core.domain.model.MemoryCard
-import com.teampatch.core.domain.model.MemoryCardQuestion
+import com.teampatch.core.domain.model.memory.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCardQuestion
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 import java.time.LocalDate

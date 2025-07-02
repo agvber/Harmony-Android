@@ -48,7 +48,7 @@ import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeQuestions
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.feature.question.R
 import com.teampatch.feature.question.main.model.QuestionSideEffect
 import com.teampatch.feature.question.main.model.QuestionUiState

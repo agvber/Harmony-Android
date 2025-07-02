@@ -1,4 +1,4 @@
-package com.teampatch.core.domain.model
+package com.teampatch.core.domain.model.group
 
 data class InvitedGroup(
     val groupId: Int,

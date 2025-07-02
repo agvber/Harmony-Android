@@ -1,8 +1,8 @@
 package com.teampatch.feature.question.main.model
 
 import androidx.paging.PagingData
-import com.teampatch.core.domain.model.Question
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.question.Question
+import com.teampatch.core.domain.model.user.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

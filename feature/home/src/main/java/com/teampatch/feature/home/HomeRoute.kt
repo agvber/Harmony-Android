@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.home.model.HomeEvent
 import com.teampatch.feature.home.model.HomeUiState

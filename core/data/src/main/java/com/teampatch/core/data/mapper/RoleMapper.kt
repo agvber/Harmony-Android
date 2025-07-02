@@ -1,6 +1,6 @@
 package com.teampatch.core.data.mapper
 
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 
 internal const val MEMBER = "m"
 internal const val VIP = "v"

@@ -2,9 +2,9 @@ package com.teampatch.core.data.repository
 
 import androidx.paging.PagingData
 import com.teampatch.core.data.mapper.toDomain
-import com.teampatch.core.domain.model.Question
-import com.teampatch.core.domain.model.QuestionComment
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.Question
+import com.teampatch.core.domain.model.question.QuestionComment
+import com.teampatch.core.domain.model.question.QuestionDetail
 import com.teampatch.core.domain.repository.QuestionRepository
 import com.teampatch.core.domain.repository.UserRepository
 import com.teampatch.core.network.QuestionRemoteDataSource

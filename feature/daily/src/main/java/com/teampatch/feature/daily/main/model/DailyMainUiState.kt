@@ -1,6 +1,6 @@
 package com.teampatch.feature.daily.main.model
 
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import java.time.LocalDateTime
 
 internal data class DailyMainUiState(

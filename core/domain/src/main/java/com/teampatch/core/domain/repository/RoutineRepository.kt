@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.repository
 
 import java.time.DayOfWeek
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.model.TaskProgress
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import kotlinx.coroutines.flow.Flow

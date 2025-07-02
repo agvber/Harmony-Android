@@ -14,8 +14,8 @@ import com.teampatch.core.data.service.image.ImageCompressorService
 import com.teampatch.core.data.service.image.ImageFormatTransferService
 import com.teampatch.core.data.service.image.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
-import com.teampatch.core.domain.model.Role
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.user.Role
+import com.teampatch.core.domain.model.user.User
 import com.teampatch.core.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

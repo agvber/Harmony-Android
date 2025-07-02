@@ -1,4 +1,4 @@
-package com.teampatch.core.domain.model
+package com.teampatch.core.domain.model.question
 
 data class QuestionComment(
     val commentId: String,

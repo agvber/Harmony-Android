@@ -4,7 +4,7 @@ import com.harmony.core.database.LOCAL_DB_DATE_FORMATTER
 import com.harmony.core.database.dao.RoutineDao
 import com.harmony.core.database.model.RoutineLogEntity
 import com.teampatch.core.data.mapper.RoutineMapper
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.model.TaskProgress
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.core.domain.repository.RoutineRepository

@@ -63,7 +63,7 @@ import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.previewPlaceholder
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.feature.memory.R
 import com.teampatch.feature.memory.chat.model.MemoryChatEvent
 import com.teampatch.feature.memory.chat.model.MemoryChatUiState

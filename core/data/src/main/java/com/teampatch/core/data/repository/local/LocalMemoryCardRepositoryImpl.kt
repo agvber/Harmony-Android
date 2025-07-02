@@ -16,8 +16,8 @@ import com.teampatch.core.data.service.image.ImageFormatTransferService
 import com.teampatch.core.data.service.image.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
 import com.teampatch.core.domain.fake.FakeMemoryCardQuestion
-import com.teampatch.core.domain.model.MemoryCard
-import com.teampatch.core.domain.model.MemoryCardQuestion
+import com.teampatch.core.domain.model.memory.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCardQuestion
 import com.teampatch.core.domain.repository.MemoryCardRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

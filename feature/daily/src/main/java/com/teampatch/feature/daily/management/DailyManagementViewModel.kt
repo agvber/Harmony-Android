@@ -3,7 +3,7 @@ package com.teampatch.feature.daily.management
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.teampatch.core.common.flowExceptionSafety
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.usecase.routine.DeleteRoutineUseCase
 import com.teampatch.core.domain.usecase.routine.GetRoutinesUseCase
 import com.teampatch.feature.daily.management.model.DailyManagementEvent

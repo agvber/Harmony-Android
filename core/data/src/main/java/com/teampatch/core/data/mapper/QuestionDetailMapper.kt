@@ -1,7 +1,7 @@
 package com.teampatch.core.data.mapper
 
-import com.teampatch.core.domain.model.QuestionComment
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.QuestionComment
+import com.teampatch.core.domain.model.question.QuestionDetail
 import com.teampatch.core.network.model.question.response.QuestionCardCommentResponse
 import com.teampatch.core.network.model.question.response.TodayQuestionResponse
 import java.time.LocalDateTime

@@ -67,7 +67,7 @@ import com.teampatch.core.designsystem.theme.G3
 import com.teampatch.core.designsystem.theme.G5
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.WH
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.feature.memory.R
 import com.teampatch.feature.memory.detail.model.MemoryDetailEvent
 import com.teampatch.feature.memory.detail.model.MemoryDetailUiState

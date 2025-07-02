@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.teampatch.core.common.flowErrorCatch
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCard
 import com.teampatch.core.domain.usecase.memory.GetMemoryCardsUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
 import com.teampatch.feature.memory.storage.model.MemoryCardSort

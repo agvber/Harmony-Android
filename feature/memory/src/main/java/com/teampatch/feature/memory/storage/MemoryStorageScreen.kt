@@ -76,7 +76,7 @@ import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.fake.FakeMemoryCard
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCard
 import com.teampatch.feature.memory.R
 import com.teampatch.feature.memory.storage.model.MemoryCardSort
 import com.teampatch.feature.memory.storage.model.MemoryStorageUiState

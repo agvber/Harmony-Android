@@ -1,4 +1,6 @@
-package com.teampatch.core.domain.model
+package com.teampatch.core.domain.model.group
+
+import com.teampatch.core.domain.model.user.Role
 
 data class FamilyInfo(
     val title: String,

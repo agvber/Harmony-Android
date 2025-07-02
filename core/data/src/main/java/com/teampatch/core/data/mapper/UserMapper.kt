@@ -1,7 +1,7 @@
 package com.teampatch.core.data.mapper
 
 import com.harmony.core.database.model.UserEntity
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.user.User
 import com.teampatch.core.network.model.user.ProfileResponse
 
 internal fun ProfileResponse.toDomain(): User = User(

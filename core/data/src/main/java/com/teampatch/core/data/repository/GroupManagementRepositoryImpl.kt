@@ -2,9 +2,9 @@ package com.teampatch.core.data.repository
 
 import com.teampatch.core.data.mapper.toDomain
 import com.teampatch.core.domain.entities.TokenManager
-import com.teampatch.core.domain.model.AdmissionGroupInformation
-import com.teampatch.core.domain.model.InvitedGroup
-import com.teampatch.core.domain.model.UserGroup
+import com.teampatch.core.domain.model.group.AdmissionGroupInformation
+import com.teampatch.core.domain.model.group.InvitedGroup
+import com.teampatch.core.domain.model.group.UserGroup
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import com.teampatch.core.domain.repository.UserRepository
 import com.teampatch.core.network.GroupRemoteDataSource

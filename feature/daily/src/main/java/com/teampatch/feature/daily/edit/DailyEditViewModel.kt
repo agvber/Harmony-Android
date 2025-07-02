@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.teampatch.core.common.launchWithCatch
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.usecase.routine.AddRoutineUseCase
 import com.teampatch.core.domain.usecase.routine.EditRoutineUseCase
 import com.teampatch.core.domain.usecase.routine.GetRoutineUseCase

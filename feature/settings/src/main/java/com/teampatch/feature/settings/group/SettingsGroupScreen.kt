@@ -45,8 +45,6 @@ import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.FamilyProfile
 import com.teampatch.core.designsystem.component.FamilyRole
 import com.teampatch.core.designsystem.component.RoundButton
-import com.teampatch.core.designsystem.preview.FamilyInfoPreviewParameterProvider
-import com.teampatch.core.designsystem.preview.UserPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G2
@@ -56,8 +54,10 @@ import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
-import com.teampatch.core.domain.model.FamilyInfo
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.fake.FakeFamilyInfo
+import com.teampatch.core.domain.fake.FakeUserModel
+import com.teampatch.core.domain.model.group.FamilyInfo
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.feature.settings.R
 import com.teampatch.feature.settings.group.model.SettingsGroupEvent
 import com.teampatch.feature.settings.group.model.SettingsGroupUiState
@@ -164,7 +164,8 @@ internal fun SettingsGroupScreen(
                         ) {
                             Image(
                                 painter = rememberAsyncImagePainter(
-                                    model = settingsGroupUiState.user.profileImageUrl ?: ic_my_appbar,
+                                    model = settingsGroupUiState.user.profileImageUrl
+                                        ?: ic_my_appbar,
                                     placeholder = previewPlaceholder(ic_my_appbar)
                                 ),
                                 contentDescription = "profile",
@@ -284,8 +285,8 @@ private fun SettingsGroupScreenPreview() {
             onSettingsClick = {},
             onProfileEditClick = {},
             settingsGroupUiState = SettingsGroupUiState(
-                user = UserPreviewParameterProvider().values.first(),
-                familyInfo = FamilyInfoPreviewParameterProvider().values.first()
+                user = FakeUserModel().get().first(),
+                familyInfo = FakeFamilyInfo().get()
             )
         )
     }

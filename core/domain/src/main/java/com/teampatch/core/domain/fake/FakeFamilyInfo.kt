@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.fake
 
-import com.teampatch.core.domain.model.FamilyInfo
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.group.FamilyInfo
+import com.teampatch.core.domain.model.user.Role
 
 class FakeFamilyInfo : FakeModel<List<FamilyInfo>>() {
     override fun build(): List<FamilyInfo> = listOf(
