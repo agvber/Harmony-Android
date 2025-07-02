@@ -22,6 +22,8 @@ interface RoutineRepository {
         periodTime: LocalTime
     )
 
+    suspend fun checkRoutine(routineId: String, isFinished: Boolean)
+
     fun getAllRoutines(): Flow<List<Routine>>
 
     fun getRoutineById(id: String): Flow<Routine>

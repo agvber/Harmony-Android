@@ -6,14 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.teampatch.core.common.SHARING_STARTED_TIME
 import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.domain.model.Todo
-import com.teampatch.core.domain.usecase.daily.ToggleDailyRoutineStatusUseCase
-import com.teampatch.core.domain.usecase.todo.GetTodosUseCase
+import com.teampatch.core.domain.model.routine.DailyRoutine
+import com.teampatch.core.domain.usecase.routine.GetDailyRoutineUseCase
+import com.teampatch.core.domain.usecase.routine.SetCheckableDailyRoutineUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
 import com.teampatch.feature.daily.main.model.DailyMainEvent
 import com.teampatch.feature.daily.main.model.DailyMainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,8 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class DailyMainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val toggleDailyRoutineUseCase: ToggleDailyRoutineStatusUseCase,
-    private val getTodosUseCase: GetTodosUseCase,
+    private val getDailyRoutineUseCase: GetDailyRoutineUseCase,
+    private val setCheckableDailyRoutineUseCase: SetCheckableDailyRoutineUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<DailyMainUiState> =
@@ -83,7 +82,7 @@ internal class DailyMainViewModel @Inject constructor(
     }
 
     fun toggleRoutineFinished(routineId: String, checked: Boolean) = viewModelScope.launch {
-        runCatching { toggleDailyRoutineUseCase(routineId, checked) }
+        runCatching { setCheckableDailyRoutineUseCase(routineId, checked) }
             .onFailure {
                 it.printStackTrace()
                 _event.send(DailyMainEvent.RoutineStatusChangedError(it))

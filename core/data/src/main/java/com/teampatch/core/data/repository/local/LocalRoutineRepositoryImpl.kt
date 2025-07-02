@@ -7,6 +7,7 @@ import com.teampatch.core.domain.repository.RoutineRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import java.time.DayOfWeek
 import java.time.LocalTime
 import javax.inject.Inject
@@ -45,6 +46,26 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
             groupId = groupId.toLong()
         )
             .let { routineDao.upsertAll(it) }
+    }
+
+    override suspend fun checkRoutine(routineId: String, isFinished: Boolean) {
+        val now: String = LocalDate.now().format(LOCAL_DB_DATE_FORMATTER)
+        val routineLog = routineDao.getRoutineLog(routineId.toLong(), now)
+
+        routineLog.onEach { entities ->
+            if (entities.isNotEmpty()) {
+                routineDao.upsertAll(entities[0].copy(isFinished = isFinished))
+                return@onEach
+            }
+            routineDao.insertAll(
+                RoutineLogEntity(
+                    routineId = routineId.toLong(),
+                    date = now,
+                    isFinished = isFinished
+                )
+            )
+        }
+            .first()
     }
 
     override fun getAllRoutines(): Flow<List<Routine>> {
