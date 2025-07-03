@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.teampatch.core.designsystem.component.DefaultButton
-import com.teampatch.core.designsystem.component.OnBoardingLayout
+import com.teampatch.feature.onboarding.common.ui.layout.OnboardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G2
@@ -49,7 +49,7 @@ internal fun InputManagerInformationScreen(
         derivedStateOf { relation.isNotBlank() && name.isNotBlank() }
     }
 
-    OnBoardingLayout(
+    OnboardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = BL)) {
                 append(stringResource(R.string.text_input_manager_information_title1))
@@ -61,7 +61,7 @@ internal fun InputManagerInformationScreen(
                 append(stringResource(R.string.text_input_manager_information_title3))
             }
         },
-        subtext = stringResource(R.string.subtext_onboarding_enter_relation),
+        subTitle = stringResource(R.string.subtext_onboarding_enter_relation),
         onBackRequest = onBackRequest,
         bottomBar = {
             DefaultButton(

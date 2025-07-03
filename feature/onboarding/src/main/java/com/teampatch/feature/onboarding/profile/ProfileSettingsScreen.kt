@@ -36,7 +36,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.teampatch.core.designsystem.R.drawable.ic_camera_profile
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.component.DefaultButton
-import com.teampatch.core.designsystem.component.OnBoardingLayout
+import com.teampatch.feature.onboarding.common.ui.layout.OnboardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
@@ -67,7 +67,7 @@ internal fun ProfileSettingsScreen(
         }
     )
 
-    OnBoardingLayout(
+    OnboardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = BL)) {
                 append("마지막으로\n")
@@ -79,7 +79,7 @@ internal fun ProfileSettingsScreen(
                 append("을 설정해요.")
             }
         },
-        subtext = stringResource(R.string.subtext_onboarding_enter_name),
+        subTitle = stringResource(R.string.subtext_onboarding_enter_name),
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(

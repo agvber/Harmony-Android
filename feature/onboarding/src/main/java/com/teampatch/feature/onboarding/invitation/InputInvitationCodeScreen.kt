@@ -42,13 +42,12 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.teampatch.core.designsystem.component.DefaultButton
-import com.teampatch.core.designsystem.component.OnBoardingLayout
+import com.teampatch.feature.onboarding.common.ui.layout.OnboardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.feature.onboarding.R
 import com.teampatch.feature.onboarding.common.OnboardingUiStateHelper
-import com.teampatch.feature.onboarding.common.model.OnboardingAction
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeEvent
 import com.teampatch.feature.onboarding.invitation.model.InputInvitationCodeUiState
 
@@ -99,7 +98,7 @@ internal fun InputInvitationCodeScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    OnBoardingLayout(
+    OnboardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = MainGreen)) {
                 append("초대코드")
@@ -108,7 +107,7 @@ internal fun InputInvitationCodeScreen(
                 append("를\n입력해 주세요.")
             }
         },
-        subtext = stringResource(R.string.subtext_onboarding_enter_invitation),
+        subTitle = stringResource(R.string.subtext_onboarding_enter_invitation),
         onBackRequest = { onBackRequest() },
         bottomBar = {
             DefaultButton(
