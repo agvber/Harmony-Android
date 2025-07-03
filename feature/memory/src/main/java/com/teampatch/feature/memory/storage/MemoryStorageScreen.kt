@@ -147,7 +147,7 @@ internal fun MemoryStorageScreen(
                             Text(
                                 text = buildAnnotatedString {
                                     withStyle(SpanStyle(MainGreen)) { append(uiState.userName) }
-                                    withStyle(SpanStyle(BL)) { append(stringResource(R.string.text_title_appbar)) }
+                                    withStyle(SpanStyle(BL)) { append(stringResource(R.string.memory_storage_text_title)) }
                                 },
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 22.sp
