@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
@@ -53,6 +54,7 @@ import com.teampatch.core.designsystem.component.DefaultButtonColor
 import com.teampatch.core.designsystem.component.SpeechBubble
 import com.teampatch.core.designsystem.component.TypeWriterText
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP156
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
@@ -263,7 +265,11 @@ internal fun MemoryRegistrationScreen(
                     )
                 }
             }
-            SpeechBubble {
+            SpeechBubble(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DP156)
+            ) {
                 TypeWriterText(
                     text = when (recordState) {
                         RecordState.INIT -> {
@@ -302,10 +308,11 @@ internal fun MemoryRegistrationScreen(
 
 private const val LANGUAGE_VALUE = "ko-KR"
 
-private fun buildSpeechRecognizerIntent(context: Context): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-    putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
-    putExtra(RecognizerIntent.EXTRA_LANGUAGE, LANGUAGE_VALUE)
-}
+private fun buildSpeechRecognizerIntent(context: Context): Intent =
+    Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, LANGUAGE_VALUE)
+    }
 
 private fun buildRecognitionListener(
     onResult: (ArrayList<String>) -> Unit,
