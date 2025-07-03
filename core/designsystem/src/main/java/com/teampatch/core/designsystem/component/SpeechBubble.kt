@@ -59,7 +59,6 @@ fun SpeechBubble(
                     color = backgroundColor,
                     size = size,
                     cornerRadius = CornerRadius(20.dp.toPx()),
-                    style = stroke
                 )
                 drawRoundRect(
                     color = borderColor,
