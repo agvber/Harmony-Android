@@ -48,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -62,6 +61,18 @@ import com.teampatch.core.designsystem.component.BackButtonAppBar
 import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.TagCard
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP0
+import com.teampatch.core.designsystem.theme.DP1
+import com.teampatch.core.designsystem.theme.DP10
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP24
+import com.teampatch.core.designsystem.theme.DP240
+import com.teampatch.core.designsystem.theme.DP28
+import com.teampatch.core.designsystem.theme.DP40
+import com.teampatch.core.designsystem.theme.DP6
+import com.teampatch.core.designsystem.theme.DP8
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G3
 import com.teampatch.core.designsystem.theme.G5
@@ -127,7 +138,7 @@ private fun MemoryDetailScreen(
                 if (uiState.role == Role.VIP) {
                     IconButton(
                         onClick = { isSettingsBottomSheetShow = true },
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier.padding(end = DP16)
                     ) {
                         Icon(
                             painter = painterResource(ic_more_question),
@@ -142,7 +153,7 @@ private fun MemoryDetailScreen(
                 onClick = onDetailPageRequest,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(start = DP20, end = DP20, bottom = DP8)
             ) {
                 Text(stringResource(R.string.btn_look_all_answer))
             }
@@ -158,7 +169,7 @@ private fun MemoryDetailScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp)
+                    .height(DP240)
                     .background(G1)
             ) {
                 uiState.imageUrl?.let {
@@ -179,7 +190,7 @@ private fun MemoryDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 28.dp)
+                    .padding(top = DP28)
             ) {
                 Text(
                     text = uiState.title,
@@ -199,13 +210,13 @@ private fun MemoryDetailScreen(
                     fontWeight = FontWeight.Medium,
                     fontSize = 20.sp,
                     color = G5,
-                    modifier = Modifier.padding(top = 6.dp)
+                    modifier = Modifier.padding(top = DP6)
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(DP12),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(top = 16.dp)
+                        .padding(top = DP16)
                 ) {
                     uiState.tags.forEach { text ->
                         TagCard({ Text(text) })
@@ -213,16 +224,16 @@ private fun MemoryDetailScreen(
                 }
             }
             HorizontalDivider(
-                thickness = 12.dp,
+                thickness = DP12,
                 color = G1,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(vertical = DP20)
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .background(G1, RoundedCornerShape(10.dp))
-                    .padding(24.dp)
+                    .padding(horizontal = DP20)
+                    .background(G1, RoundedCornerShape(DP10))
+                    .padding(DP24)
             ) {
                 Text(
                     text = uiState.description,
@@ -231,7 +242,7 @@ private fun MemoryDetailScreen(
                     color = G5
                 )
             }
-            Box(Modifier.height(40.dp))
+            Box(Modifier.height(DP40))
         }
     }
 }
@@ -246,7 +257,7 @@ private fun SettingsBottomSheet(
     shape: Shape = BottomSheetDefaults.ExpandedShape,
     containerColor: Color = WH,
     contentColor: Color = contentColorFor(containerColor),
-    tonalElevation: Dp = 0.dp,
+    tonalElevation: Dp = DP0,
     scrimColor: Color = BottomSheetDefaults.ScrimColor,
     dragHandle: @Composable (() -> Unit)? = null,
     contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
@@ -270,14 +281,14 @@ private fun SettingsBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
+                .padding(bottom = DP20)
         ) {
             Text(
                 text = stringResource(R.string.text_retry_settings),
                 style = BottomSheetTextStyle,
                 modifier = BottomSheetTextModifier,
             )
-            HorizontalDivider(thickness = 1.dp, color = G3)
+            HorizontalDivider(thickness = DP1, color = G3)
             Text(
                 text = stringResource(R.string.text_delete_settings),
                 style = BottomSheetTextStyle,
@@ -295,7 +306,7 @@ private val BottomSheetTextStyle = TextStyle(
 
 private val BottomSheetTextModifier = Modifier
     .fillMaxWidth()
-    .padding(vertical = 20.dp)
+    .padding(vertical = DP20)
 
 @Preview
 @Composable

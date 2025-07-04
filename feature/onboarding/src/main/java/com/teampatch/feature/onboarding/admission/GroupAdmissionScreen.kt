@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,12 +40,7 @@ import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.component.BackButtonAppBar
 import com.teampatch.core.designsystem.component.DefaultButton
 import com.teampatch.core.designsystem.component.SpeechBubble
-import com.teampatch.core.designsystem.theme.BL
-import com.teampatch.core.designsystem.theme.G5
-import com.teampatch.core.designsystem.theme.HarmonyTheme
-import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.PretendardFontFamily
-import com.teampatch.core.designsystem.theme.WH
+import com.teampatch.core.designsystem.theme.*
 import com.teampatch.feature.onboarding.R
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionEvent
 import com.teampatch.feature.onboarding.admission.model.GroupAdmissionUiState
@@ -162,7 +156,7 @@ private fun GroupAdmissionScreen(
                     backgroundColor = WH,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 80.dp)
+                        .heightIn(min = DP80)
                 ) {
                     Text(
                         text = stringResource(R.string.text_admission_speech_bubble),
@@ -175,8 +169,8 @@ private fun GroupAdmissionScreen(
                 DefaultButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .padding(top = 32.dp, bottom = 8.dp),
+                        .padding(horizontal = DP20)
+                        .padding(top = DP32, bottom = DP8),
                     onClick = onHomeRouteRequest,
                 ) {
                     Text(text = stringResource(R.string.text_admission_bottom_button))
@@ -188,7 +182,7 @@ private fun GroupAdmissionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(scaffoldPaddingValue)
-                .padding(top = 20.dp)
+                .padding(top = DP20)
         ) {
             Text(
                 text = buildAnnotatedString {
@@ -205,7 +199,7 @@ private fun GroupAdmissionScreen(
                     }
                 },
                 lineHeight = 2.em,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier.padding(start = DP20)
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -217,13 +211,13 @@ private fun GroupAdmissionScreen(
                     painter = painterResource(ic_my_appbar),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(144.dp)
+                        .size(DP144)
                         .align(Alignment.CenterHorizontally)
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = DP16),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     uiState.members.forEach {
@@ -231,7 +225,7 @@ private fun GroupAdmissionScreen(
                             painter = painterResource(ic_my_appbar),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(72.dp)
+                                .size(DP72)
                         )
                     }
                 }
@@ -244,7 +238,7 @@ private fun GroupAdmissionScreen(
                     color = G5,
                     fontFamily = PretendardFontFamily,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = DP16)
                 )
             }
         }

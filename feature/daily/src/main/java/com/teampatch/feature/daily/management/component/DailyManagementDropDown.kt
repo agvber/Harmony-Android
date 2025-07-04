@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP200
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.RoundedCornerShape10
 import com.teampatch.core.designsystem.theme.SubRed
@@ -36,7 +37,7 @@ internal fun DailyManagementDropDown(
         onDismissRequest = onDismissRequest,
         shape = RoundedCornerShape10,
         modifier = modifier
-            .widthIn(min = 200.dp),
+            .widthIn(min = DP200),
         offset = offset
     ) {
         DropDownOption.entries.forEach { option ->

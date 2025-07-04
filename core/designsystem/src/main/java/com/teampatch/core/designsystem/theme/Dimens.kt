@@ -104,12 +104,17 @@ val DP97: Dp = 97.dp
 val DP98: Dp = 98.dp
 val DP99: Dp = 99.dp
 val DP100: Dp = 100.dp
+val DP114: Dp = 114.dp
 val DP120: Dp = 120.dp
+val DP144: Dp = 144.dp
 val DP156: Dp = 156.dp
+val DP192: Dp = 192.dp
 val DP200: Dp = 200.dp
 val DP204: Dp = 204.dp
 val DP240: Dp = 240.dp
 val DP252: Dp = 252.dp
 val DP280: Dp = 280.dp
+val DP320: Dp = 320.dp
+val DP999: Dp = 999.dp
 
 val PaddingContentHorizontal: Dp = DP20

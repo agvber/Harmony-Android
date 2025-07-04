@@ -1,5 +1,6 @@
 package com.teampatch.feature.memory.registration
 
+import com.teampatch.core.designsystem.theme.*
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -162,7 +163,7 @@ internal fun MemoryRegistrationScreen(
                         text = uiState.title,
                         maxLines = 1,
                         modifier = Modifier
-                            .widthIn(max = 240.dp)
+                            .widthIn(max = DP240)
                     )
                 },
                 actions = {
@@ -170,7 +171,7 @@ internal fun MemoryRegistrationScreen(
                         painter = painterResource(ic_close_memory_card),
                         contentDescription = "close",
                         modifier = Modifier
-                            .padding(end = 20.dp)
+                            .padding(end = DP20)
                             .noRippleClickable(onClick = onDismissRequest)
                     )
                 }
@@ -224,7 +225,7 @@ internal fun MemoryRegistrationScreen(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(start = DP20, end = DP20, bottom = DP8)
             ) {
                 Text(
                     text = when (recordState) {
@@ -245,7 +246,7 @@ internal fun MemoryRegistrationScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp)
+                    .height(DP240)
                     .background(G1)
             ) {
                 if (uiState.imageUrl == null) {
@@ -290,7 +291,7 @@ internal fun MemoryRegistrationScreen(
                 painter = painterResource(ic_harmony_talk),
                 contentDescription = "icon",
                 modifier = Modifier
-                    .padding(top = 24.dp)
+                    .padding(top = DP24)
                     .align(Alignment.CenterHorizontally)
             )
             if (recordState == RecordState.RECORDING) {
@@ -298,7 +299,7 @@ internal fun MemoryRegistrationScreen(
                     painter = painterResource(ic_voice_memorycard),
                     contentDescription = "recording",
                     modifier = Modifier
-                        .padding(top = 4.dp)
+                        .padding(top = DP4)
                         .align(Alignment.CenterHorizontally)
                 )
             }

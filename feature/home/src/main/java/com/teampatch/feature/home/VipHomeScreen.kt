@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
@@ -42,20 +41,13 @@ import com.teampatch.core.designsystem.component.EmptyLetterBox
 import com.teampatch.core.designsystem.component.ExpandMemoryCard
 import com.teampatch.core.designsystem.component.HomeAppBar
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.designsystem.theme.BL
-import com.teampatch.core.designsystem.theme.G1
-import com.teampatch.core.designsystem.theme.G4
-import com.teampatch.core.designsystem.theme.HarmonyTheme
-import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.PretendardFontFamily
-import com.teampatch.core.designsystem.theme.WH
+import com.teampatch.core.designsystem.theme.*
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeDailyRoutine
 import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.home.model.HomeUiState
 import com.teampatch.feature.home.model.MemoryCardState
-import java.time.LocalTime
 
 @Composable
 internal fun VipHomeScreen(
@@ -80,7 +72,7 @@ internal fun VipHomeScreen(
                 painter = painterResource(ic_my_appbar),
                 contentDescription = "my",
                 modifier = Modifier
-                    .padding(end = 20.dp)
+                    .padding(end = DP20)
                     .noRippleClickable(
                         onClick = onUserPageRequest
                     )
@@ -88,7 +80,7 @@ internal fun VipHomeScreen(
         }
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
         ) {
             item {
@@ -97,7 +89,7 @@ internal fun VipHomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(G1)
-                        .padding(top = 28.dp, bottom = 24.dp)
+                        .padding(top = DP28, bottom = DP24)
                         .noRippleClickable {
                             if (memoryCardExpanded &&
                                 memoryCardState is MemoryCardState.Success
@@ -166,7 +158,7 @@ internal fun VipHomeScreen(
                     fontWeight = FontWeight.W500,
                     fontSize = 22.sp,
                     modifier = Modifier
-                        .padding(start = 24.dp, top = 8.dp, bottom = 12.dp)
+                        .padding(start = DP24, top = DP8, bottom = DP12)
                 )
             }
 
@@ -180,14 +172,14 @@ internal fun VipHomeScreen(
                     dateTime = dailyRoutine.data.time.toStringFormat(context),
                     text = dailyRoutine.data.name,
                     modifier = Modifier
-                        .padding(horizontal = 24.dp)
+                        .padding(horizontal = DP24)
                         .noRippleClickable { onDailyRoutineClick(dailyRoutine.data.routineId) }
                 )
             }
 
             if (dailyRoutine.isNotEmpty()) {
                 item {
-                    Box(modifier = Modifier.height(20.dp))
+                    Box(modifier = Modifier.height(DP20))
                 }
             }
         }
@@ -209,10 +201,10 @@ internal fun VipHomeScreen(
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .padding(top = 18.dp)
-                        .widthIn(min = 320.dp)
-                        .heightIn(48.dp)
-                        .background(MainGreen, RoundedCornerShape(999.dp))
+                        .padding(top = DP18)
+                        .widthIn(min = DP320)
+                        .heightIn(DP48)
+                        .background(MainGreen, RoundedCornerShape999)
                         .noRippleClickable(
                             onClick = onDailyRoutineRegisterPageRequest
                         )

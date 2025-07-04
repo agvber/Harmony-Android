@@ -1,5 +1,6 @@
 package com.teampatch.feature.home
 
+import com.teampatch.core.designsystem.theme.*
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,7 +74,7 @@ internal fun MemberHomeScreen(
                     painter = painterResource(ic_my_appbar),
                     contentDescription = "my",
                     modifier = Modifier
-                        .padding(end = 20.dp)
+                        .padding(end = DP20)
                         .noRippleClickable(onClick = onUserPageRequest)
                 )
             }
@@ -82,7 +83,7 @@ internal fun MemberHomeScreen(
             .statusBarsPadding()
     ) { scaffoldPaddingValues ->
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(scaffoldPaddingValues)
@@ -93,7 +94,7 @@ internal fun MemberHomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(G1)
-                        .padding(top = 28.dp, bottom = 24.dp)
+                        .padding(top = DP28, bottom = DP24)
                         .noRippleClickable {
                             if (memoryCardExpanded &&
                                 memoryCardState is MemoryCardState.Success
@@ -178,7 +179,7 @@ internal fun MemberHomeScreen(
                     fontWeight = FontWeight.W500,
                     fontSize = 22.sp,
                     modifier = Modifier
-                        .padding(start = 24.dp, top = 8.dp, bottom = 12.dp)
+                        .padding(start = DP24, top = DP8, bottom = DP12)
                 )
             }
 
@@ -192,14 +193,14 @@ internal fun MemberHomeScreen(
                     dateTime = dailyRoutine.data.time.toStringFormat(context),
                     text = dailyRoutine.data.name,
                     modifier = Modifier
-                        .padding(horizontal = 24.dp)
+                        .padding(horizontal = DP24)
                         .noRippleClickable { onDailyRoutineClick(dailyRoutine.data.routineId) }
                 )
             }
 
             if (dailyRoutine.isNotEmpty()) {
                 item {
-                    Box(modifier = Modifier.height(20.dp))
+                    Box(modifier = Modifier.height(DP20))
                 }
             }
         }

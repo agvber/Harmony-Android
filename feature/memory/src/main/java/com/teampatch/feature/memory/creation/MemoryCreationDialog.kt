@@ -65,6 +65,7 @@ import com.teampatch.core.designsystem.theme.DP10
 import com.teampatch.core.designsystem.theme.DP12
 import com.teampatch.core.designsystem.theme.DP14
 import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP192
 import com.teampatch.core.designsystem.theme.DP2
 import com.teampatch.core.designsystem.theme.DP20
 import com.teampatch.core.designsystem.theme.DP24
@@ -197,7 +198,7 @@ private fun MemoryCardCreationContent(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(192.dp)
+                .height(DP192)
                 .padding(top = DP24)
                 .clip(RoundedCornerShape10)
                 .background(G1, RoundedCornerShape10)

@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -64,15 +63,7 @@ import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DefaultTextField
 import com.teampatch.core.designsystem.component.ItemFloatingButton
-import com.teampatch.core.designsystem.theme.BL
-import com.teampatch.core.designsystem.theme.G1
-import com.teampatch.core.designsystem.theme.G2
-import com.teampatch.core.designsystem.theme.G3
-import com.teampatch.core.designsystem.theme.G5
-import com.teampatch.core.designsystem.theme.HarmonyTheme
-import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.SubRed
-import com.teampatch.core.designsystem.theme.WH
+import com.teampatch.core.designsystem.theme.*
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.fake.FakeMemoryCard
@@ -130,11 +121,11 @@ internal fun MemoryStorageScreen(
 
     Scaffold(
         topBar = {
-            Column(modifier = Modifier.padding(bottom = 20.dp)) {
+            Column(modifier = Modifier.padding(bottom = DP20)) {
                 AppBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
+                        .padding(horizontal = DP20),
                     navigation = {
                         if (isSearchMode) {
                             MemoryStorageTextField(
@@ -186,14 +177,14 @@ internal fun MemoryStorageScreen(
     ) { scaffoldPaddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
+            horizontalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(scaffoldPaddingValues)
                 .background(G1)
-                .padding(top = 16.dp, bottom = 16.dp)
-                .padding(horizontal = 20.dp)
+                .padding(top = DP16, bottom = DP16)
+                .padding(horizontal = DP20)
         ) {
             items(
                 count = memoryCardsLazyItems.itemCount,
@@ -203,7 +194,7 @@ internal fun MemoryStorageScreen(
                 Column(
                     modifier = Modifier
                         .background(WH)
-                        .border(1.dp, G2)
+                        .border(DP1, G2)
                         .noRippleClickable {
                             currentItem?.let { onDetailPageRequest(it.id) }
                                 ?: Toast.makeText(
@@ -220,10 +211,10 @@ internal fun MemoryStorageScreen(
                         placeholder = previewPlaceholder(img_test_memory_card),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(114.dp)
+                            .height(DP114)
                     )
                     Column(
-                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp)
+                        modifier = Modifier.padding(vertical = DP10, horizontal = DP14)
                     ) {
                         Text(
                             text = currentItem?.writerTitle ?: "",
@@ -294,7 +285,7 @@ fun MemoryStorageTextField(
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
             modifier = Modifier
-                .padding(start = 8.dp)
+                .padding(start = DP8)
                 .noRippleClickable(onClick = onCancelRequest)
         )
     }
@@ -319,7 +310,7 @@ private fun MemoryStorageFilterTab(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = DP20),
     ) {
         Text(
             text = stringResource(sortOption.toStringResource()),
@@ -327,7 +318,7 @@ private fun MemoryStorageFilterTab(
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
-                .padding(end = 4.dp)
+                .padding(end = DP4)
                 .onGloballyPositioned {
                     dropdownMenuFloatOffset = it.parentCoordinates?.positionInRoot()?.x ?: 0f
                 }
@@ -339,12 +330,12 @@ private fun MemoryStorageFilterTab(
             painter = painterResource(ic_chevron_memory_storage),
             contentDescription = null,
             modifier = Modifier
-                .size(14.dp)
+                .size(DP14)
         )
         DropdownMenu(
             expanded = isDropdownExpanded,
             onDismissRequest = { isDropdownExpanded = false },
-            offset = DpOffset(dropdownMenuDpOffset, 0.dp)
+            offset = DpOffset(dropdownMenuDpOffset, DP0)
         ) {
             MemoryCardSort.entries.forEach { option ->
                 DropdownMenuItem(

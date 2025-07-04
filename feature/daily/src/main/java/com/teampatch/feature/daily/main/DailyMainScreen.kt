@@ -35,7 +35,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -49,6 +48,11 @@ import com.teampatch.core.designsystem.component.DailyRoutineCard
 import com.teampatch.core.designsystem.component.ItemFloatingButton
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP10
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP4
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G5
 import com.teampatch.core.designsystem.theme.HarmonyTheme
@@ -174,7 +178,7 @@ private fun DailyMainScreen(
         floatingActionButtonPosition = FabPosition.End
     ) { scaffoldPaddingValues ->
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(scaffoldPaddingValues)
@@ -184,10 +188,10 @@ private fun DailyMainScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 4.dp)
+                        .padding(bottom = DP4)
                         .background(WH)
                         .padding(
-                            vertical = 16.dp,
+                            vertical = DP16,
                             horizontal = dimensionResource(R.dimen.padding_root_20)
                         )
                 ) {
@@ -212,8 +216,8 @@ private fun DailyMainScreen(
                         progress = { animatedFloatProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp)
-                            .height(16.dp)
+                            .padding(top = DP10)
+                            .height(DP16)
                             .clip(RoundedCornerShape(dimensionResource(R.dimen.size_radius_999))),
                         color = MainGreen,
                         trackColor = G1
@@ -243,7 +247,7 @@ private fun DailyMainScreen(
             }
             if (dailyRoutine.isNotEmpty()) {
                 item {
-                    Box(modifier = Modifier.height(20.dp))
+                    Box(modifier = Modifier.height(DP20))
                 }
             }
         }
