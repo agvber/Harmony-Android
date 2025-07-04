@@ -13,7 +13,8 @@ class EditRoutineUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(
-        routineId: String, name: String,
+        routineId: String,
+        name: String,
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
     ) {
