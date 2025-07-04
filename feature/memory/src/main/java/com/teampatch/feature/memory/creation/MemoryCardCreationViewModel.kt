@@ -62,4 +62,9 @@ internal class MemoryCardCreationViewModel @Inject constructor(
         val date = LocalDate.ofInstant(instant, ZoneOffset.UTC)
         _uiState.update { it.copy(date = date) }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        _event.close()
+    }
 }
