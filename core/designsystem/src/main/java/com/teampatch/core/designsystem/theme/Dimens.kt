@@ -3,6 +3,7 @@ package com.teampatch.core.designsystem.theme
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+val DP0: Dp = 0.dp
 val DP1: Dp = 1.dp
 val DP2: Dp = 2.dp
 val DP3: Dp = 3.dp
@@ -103,9 +104,12 @@ val DP97: Dp = 97.dp
 val DP98: Dp = 98.dp
 val DP99: Dp = 99.dp
 val DP100: Dp = 100.dp
+val DP120: Dp = 120.dp
 val DP156: Dp = 156.dp
 val DP200: Dp = 200.dp
 val DP204: Dp = 204.dp
 val DP240: Dp = 240.dp
+val DP252: Dp = 252.dp
+val DP280: Dp = 280.dp
 
 val PaddingContentHorizontal: Dp = DP20
