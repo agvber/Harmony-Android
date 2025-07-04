@@ -12,7 +12,6 @@ fun TodayQuestionResponse.toDomain(): QuestionDetail = QuestionDetail(
     title = question,
     content = answer ?: "",
     dateTime = LocalDateTime.now(),
-    commentCount = 0
 )
 
 fun QuestionCardCommentResponse.toDomain(): QuestionComment = QuestionComment(

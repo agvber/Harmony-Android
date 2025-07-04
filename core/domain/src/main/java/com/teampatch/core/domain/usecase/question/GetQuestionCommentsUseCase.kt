@@ -1,13 +1,14 @@
 package com.teampatch.core.domain.usecase.question
 
-import androidx.paging.PagingData
-import com.teampatch.core.domain.fake.FakeQuestionComments
 import com.teampatch.core.domain.model.question.QuestionComment
-import javax.inject.Inject
+import com.teampatch.core.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class GetQuestionCommentsUseCase @Inject constructor() {
+class GetQuestionCommentsUseCase @Inject constructor(
+    private val questionRepository: QuestionRepository,
+) {
 
-    operator fun invoke(questionId: String): Flow<PagingData<QuestionComment>> = flowOf(PagingData.from(FakeQuestionComments().get()))
+    operator fun invoke(questionId: String): Flow<List<QuestionComment>> =
+        questionRepository.getQuestionComments(questionId)
 }

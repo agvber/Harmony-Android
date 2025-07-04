@@ -1,6 +1,5 @@
 package com.teampatch.core.data.repository.local
 
-import androidx.paging.PagingData
 import com.harmony.core.database.LOCAL_DB_DATE_TIME_FORMATTER
 import com.harmony.core.database.dao.QuestionDao
 import com.harmony.core.database.dao.UserDao
@@ -14,6 +13,7 @@ import com.teampatch.core.domain.repository.QuestionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -23,41 +23,41 @@ internal class LocalQuestionRepositoryImpl @Inject constructor(
     private val authenticationLocalDatasource: AuthenticationLocalDatasource
 ) : QuestionRepository {
 
-    override fun getQuestions(limit: Int): Flow<PagingData<Question>> =
+    override fun getQuestions(limit: Int): Flow<List<Question>> =
         questionDao.getQuestions(limit).map { questionEntities ->
             questionEntities.map { questionEntity ->
                 Question(
                     id = questionEntity.id.toString(),
-                    number = 0,
+                    number = questionEntity.id.toInt(),
                     title = questionEntity.title
                 )
             }
-                .let {
-                    PagingData.from(it)
-                }
         }
 
     override suspend fun getQuestionDetail(questionId: String): QuestionDetail {
-        val question = questionDao.getQuestionById(questionId.toLong()).first()
-        return QuestionDetail(
-            id = question.id.toString(),
-            number = 0,
-            title = question.title,
-            content = question.content,
-            dateTime = LocalDateTime.parse(question.createdAt, LOCAL_DB_DATE_TIME_FORMATTER),
-            commentCount = 0,
-            comment = questionDao.getQuestionComments(questionId.toLong()).map { commentEntities ->
-                commentEntities.map { commentEntity ->
-                    QuestionComment(
-                        commentId = commentEntity.comment.id.toString(),
-                        writerUid = commentEntity.comment.writtenUid.toString(),
-                        writerName = commentEntity.user.name,
-                        content = commentEntity.comment.content
-                    )
-                }
-                    .let { PagingData.from(it) }
+        return questionDao.getQuestionById(questionId.toLong()).map { question ->
+            QuestionDetail(
+                id = question.id.toString(),
+                number = question.id.toInt(),
+                title = question.title,
+                content = question.content,
+                dateTime = LocalDateTime.parse(question.createdAt, LOCAL_DB_DATE_TIME_FORMATTER),
+            )
+        }
+            .first()
+    }
+
+    override fun getQuestionComments(questionId: String): Flow<List<QuestionComment>> {
+        return questionDao.getQuestionComments(questionId.toLong()).map { commentEntities ->
+            commentEntities.map { commentEntity ->
+                QuestionComment(
+                    commentId = commentEntity.comment.id.toString(),
+                    writerUid = commentEntity.comment.writtenUid.toString(),
+                    writerName = commentEntity.user.name,
+                    content = commentEntity.comment.content
+                )
             }
-        )
+        }
     }
 
     override suspend fun addComment(questionId: String, comment: String): QuestionComment {
@@ -82,14 +82,16 @@ internal class LocalQuestionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editComment(commentId: String, comment: String) {
-        val questionCommentEntity = questionDao.getQuestionCommentById(commentId.toLong()).first()
         val currentTime = getCurrentTimeLocalDBFormat()
-        questionDao.updateQuestionComment(
-            questionCommentEntity.copy(
-                content = comment,
-                modifiedAt = currentTime
+        questionDao.getQuestionCommentById(commentId.toLong()).onEach {
+            questionDao.updateQuestionComment(
+                it.copy(
+                    content = comment,
+                    modifiedAt = currentTime
+                )
             )
-        )
+        }
+            .first()
     }
 
     override suspend fun deleteComment(commentId: String) {

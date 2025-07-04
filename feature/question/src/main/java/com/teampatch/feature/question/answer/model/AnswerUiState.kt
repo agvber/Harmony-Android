@@ -10,7 +10,6 @@ internal data class AnswerUiState(
         title = "",
         content = "",
         dateTime = LocalDateTime.now(),
-        commentCount = 0
     ),
     val isLoading: Boolean = true,
 )

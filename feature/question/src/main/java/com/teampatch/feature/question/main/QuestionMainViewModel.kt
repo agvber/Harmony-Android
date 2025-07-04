@@ -1,51 +1,64 @@
 package com.teampatch.feature.question.main
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
+import com.teampatch.core.common.DefaultSharingStarted
+import com.teampatch.core.common.flowExceptionSafety
+import com.teampatch.core.domain.model.question.Question
 import com.teampatch.core.domain.usecase.question.GetQuestionsUseCase
 import com.teampatch.core.domain.usecase.user.GetUserInfoUseCase
-import com.teampatch.feature.question.main.model.QuestionSideEffect
+import com.teampatch.feature.question.main.model.QuestionMainEvent
 import com.teampatch.feature.question.main.model.QuestionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class QuestionMainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getQuestionsUseCase: GetQuestionsUseCase,
+    getQuestionsUseCase: GetQuestionsUseCase,
 ) : ViewModel() {
 
-    var questionUiState = mutableStateOf(QuestionUiState())
-        private set
+    private val _uiState = MutableStateFlow(QuestionUiState())
+    val uiState: StateFlow<QuestionUiState> = _uiState
 
-    private val _sideEffect = Channel<QuestionSideEffect>()
-    val sideEffect = _sideEffect.receiveAsFlow()
+    private val _event = Channel<QuestionMainEvent>()
+    val event = _event.receiveAsFlow()
+
+    val questions: StateFlow<List<Question>> = flowExceptionSafety {
+        getQuestionsUseCase(3)
+    }
+        .catch {
+            it.printStackTrace()
+            _event.send(QuestionMainEvent.LoadError(it))
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = DefaultSharingStarted,
+            initialValue = emptyList()
+        )
 
     init {
         load()
     }
 
     private fun load() = viewModelScope.launch {
-        try {
-            val user = getUserInfoUseCase().first()
-            val questions = getQuestionsUseCase()
-                .catch {
-                    it.printStackTrace()
-                    _sideEffect.send(QuestionSideEffect.LoadError(it))
-                }
-                .cachedIn(viewModelScope)
-            questionUiState.value =
-                QuestionUiState(user = user, question = questions, isLoading = false)
-        } catch (e: Exception) {
-            _sideEffect.send(QuestionSideEffect.LoadError(e))
-            e.printStackTrace()
+        runCatching {
+            getUserInfoUseCase.invoke().collectLatest { user ->
+                _uiState.update { it.copy(role = user.role, isLoading = false) }
+            }
         }
+            .onFailure { e ->
+                _event.send(QuestionMainEvent.LoadError(e))
+                e.printStackTrace()
+            }
     }
 }

@@ -6,11 +6,10 @@ import java.time.LocalDateTime
 class FakeQuestionDetail : FakeModel<QuestionDetail>() {
 
     override fun build(): QuestionDetail = QuestionDetail(
-        id = "qd001",
+        id = "1",
         number = 1,
         title = "What inspired you to start coding?",
         content = "I've always been fascinated by technology and how things work. Coding allows me to create and solve problems in unique ways.",
         dateTime = LocalDateTime.now(),
-        commentCount = 100
     )
 }
