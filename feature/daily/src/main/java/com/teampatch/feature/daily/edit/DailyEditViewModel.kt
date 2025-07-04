@@ -51,7 +51,9 @@ internal class DailyEditViewModel @Inject constructor(
         ) {
             val routine: Routine = getRoutineUseCase.invoke(route.dailyId)
             _uiState.value = DailyEditUiState(
-                title = routine.name, dailyEditMode = DailyEditMode.EDIT
+                title = routine.name,
+                selectedDays = routine.daysOfWeekPeriod,
+                dailyEditMode = DailyEditMode.EDIT
             )
         }
     }

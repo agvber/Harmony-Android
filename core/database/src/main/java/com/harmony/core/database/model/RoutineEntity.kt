@@ -20,5 +20,6 @@ data class RoutineEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "group_id") val groupId: Long,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "period") val period: String,
+    @ColumnInfo(name = "day_of_week") val dayOfWeek: Set<String>,
+    @ColumnInfo(name = "time") val time: String,
 )

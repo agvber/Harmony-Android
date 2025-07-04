@@ -1,12 +1,15 @@
 package com.teampatch.core.data.repository.local
 
 import com.harmony.core.database.LOCAL_DB_DATE_FORMATTER
+import com.harmony.core.database.LOCAL_DB_TIME_FORMATTER
 import com.harmony.core.database.dao.RoutineDao
+import com.harmony.core.database.model.RoutineEntity
 import com.harmony.core.database.model.RoutineLogEntity
-import com.teampatch.core.data.mapper.RoutineMapper
-import com.teampatch.core.domain.model.routine.Routine
+import com.teampatch.core.common.set
+import com.teampatch.core.data.mapper.toDomain
 import com.teampatch.core.domain.model.TaskProgress
 import com.teampatch.core.domain.model.routine.DailyRoutine
+import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.repository.RoutineRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -21,7 +24,6 @@ import javax.inject.Inject
 
 internal class LocalRoutineRepositoryImpl @Inject constructor(
     private val routineDao: RoutineDao,
-    private val routineMapper: RoutineMapper,
 ) : RoutineRepository {
 
     override suspend fun addRoutine(
@@ -30,13 +32,14 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
     ) {
-        routineMapper.buildRoutineEntity(
-            routineName = routineName,
-            daysOfWeekPeriod = daysOfWeekPeriod,
-            periodTime = periodTime,
-            groupId = groupId.toLong()
+        val routineEntity = RoutineEntity(
+            id = null,
+            groupId = groupId.toLong(),
+            name = routineName,
+            dayOfWeek = daysOfWeekPeriod.set { it.name },
+            time = periodTime.format(LOCAL_DB_TIME_FORMATTER)
         )
-            .let { routineDao.insertAll(it) }
+        routineDao.insertAll(routineEntity)
     }
 
     override suspend fun editRoutine(
@@ -46,13 +49,14 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
     ) {
-        routineMapper.buildRoutineEntity(
-            routineName = routineName,
-            daysOfWeekPeriod = daysOfWeekPeriod,
-            periodTime = periodTime,
-            groupId = groupId.toLong()
+        val routineEntity = RoutineEntity(
+            id = routineId.toLong(),
+            groupId = groupId.toLong(),
+            name = routineName,
+            dayOfWeek = daysOfWeekPeriod.set { it.name },
+            time = periodTime.format(LOCAL_DB_TIME_FORMATTER)
         )
-            .let { routineDao.upsertAll(it) }
+        routineDao.upsertAll(routineEntity)
     }
 
     override suspend fun checkRoutine(routineId: String, isFinished: Boolean) {
@@ -64,26 +68,25 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
                 routineDao.upsertAll(entities[0].copy(isFinished = isFinished))
                 return@onEach
             }
-            routineDao.insertAll(
-                RoutineLogEntity(
-                    routineId = routineId.toLong(),
-                    date = now,
-                    isFinished = isFinished
-                )
+            val routineLogEntity = RoutineLogEntity(
+                routineId = routineId.toLong(),
+                date = now,
+                isFinished = isFinished
             )
+            routineDao.insertAll(routineLogEntity)
         }
             .first()
     }
 
     override fun getAllRoutines(): Flow<List<Routine>> {
         return routineDao.getAllRoutines().map { entities ->
-            entities.mapNotNull { routineMapper.toDomain(it) }
+            entities.mapNotNull { it.toDomain() }
         }
     }
 
     override fun getRoutineById(id: String): Flow<Routine> {
         return routineDao.getRoutineById(id.toLong())
-            .mapNotNull { routineMapper.toDomain(it) }
+            .mapNotNull { it.toDomain() }
     }
 
     override fun getDailyRoutine(date: LocalDate): Flow<List<DailyRoutine>> {
@@ -93,11 +96,18 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
             flow2 = routineDao.getRoutineLogByDate(dateServerFormat)
         ) { routines, routineLogs ->
             routines.mapNotNull { routineEntity ->
-                routineMapper.toDomain(
-                    routineEntity = routineEntity,
-                    routineLogs = routineLogs,
-                    date = date
-                )
+                runCatching {
+                    DailyRoutine(
+                        routineId = routineEntity.id.toString(),
+                        name = routineEntity.name,
+                        time = LocalTime.parse(routineEntity.time, LOCAL_DB_TIME_FORMATTER),
+                        isFinished = routineLogs.find {
+                            it.routineId == routineEntity.id?.toLong()
+                        }?.isFinished == true
+                    )
+                }
+                    .onFailure { it.printStackTrace() }
+                    .getOrNull()
             }
         }
     }
@@ -108,8 +118,8 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
             routineDao.getAllRoutines(),
             routineDao.getRoutineLogByDate(dateStringFormat)
         ) { routines, routineLogs ->
-            val routinesCount: Int = routines.map { routineMapper.toDomain(it) }
-                .count { it?.let { date.dayOfWeek in it.daysOfWeekPeriod } == true }
+            val routinesCount: Int = routines
+                .count { date.dayOfWeek.name in it.dayOfWeek }
             val finishedCount: Int = routineLogs.count { it.isFinished }
             TaskProgress(routinesCount, finishedCount)
         }
