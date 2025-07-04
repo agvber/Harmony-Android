@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
@@ -87,9 +88,7 @@ import com.teampatch.feature.memory.creation.model.MemoryCreationEvent
 import com.teampatch.feature.memory.creation.model.MemoryCreationUiState
 
 @Composable
-fun MemoryCreationDialog(
-    onDismissRequest: () -> Unit,
-) {
+fun MemoryCreationDialog(onDismissRequest: () -> Unit) {
     MemoryCardCreationDialogWithViewModel(onDismissRequest = onDismissRequest)
 }
 
@@ -200,6 +199,7 @@ private fun MemoryCardCreationContent(
                 .fillMaxWidth()
                 .height(192.dp)
                 .padding(top = DP24)
+                .clip(RoundedCornerShape10)
                 .background(G1, RoundedCornerShape10)
                 .noRippleClickable { photoPicker.launch(pickVisualMediaRequest) }
         ) {
