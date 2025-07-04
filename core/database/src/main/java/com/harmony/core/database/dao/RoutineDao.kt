@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RoutineDao {
 
-    @Query("SELECT * FROM routine")
+    @Query("SELECT * FROM routine ORDER BY time ASC")
     fun getAllRoutines(): Flow<List<RoutineEntity>>
 
     @Query("SELECT * FROM routine WHERE id = :id")
