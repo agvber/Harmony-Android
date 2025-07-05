@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_image_harmony_description">가족과 함께 만드는 추억</string>
+    <string name="login_button_kakao">카카오 로그인</string>
+    <string name="login_button_kakao_description">카카오 로그인 버튼</string>
+    <string name="login_toast_login_error_message">로그인에 실패했습니다.</string>
+</resources>

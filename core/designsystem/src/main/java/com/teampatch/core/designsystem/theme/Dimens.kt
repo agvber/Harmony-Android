@@ -106,6 +106,7 @@ val DP99: Dp = 99.dp
 val DP100: Dp = 100.dp
 val DP114: Dp = 114.dp
 val DP120: Dp = 120.dp
+val DP136: Dp = 136.dp
 val DP144: Dp = 144.dp
 val DP156: Dp = 156.dp
 val DP192: Dp = 192.dp
