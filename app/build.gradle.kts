@@ -90,7 +90,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:settings"))
-    implementation(project(":feature:daily"))
+    implementation(project(":feature:routine"))
     implementation(project(":feature:question"))
     implementation(project(":feature:memory"))
 
