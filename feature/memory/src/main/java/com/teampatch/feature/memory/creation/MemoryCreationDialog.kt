@@ -105,7 +105,7 @@ internal fun MemoryCardCreationDialogWithViewModel(
 
     Dialog(onDismissRequest) {
         MemoryCardCreationContent(
-            onDismissRequest = onDismissRequest,
+            onDismissRequest = { viewModel.clearState(); onDismissRequest() },
             onCompleteRequest = viewModel::addMemoryCard,
             onChangeImage = viewModel::updateImage,
             onDateChange = viewModel::updateDate,

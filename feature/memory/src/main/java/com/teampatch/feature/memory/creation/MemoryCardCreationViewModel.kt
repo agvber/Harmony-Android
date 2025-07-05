@@ -63,6 +63,10 @@ internal class MemoryCardCreationViewModel @Inject constructor(
         _uiState.update { it.copy(date = date) }
     }
 
+    fun clearState() {
+        _uiState.value = MemoryCreationUiState()
+    }
+
     override fun onCleared() {
         super.onCleared()
         _event.close()
