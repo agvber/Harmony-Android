@@ -2,7 +2,7 @@
 - 하모니, 소중한 사람들과의 추억 공유 서비스. '모니'와 대화를 하며 추억을 떠올리고, 가족/친구와 공유해요.
 
 ### 개발 스킬
-![image](https://github.com/user-attachments/assets/df56667c-f7fd-4eaf-95cf-b27053d7e076)
+![image](https://github.com/user-attachments/assets/065d1b9f-aa02-48ca-9788-20ca6822020f)
 
 ### 기능 소개
 #### 🏠홈
