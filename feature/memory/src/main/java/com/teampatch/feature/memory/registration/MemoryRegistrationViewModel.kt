@@ -48,7 +48,7 @@ internal class MemoryRegistrationViewModel @Inject constructor(
         try {
             val memoryCard = getMemoryCardUseCase(route!!.memoryCardId)
             uiState = uiState.copy(
-                title = memoryCard.text,
+                title = memoryCard.writerTitle,
                 imageUrl = memoryCard.imageUrl,
                 isLoading = false
             )

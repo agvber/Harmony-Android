@@ -2,10 +2,12 @@ package com.teampatch.core.common
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 const val SHARING_STARTED_TIME: Long = 5_000
+val DefaultSharingStarted = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME)
 
 fun <T> flowErrorCatch(
     block: () -> Flow<T>,

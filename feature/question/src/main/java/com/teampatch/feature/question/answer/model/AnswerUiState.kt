@@ -1,6 +1,6 @@
 package com.teampatch.feature.question.answer.model
 
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.QuestionDetail
 import java.time.LocalDateTime
 
 internal data class AnswerUiState(
@@ -10,7 +10,6 @@ internal data class AnswerUiState(
         title = "",
         content = "",
         dateTime = LocalDateTime.now(),
-        commentCount = 0
     ),
     val isLoading: Boolean = true,
 )

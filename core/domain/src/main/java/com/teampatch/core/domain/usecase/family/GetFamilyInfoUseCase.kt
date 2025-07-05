@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.usecase.family
 
-import com.teampatch.core.domain.model.FamilyInfo
+import com.teampatch.core.domain.model.group.FamilyInfo
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import com.teampatch.core.domain.repository.UserRepository
 import javax.inject.Inject

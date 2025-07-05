@@ -1,27 +1,25 @@
 package com.teampatch.core.data.repository
 
-import androidx.paging.PagingData
 import com.teampatch.core.data.mapper.toDomain
-import com.teampatch.core.domain.model.Question
-import com.teampatch.core.domain.model.QuestionComment
-import com.teampatch.core.domain.model.QuestionDetail
+import com.teampatch.core.domain.model.question.Question
+import com.teampatch.core.domain.model.question.QuestionComment
+import com.teampatch.core.domain.model.question.QuestionDetail
 import com.teampatch.core.domain.repository.QuestionRepository
 import com.teampatch.core.domain.repository.UserRepository
 import com.teampatch.core.network.QuestionRemoteDataSource
 import com.teampatch.core.network.model.question.request.CommentRequestBody
 import com.teampatch.core.network.model.question.request.QuestionCardCommentRequestBody
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 class QuestionRepositoryImpl @Inject constructor(
     private val questionRemoteDataSource: QuestionRemoteDataSource,
     private val userRepository: UserRepository,
 ) : QuestionRepository {
 
-    override fun getQuestions(limit: Int): Flow<PagingData<Question>> = flow {
+    override fun getQuestions(limit: Int): Flow<List<Question>> = flow {
         val user = userRepository.getUserInfo().first()
         val questions = if ((1..3).contains(limit)) {
             questionRemoteDataSource.getRecentThreeQuestions(user.groupId)
@@ -33,26 +31,35 @@ class QuestionRepositoryImpl @Inject constructor(
             .mapIndexed { index, question ->
                 question.toDomain(index)
             }
-        emit(PagingData.from(questions))
+        emit(questions)
     }
 
     override suspend fun getQuestionDetail(questionId: String): QuestionDetail {
-        val questionResponse = questionRemoteDataSource.getQuestionDetail(questionId = questionId.toInt()).data
-        val commentResponse = questionRemoteDataSource.getQuestionCardComments(questionId.toInt()).data
-        val comment = commentResponse.map { it.toDomain() }
-
-        return questionResponse
+        return questionRemoteDataSource.getQuestionDetail(questionId = questionId.toInt())
+            .data
             .toDomain()
-            .copy(commentCount = commentResponse.size, comment = flowOf(PagingData.from(comment)))
     }
+
+    override fun getQuestionComments(questionId: String): Flow<List<QuestionComment>> = flow {
+        questionRemoteDataSource.getQuestionCardComments(questionId.toInt()).data
+            .map { it.toDomain() }
+            .let { emit(it) }
+    }
+
 
     override suspend fun addComment(questionId: String, comment: String): QuestionComment {
         val user = userRepository.getUserInfo().first()
         val questionCardCommentRequestBody =
             QuestionCardCommentRequestBody(questionId.toInt(), user.groupId, user.name, comment)
-        val commentCreateResponse = questionRemoteDataSource.postQuestionCardComment(questionCardCommentRequestBody)
+        val commentCreateResponse =
+            questionRemoteDataSource.postQuestionCardComment(questionCardCommentRequestBody)
         val commentCreateResponseData = commentCreateResponse.data
-        return QuestionComment(commentCreateResponseData.commentId.toString(), user.uid, user.name, comment)
+        return QuestionComment(
+            commentId = commentCreateResponseData.commentId.toString(),
+            writerUid = user.uid,
+            writerName = user.name,
+            content = comment
+        )
     }
 
     override suspend fun editComment(commentId: String, comment: String) {

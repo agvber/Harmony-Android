@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.fake
 
 import java.time.DayOfWeek
-import com.teampatch.core.domain.model.Routine
+import com.teampatch.core.domain.model.routine.Routine
 import java.time.LocalTime
 
 class FakeRoutines : FakeModel<List<Routine>>() {

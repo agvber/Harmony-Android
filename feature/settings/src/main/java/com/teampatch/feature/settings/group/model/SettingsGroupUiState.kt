@@ -1,7 +1,7 @@
 package com.teampatch.feature.settings.group.model
 
-import com.teampatch.core.domain.model.FamilyInfo
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.group.FamilyInfo
+import com.teampatch.core.domain.model.user.User
 
 data class SettingsGroupUiState(
     val user: User = User.createEmptyUser(),

@@ -1,8 +1,8 @@
 package com.teampatch.core.domain.repository
 
-import com.teampatch.core.domain.model.AdmissionGroupInformation
-import com.teampatch.core.domain.model.InvitedGroup
-import com.teampatch.core.domain.model.UserGroup
+import com.teampatch.core.domain.model.group.AdmissionGroupInformation
+import com.teampatch.core.domain.model.group.InvitedGroup
+import com.teampatch.core.domain.model.group.UserGroup
 
 interface GroupManagementRepository {
 

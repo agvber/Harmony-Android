@@ -2,6 +2,7 @@ package com.harmony.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.harmony.core.database.model.QuestionCommentEntity
@@ -32,10 +33,13 @@ interface QuestionDao {
     @Query("SELECT * FROM question_comment WHERE id = :questionCommentId")
     fun getQuestionCommentById(questionCommentId: Long): Flow<QuestionCommentEntity>
 
-    @Insert(QuestionCommentEntity::class)
+    @Insert(entity = QuestionEntity::class)
+    suspend fun insertQuestion(vararg questionEntity: QuestionEntity): List<Long>
+
+    @Insert(entity = QuestionCommentEntity::class)
     suspend fun insertQuestionComment(vararg questionCommentEntity: QuestionCommentEntity): List<Long>
 
-    @Update(QuestionCommentEntity::class)
+    @Update(entity = QuestionCommentEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateQuestionComment(questionCommentEntity: QuestionCommentEntity)
 
     @Query("DELETE FROM question_comment WHERE id = :questionCommentId")

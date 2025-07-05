@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="date_format">%d년 %d월 %d일</string>
+    <string name="everyday">매일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="sunday">일</string>
+    <string name="am">오전</string>
+    <string name="pm">오후</string>
+    <string name="hour">시</string>
+    <string name="minute">분</string>
+    <string name="coma">,</string>
+
+    <string name="image_exit_description">화면 닫기</string>
+
+    <string name="routine_text_time_format_am">오전 %d시 %d분</string>
+    <string name="routine_text_time_format_pm">오후 %d시 %d분</string>
+    <string name="routine_text_hour_format_am">오전 %d시</string>
+    <string name="routine_text_hour_format_pm">오후 %d시</string>
+
+
+    <!--  Main  -->
+    <string name="appbar_main_title">&#160;일과</string>
+    <string name="text_main_title">완료된 일과에 응원의 한 마디를 남겨요!</string>
+    <string name="text_main_title_vip">나머지도 힘내서 달성해 봐요!</string>
+    <string name="image_edit_content_description">수정하기</string>
+    <string name="text_main_progress">%d%% 완료</string>
+    <string name="text_date_am">오전 %d시</string>
+    <string name="text_date_pm">오후 %d시</string>
+    <string name="toast_main_load_error">오늘의 일과 데이터를 불러오지 못하였습니다.</string>
+    <string name="toast_main_status_changed_error">데이터를 변경할 수 없습니다.\n앱을 다시시작해주세요.</string>
+    <string name="image_add_description">아이템 추가</string>
+
+    <!--  Add  -->
+    <string name="appbar_daily_add">새로운 일과</string>
+    <string name="button_daily_add_complete">추가하기</string>
+
+    <!--  Edit  -->
+    <string name="appbar_daily_edit">일과 수정</string>
+    <string name="button_daily_edit_complete">수정하기</string>
+    <string name="text_per_daily">무슨 일과인가요?</string>
+    <string name="select_time">몇 시로 설정할까요?</string>
+    <string name="select_week_days">무슨 요일마다 하나요?</string>
+    <string name="image_selected_time_description">설정된 시간</string>
+    <string name="toast_edit_data_send_error">데이터 전송 과정에서 오류가 발생하였습니다.</string>
+    <string name="toast_edit_load_error">해당 일과를 불러오지 못하였습니다.</string>
+    <string name="text_date_picker_cancel">취소</string>
+    <string name="text_date_picker_confirm">확인</string>
+    <string name="text_date_picker_title">날짜 선택</string>
+    <string name="hint_daily_title">예) 아침 식사 먹기</string>
+    <string name="toast_edit_time_format_error">시간 형식이 올바르지 않습니다.</string>
+
+    <!--  Management  -->
+    <string name="text_management_appbar">일과 관리</string>
+    <string name="dropdown_edit_daily">일과 수정</string>
+    <string name="dropdown_delete_daily">일과 삭제</string>
+    <string name="toast_management_load_error">일과 목록을 불러오지 못하였습니다.</string>
+    <string name="toast_management_item_select_error">아이템 정보를 불러오는 과정에서 에러가 발생하였습니다.</string>
+    <string name="toast_management_item_delete_error">일과 삭제 과정에서 에러가 발생하였습니다.\n 다시 시도 해주세요.</string>
+    <string name="text_management_date_format">%s / %s</string>
+</resources>

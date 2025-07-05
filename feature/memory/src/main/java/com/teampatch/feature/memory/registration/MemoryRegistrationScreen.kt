@@ -1,5 +1,6 @@
 package com.teampatch.feature.memory.registration
 
+import com.teampatch.core.designsystem.theme.*
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
@@ -53,6 +55,7 @@ import com.teampatch.core.designsystem.component.DefaultButtonColor
 import com.teampatch.core.designsystem.component.SpeechBubble
 import com.teampatch.core.designsystem.component.TypeWriterText
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP156
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
@@ -160,7 +163,7 @@ internal fun MemoryRegistrationScreen(
                         text = uiState.title,
                         maxLines = 1,
                         modifier = Modifier
-                            .widthIn(max = 240.dp)
+                            .widthIn(max = DP240)
                     )
                 },
                 actions = {
@@ -168,7 +171,7 @@ internal fun MemoryRegistrationScreen(
                         painter = painterResource(ic_close_memory_card),
                         contentDescription = "close",
                         modifier = Modifier
-                            .padding(end = 20.dp)
+                            .padding(end = DP20)
                             .noRippleClickable(onClick = onDismissRequest)
                     )
                 }
@@ -222,7 +225,7 @@ internal fun MemoryRegistrationScreen(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 8.dp)
+                    .padding(start = DP20, end = DP20, bottom = DP8)
             ) {
                 Text(
                     text = when (recordState) {
@@ -243,7 +246,7 @@ internal fun MemoryRegistrationScreen(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp)
+                    .height(DP240)
                     .background(G1)
             ) {
                 if (uiState.imageUrl == null) {
@@ -263,7 +266,11 @@ internal fun MemoryRegistrationScreen(
                     )
                 }
             }
-            SpeechBubble {
+            SpeechBubble(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DP156)
+            ) {
                 TypeWriterText(
                     text = when (recordState) {
                         RecordState.INIT -> {
@@ -284,7 +291,7 @@ internal fun MemoryRegistrationScreen(
                 painter = painterResource(ic_harmony_talk),
                 contentDescription = "icon",
                 modifier = Modifier
-                    .padding(top = 24.dp)
+                    .padding(top = DP24)
                     .align(Alignment.CenterHorizontally)
             )
             if (recordState == RecordState.RECORDING) {
@@ -292,7 +299,7 @@ internal fun MemoryRegistrationScreen(
                     painter = painterResource(ic_voice_memorycard),
                     contentDescription = "recording",
                     modifier = Modifier
-                        .padding(top = 4.dp)
+                        .padding(top = DP4)
                         .align(Alignment.CenterHorizontally)
                 )
             }
@@ -302,10 +309,11 @@ internal fun MemoryRegistrationScreen(
 
 private const val LANGUAGE_VALUE = "ko-KR"
 
-private fun buildSpeechRecognizerIntent(context: Context): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-    putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
-    putExtra(RecognizerIntent.EXTRA_LANGUAGE, LANGUAGE_VALUE)
-}
+private fun buildSpeechRecognizerIntent(context: Context): Intent =
+    Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, LANGUAGE_VALUE)
+    }
 
 private fun buildRecognitionListener(
     onResult: (ArrayList<String>) -> Unit,

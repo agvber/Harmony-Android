@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
@@ -64,6 +65,7 @@ import com.teampatch.core.designsystem.theme.DP10
 import com.teampatch.core.designsystem.theme.DP12
 import com.teampatch.core.designsystem.theme.DP14
 import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP192
 import com.teampatch.core.designsystem.theme.DP2
 import com.teampatch.core.designsystem.theme.DP20
 import com.teampatch.core.designsystem.theme.DP24
@@ -87,9 +89,7 @@ import com.teampatch.feature.memory.creation.model.MemoryCreationEvent
 import com.teampatch.feature.memory.creation.model.MemoryCreationUiState
 
 @Composable
-fun MemoryCreationDialog(
-    onDismissRequest: () -> Unit,
-) {
+fun MemoryCreationDialog(onDismissRequest: () -> Unit) {
     MemoryCardCreationDialogWithViewModel(onDismissRequest = onDismissRequest)
 }
 
@@ -105,7 +105,7 @@ internal fun MemoryCardCreationDialogWithViewModel(
 
     Dialog(onDismissRequest) {
         MemoryCardCreationContent(
-            onDismissRequest = onDismissRequest,
+            onDismissRequest = { viewModel.clearState(); onDismissRequest() },
             onCompleteRequest = viewModel::addMemoryCard,
             onChangeImage = viewModel::updateImage,
             onDateChange = viewModel::updateDate,
@@ -198,8 +198,9 @@ private fun MemoryCardCreationContent(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(192.dp)
+                .height(DP192)
                 .padding(top = DP24)
+                .clip(RoundedCornerShape10)
                 .background(G1, RoundedCornerShape10)
                 .noRippleClickable { photoPicker.launch(pickVisualMediaRequest) }
         ) {
@@ -288,7 +289,7 @@ private fun MemoryCardCreationContent(
                     color = if (isBottomButtonEnable) MainGreen else G2,
                     shape = RoundedCornerShape10
                 )
-                .noRippleClickable(enabled = !isBottomButtonEnable, onClick = onCompleteRequest)
+                .noRippleClickable(enabled = isBottomButtonEnable, onClick = onCompleteRequest)
         ) {
             Text(
                 text = stringResource(R.string.memory_creation_button_upload),

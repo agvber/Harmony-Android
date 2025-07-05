@@ -1,37 +1,24 @@
 package com.teampatch.feature.question.detail
 
-import android.util.Log
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -42,50 +29,58 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import androidx.paging.map
-import com.teampatch.core.common.PagingDataHelper
-import com.teampatch.core.common.getOrNull
+import androidx.lifecycle.flowWithLifecycle
 import com.teampatch.core.designsystem.R.drawable.ic_more_question
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.component.BackButtonAppBar
-import com.teampatch.core.designsystem.component.DefaultTextField
 import com.teampatch.core.designsystem.component.RoundButton
-import com.teampatch.core.designsystem.dialog.InputLargeTextBottomSheetContent
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP200
+import com.teampatch.core.designsystem.theme.DP24
+import com.teampatch.core.designsystem.theme.DP32
+import com.teampatch.core.designsystem.theme.DP36
+import com.teampatch.core.designsystem.theme.DP40
+import com.teampatch.core.designsystem.theme.DP68
+import com.teampatch.core.designsystem.theme.DP8
+import com.teampatch.core.designsystem.theme.EnterVisibilityAnimation
+import com.teampatch.core.designsystem.theme.ExitVisibilityAnimation
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G3
-import com.teampatch.core.designsystem.theme.G4
 import com.teampatch.core.designsystem.theme.G5
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.PretendardFontFamily
-import com.teampatch.core.designsystem.theme.SubRed
+import com.teampatch.core.designsystem.theme.RoundedCornerShape10
+import com.teampatch.core.designsystem.theme.SP18
+import com.teampatch.core.designsystem.theme.SP20
+import com.teampatch.core.designsystem.theme.SP22
+import com.teampatch.core.designsystem.theme.SP24
 import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeQuestionComments
 import com.teampatch.core.domain.fake.FakeQuestionDetail
+import com.teampatch.core.domain.model.question.QuestionComment
 import com.teampatch.feature.question.R
+import com.teampatch.feature.question.detail.component.CommentEditorDialog
+import com.teampatch.feature.question.detail.component.CommentEditorState
+import com.teampatch.feature.question.detail.component.QuestionDetailComment
 import com.teampatch.feature.question.detail.mapper.toPresentationModel
-import com.teampatch.feature.question.detail.model.Comment
 import com.teampatch.feature.question.detail.model.CommentEvent
 import com.teampatch.feature.question.detail.model.PostEvent
-import com.teampatch.feature.question.detail.model.QuestionDetailSideEffect
+import com.teampatch.feature.question.detail.model.QuestionDetailEvent
 import com.teampatch.feature.question.detail.model.QuestionDetailUiState
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
 internal fun QuestionDetailRoute(
@@ -93,8 +88,10 @@ internal fun QuestionDetailRoute(
     answerEditPageRequest: (questionId: String) -> Unit,
     viewModel: QuestionDetailViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val uiState = viewModel.uiState
+    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    val context: Context = LocalContext.current
+    val uiState: QuestionDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val comments: List<QuestionComment> by viewModel.comments.collectAsStateWithLifecycle()
 
     if (!uiState.isLoading) {
         QuestionDetailScreen(
@@ -103,33 +100,54 @@ internal fun QuestionDetailRoute(
             commentEventListener = { event ->
                 when (event) {
                     is CommentEvent.Add -> viewModel.addComment(event.commentText)
-                    is CommentEvent.Delete -> viewModel.deleteComment(event.comment)
+                    is CommentEvent.Delete -> viewModel.deleteComment(event.commentId)
                     is CommentEvent.Edit -> viewModel.editComment(
-                        comment = event.comment,
-                        text = event.commentText
+                        event.commentId,
+                        event.commentText
                     )
                 }
             },
-            uiState = uiState
+            uiState = uiState,
+            comments = comments
         )
     }
 
     LaunchedEffect(Unit) {
-        viewModel.sideEffect.collect { sideEffect ->
-            when (sideEffect) {
-                is QuestionDetailSideEffect.AddCommentError ->
-                    Toast.makeText(context, "댓글 추가 실패", Toast.LENGTH_SHORT).show()
+        viewModel.event
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { event ->
+                when (event) {
+                    is QuestionDetailEvent.AddCommentError ->
+                        Toast.makeText(
+                            context,
+                            R.string.question_detail_toast_comment_add_error,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                is QuestionDetailSideEffect.DeleteCommentError ->
-                    Toast.makeText(context, "댓글 삭제 실패", Toast.LENGTH_SHORT).show()
+                    is QuestionDetailEvent.DeleteCommentError ->
+                        Toast.makeText(
+                            context,
+                            R.string.question_detail_toast_comment_delete_error,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                is QuestionDetailSideEffect.EditCommentError ->
-                    Toast.makeText(context, "댓글 수정 실패", Toast.LENGTH_SHORT).show()
+                    is QuestionDetailEvent.EditCommentError ->
+                        Toast.makeText(
+                            context,
+                            R.string.question_detail_toast_comment_edit_error,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                is QuestionDetailSideEffect.LoadError ->
-                    Toast.makeText(context, "데이터를 불러오지 못하였습니다.", Toast.LENGTH_SHORT).show()
+                    is QuestionDetailEvent.LoadError -> {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.question_detail_toast_init_data_load_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onBackRequest()
+                    }
+                }
             }
-        }
     }
 }
 
@@ -140,169 +158,53 @@ internal fun QuestionDetailScreen(
     postEventListener: (PostEvent) -> Unit,
     commentEventListener: (CommentEvent) -> Unit,
     uiState: QuestionDetailUiState,
+    comments: List<QuestionComment>
 ) {
-    var answerEventMenuExpanded by rememberSaveable { mutableStateOf(false) }
-    var isCommentDialogShow by rememberSaveable { mutableStateOf(false) }
-    var isCommentEditDialogShow by rememberSaveable { mutableStateOf<Comment?>(null) }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-        confirmValueChange = { it != SheetValue.Hidden }
-    )
-    val commentsInsertedItems by uiState.comments.pagingDataInsertedItems.collectAsStateWithLifecycle(
-        emptyList()
-    )
-    val comments = uiState.comments.pagingDataFlow.collectAsLazyPagingItems()
-    val commentsSize: Int by remember(commentsInsertedItems, comments) {
-        derivedStateOf { commentsInsertedItems.size + comments.itemCount }
-    }
-
-    if (isCommentDialogShow) {
-        var text by rememberSaveable { mutableStateOf("") }
-
-        ModalBottomSheet(
-            onDismissRequest = { },
-            sheetState = sheetState,
-            containerColor = WH,
-            dragHandle = null
-//            sheetGesturesEnabled = false TODO: androidx.compose.material3:material3:1.4.0-alpha02
-        ) {
-            InputLargeTextBottomSheetContent(
-                onDismissRequest = { isCommentDialogShow = false },
-                onCompleteRequest = {
-                    commentEventListener(CommentEvent.Add(text))
-                    isCommentDialogShow = false
-                },
-                title = { Text(text = stringResource(R.string.text_title_add_comment)) },
-                buttonText = { Text(text = stringResource(R.string.btn_complete_add_comment)) },
-                buttonEnable = text.isNotBlank()
-            ) {
-                CommentEditorContent(
-                    text = text
-                ) {
-                    if (it.length <= 100) {
-                        text = it
-                    }
-                }
-            }
-        }
-    }
-
-    isCommentEditDialogShow?.let { editor ->
-        var text: String by rememberSaveable { mutableStateOf(editor.content) }
-
-        ModalBottomSheet(
-            onDismissRequest = { },
-            sheetState = sheetState,
-            containerColor = WH,
-            dragHandle = null
-//            sheetGesturesEnabled = false TODO: androidx.compose.material3:material3:1.4.0-alpha02
-        ) {
-            InputLargeTextBottomSheetContent(
-                onDismissRequest = { isCommentEditDialogShow = null },
-                onCompleteRequest = {
-                    commentEventListener(CommentEvent.Edit(editor, text))
-                    isCommentEditDialogShow = null
-                },
-                title = { Text(text = stringResource(R.string.text_title_edit_comment)) },
-                buttonText = { Text(text = stringResource(R.string.btn_complete_edit_comment)) },
-                buttonEnable = text.isNotBlank()
-            ) {
-                CommentEditorContent(text = text) {
-                    if (it.length <= 100) {
-                        text = it
-                    }
-                }
-            }
-        }
-    }
-
     val lazyColumnState = rememberLazyListState()
     val isFabShow: Boolean by remember(lazyColumnState) {
-        derivedStateOf {
-            !lazyColumnState.isScrollInProgress && !lazyColumnState.canScrollBackward
-        }
+        derivedStateOf { !lazyColumnState.isScrollInProgress && !lazyColumnState.canScrollBackward }
     }
 
-    Scaffold(
-        topBar = {
-            BackButtonAppBar(
-                onBackRequest = onBackRequest,
-                actions = {
-                    if (uiState.post.hasWritePermission) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .padding(end = 20.dp)
-                                .size(36.dp)
-                                .noRippleClickable {
-                                    answerEventMenuExpanded = true
-                                }
-                        ) {
-                            Image(
-                                painter = painterResource(ic_more_question),
-                                contentDescription = "more"
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = answerEventMenuExpanded,
-                            onDismissRequest = { answerEventMenuExpanded = false },
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier
-                                .widthIn(min = 200.dp)
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier.fillMaxSize()
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.dropdown_edit_answer),
-                                            fontFamily = PretendardFontFamily,
-                                            fontWeight = FontWeight.Medium,
-                                            fontSize = 20.sp,
-                                            color = BL
-                                        )
-                                    }
-                                },
-                                onClick = {
-                                    postEventListener(PostEvent.EDIT)
-                                    answerEventMenuExpanded = false
-                                }
-                            )
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .background(WH)
-            )
-        },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFabShow,
-                enter = fadeIn(tween(600)),
-                exit = fadeOut(tween(600))
-            ) {
-                RoundButton(
-                    onClick = { isCommentDialogShow = true },
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .size(200.dp, 68.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.float_add_comment),
-                        fontSize = 22.sp
-                    )
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center
-    ) { scaffoldPaddingValues ->
+    var selectedCommentId by rememberSaveable { mutableStateOf("") }
+    var selectedCommentText by rememberSaveable { mutableStateOf("") }
+    var commentEditorState: CommentEditorState by rememberSaveable {
+        mutableStateOf(CommentEditorState.NONE)
+    }
 
+    if (commentEditorState != CommentEditorState.NONE) {
+        CommentEditorDialog(
+            onDismissRequest = {
+                commentEditorState = CommentEditorState.NONE
+                selectedCommentId = ""
+                selectedCommentText = ""
+            },
+            onCompleteRequest = {
+                when (commentEditorState) {
+                    CommentEditorState.ADD -> commentEventListener(CommentEvent.Add(it))
+                    CommentEditorState.EDIT -> commentEventListener(
+                        CommentEvent.Edit(
+                            commentId = selectedCommentId,
+                            commentText = it
+                        )
+                    )
+
+                    else -> {}
+                }
+            },
+            commentText = selectedCommentText,
+            commentEditorState = CommentEditorState.NONE,
+        )
+    }
+
+    Column {
+        QuestionDetailAppbar(
+            onBackRequest = onBackRequest,
+            postEventListener = postEventListener,
+            isPostWritable = uiState.postWritable
+        )
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(scaffoldPaddingValues)
+                .fillMaxSize()
                 .background(G1),
             state = lazyColumnState
         ) {
@@ -311,49 +213,49 @@ internal fun QuestionDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(WH)
-                        .padding(top = 40.dp)
+                        .padding(top = DP40)
                 ) {
                     Text(
-                        text = "${uiState.post.number}${stringResource(R.string.text_number_question)}",
-                        fontFamily = PretendardFontFamily,
+                        text = stringResource(
+                            R.string.question_detail_text_line_count,
+                            uiState.post.number
+                        ),
                         fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
+                        fontSize = SP18,
                         color = MainGreen,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier.padding(horizontal = DP20)
                     )
                     Text(
                         text = uiState.post.title,
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 24.sp,
+                        fontSize = SP24,
                         color = BL,
                         modifier = Modifier
-                            .padding(top = 12.dp, bottom = 8.dp, start = 20.dp, end = 20.dp)
+                            .padding(top = DP12, bottom = DP8, start = DP20, end = DP20)
                     )
                     Text(
                         text = with(uiState.post.dateTime) {
-                            "${year}${stringResource(R.string.text_year_datetime)} " +
-                                "${monthValue}${stringResource(R.string.text_month_datetime)} " +
-                                "${dayOfMonth}${stringResource(R.string.text_day_datetime)}"
+                            stringResource(
+                                R.string.question_main_text_post_date_time,
+                                year, monthValue, dayOfMonth
+                            )
                         },
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
+                        fontSize = SP18,
                         color = G3,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier.padding(horizontal = DP20)
                     )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, bottom = 32.dp, top = 24.dp)
-                            .background(G1, RoundedCornerShape(10.dp))
-                            .padding(24.dp)
+                            .padding(start = DP20, end = DP20, bottom = DP32, top = DP24)
+                            .background(G1, RoundedCornerShape10)
+                            .padding(DP24)
                     ) {
                         Text(
                             text = uiState.post.content,
-                            fontFamily = PretendardFontFamily,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 20.sp,
+                            fontSize = SP20,
                             color = G5
                         )
                     }
@@ -362,55 +264,59 @@ internal fun QuestionDetailScreen(
 
             item {
                 Text(
-                    text = "${stringResource(R.string.text_count_comment)} $commentsSize",
-                    fontFamily = PretendardFontFamily,
+                    text = stringResource(
+                        R.string.question_detail_text_comment_count,
+                        comments.size
+                    ),
                     fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
+                    fontSize = SP18,
                     color = G5,
                     modifier = Modifier
-                        .padding(start = 20.dp, top = 16.dp)
+                        .padding(start = DP20, top = DP16)
                 )
             }
 
             items(
-                items = commentsInsertedItems,
-                key = { it.id }
-            ) {
-                QuestionDetailCommentLayout(
-                    onEditCommentRequest = { isCommentEditDialogShow = it },
-                    onDeleteCommentRequest = { commentEventListener(CommentEvent.Delete(it)) },
-                    comment = it.content,
-                    username = it.writer.name,
-                    profileImage = painterResource(ic_my_appbar),
-                    hasWritePermission = it.hasWritePermission
-                )
-            }
-
-            items(
-                count = comments.itemCount,
-                key = comments.itemKey()
-            ) { index ->
-                QuestionDetailCommentLayout(
+                items = comments,
+                key = { it.commentId }
+            ) { currentItem ->
+                QuestionDetailComment(
                     onEditCommentRequest = {
-                        comments.getOrNull(index)?.let { comment ->
-                            isCommentEditDialogShow = comment
-                        } ?: Log.d(
-                            "QuestionDetailScreen",
-                            "comment[$index] is null"
-                        )
+                        commentEditorState = CommentEditorState.EDIT
+                        selectedCommentId = currentItem.commentId
+                        selectedCommentText = currentItem.content
                     },
                     onDeleteCommentRequest = {
-                        comments.getOrNull(index)?.let {
-                            commentEventListener(CommentEvent.Delete(it))
-                        } ?: Log.d(
-                            "QuestionDetailScreen",
-                            "comment[$index] is null"
-                        )
+                        commentEventListener(CommentEvent.Delete(currentItem.commentId))
                     },
-                    comment = comments.getOrNull(index)?.content ?: "",
-                    username = comments.getOrNull(index)?.writer?.name ?: "",
+                    comment = currentItem.content,
+                    username = currentItem.writerName,
                     profileImage = painterResource(ic_my_appbar),
-                    hasWritePermission = comments.getOrNull(index)?.hasWritePermission ?: false
+                    hasWritePermission = uiState.uid == currentItem.writerUid,
+                )
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        AnimatedVisibility(
+            visible = isFabShow,
+            enter = EnterVisibilityAnimation,
+            exit = ExitVisibilityAnimation,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ) {
+            RoundButton(
+                onClick = { commentEditorState = CommentEditorState.ADD },
+                modifier = Modifier
+                    .padding(bottom = DP24)
+                    .size(DP200, DP68)
+            ) {
+                Text(
+                    text = stringResource(R.string.float_add_comment),
+                    fontSize = SP22
                 )
             }
         }
@@ -418,160 +324,60 @@ internal fun QuestionDetailScreen(
 }
 
 @Composable
-private fun QuestionDetailCommentLayout(
-    onEditCommentRequest: () -> Unit,
-    onDeleteCommentRequest: () -> Unit,
-    comment: String,
-    username: String,
-    profileImage: Painter,
-    hasWritePermission: Boolean,
-    modifier: Modifier = Modifier,
+private fun QuestionDetailAppbar(
+    onBackRequest: () -> Unit,
+    postEventListener: (PostEvent) -> Unit,
+    isPostWritable: Boolean,
 ) {
-    var isDropDownMenuShow by remember { mutableStateOf(false) }
+    var answerEventMenuExpanded by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 8.dp)
-            .background(WH)
-            .padding(all = 20.dp)
-    ) {
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = profileImage,
-                    contentDescription = "profile image"
-                )
-                Text(
-                    text = username,
-                    fontFamily = PretendardFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
-                    color = G5,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
-            if (hasWritePermission) {
+    BackButtonAppBar(
+        onBackRequest = onBackRequest,
+        actions = {
+            if (isPostWritable) {
                 Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .padding(end = DP20)
+                        .size(DP36)
                         .noRippleClickable {
-                            isDropDownMenuShow = true
+                            answerEventMenuExpanded = true
                         }
                 ) {
-                    Icon(
+                    Image(
                         painter = painterResource(ic_more_question),
-                        contentDescription = "more",
-                        tint = G5,
-                        modifier = Modifier
-                            .size(width = 4.dp, height = 16.dp)
-                            .align(Alignment.CenterEnd)
+                        contentDescription = "more"
                     )
-                    DropdownMenu(
-                        expanded = isDropDownMenuShow,
-                        onDismissRequest = { isDropDownMenuShow = false },
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier
-                            .widthIn(min = 200.dp)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier.fillMaxSize()
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.dropdown_edit_comment),
-                                        fontFamily = PretendardFontFamily,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 20.sp,
-                                        color = BL
-                                    )
-                                }
-                            },
-                            onClick = {
-                                onEditCommentRequest()
-                                isDropDownMenuShow = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier.fillMaxSize()
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.dropdown_delete_comment),
-                                        fontFamily = PretendardFontFamily,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 20.sp,
-                                        color = SubRed
-                                    )
-                                }
-                            },
-                            onClick = {
-                                onDeleteCommentRequest()
-                                isDropDownMenuShow = false
-                            }
-                        )
-                    }
+                }
+                DropdownMenu(
+                    expanded = answerEventMenuExpanded,
+                    onDismissRequest = { answerEventMenuExpanded = false },
+                    shape = RoundedCornerShape10,
+                    modifier = Modifier
+                        .widthIn(min = DP200)
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(R.string.dropdown_edit_answer),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = SP20,
+                                color = BL,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        },
+                        onClick = {
+                            postEventListener(PostEvent.EDIT)
+                            answerEventMenuExpanded = false
+                        }
+                    )
                 }
             }
-        }
-        Text(
-            text = comment,
-            fontFamily = PretendardFontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            color = BL,
-            modifier = Modifier.padding(top = 12.dp)
-        )
-    }
-}
-
-@Composable
-private fun CommentEditorContent(
-    text: String,
-    onTextChange: (String) -> Unit,
-) {
-    Box(
+        },
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 12.dp)
-            .height(204.dp)
-    ) {
-        DefaultTextField(
-            value = text,
-            onValueChange = onTextChange,
-            singleLine = false,
-            maxLines = 6,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.None),
-            modifier = Modifier
-                .fillMaxSize()
-        )
-        Text(
-            text = "${text.length}/100${stringResource(R.string.text_per_comment)}",
-            fontFamily = PretendardFontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
-            color = G4,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(vertical = 16.dp, horizontal = 20.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun QuestionDetailCommentLayoutPreview() {
-    HarmonyTheme {
-    }
+            .background(WH)
+    )
 }
 
 @Preview
@@ -584,14 +390,9 @@ private fun QuestionDetailScreenPreview() {
             commentEventListener = {},
             uiState = QuestionDetailUiState(
                 post = FakeQuestionDetail().get().toPresentationModel(true),
-                comments = PagingDataHelper(
-                    flowOf(
-                        PagingData.from(FakeQuestionComments().get())
-                            .map { it.toPresentationModel("Alice Johnson") }
-                    )
-                ),
                 isLoading = false
-            )
+            ),
+            comments = FakeQuestionComments().get()
         )
     }
 }

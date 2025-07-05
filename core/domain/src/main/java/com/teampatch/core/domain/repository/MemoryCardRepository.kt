@@ -1,10 +1,10 @@
 package com.teampatch.core.domain.repository
 
-import androidx.paging.PagingData
-import com.teampatch.core.domain.model.MemoryCard
-import com.teampatch.core.domain.model.MemoryCardQuestion
-import java.io.InputStream
+import com.teampatch.core.domain.model.memory.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCardQuestion
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
+import java.time.LocalDate
 
 interface MemoryCardRepository {
 
@@ -31,7 +31,16 @@ interface MemoryCardRepository {
 
     suspend fun getQuestionMessage(memoryCardId: String): MemoryCardQuestion
 
-    fun getMemoryCards(): Flow<PagingData<MemoryCard>>
+    fun getAllMemoryCards(): Flow<List<MemoryCard>>
+
+    fun getMemoryCards(keyword: String): Flow<List<MemoryCard>>
 
     fun getMemoryCardById(memoryCardId: String): Flow<MemoryCard>
+
+    suspend fun addMemoryCard(
+        title: String,
+        date: LocalDate,
+        image: InputStream,
+        writtenUserId: String
+    )
 }

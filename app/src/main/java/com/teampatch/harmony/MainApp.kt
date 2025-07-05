@@ -23,8 +23,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.teampatch.core.designsystem.component.DefaultBottomNavigation
 import com.teampatch.core.designsystem.component.NavigationItem
-import com.teampatch.feature.daily.main.DailyMainRoute
-import com.teampatch.feature.daily.main.navigateToDailyMainScreen
+import com.teampatch.feature.routine.main.DailyMainRoute
+import com.teampatch.feature.routine.main.navigateToDailyMainScreen
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.navigateToHomeScreen
 import com.teampatch.feature.memory.storage.MemoryStorageRoute

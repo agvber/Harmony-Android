@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.teampatch.core.designsystem.component.DefaultButton
-import com.teampatch.core.designsystem.component.OnBoardingLayout
+import com.teampatch.feature.onboarding.common.ui.layout.OnboardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.HarmonyTheme
@@ -70,7 +70,7 @@ internal fun InputVipInformationScreen(
     onVipAliasChange: (VipAlias) -> Unit,
     uiState: InputVipInformationUiState,
 ) {
-    OnBoardingLayout(
+    OnboardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = MainGreen)) {
                 append("먼저")
@@ -82,7 +82,7 @@ internal fun InputVipInformationScreen(
                 append("을\n만들어 주세요.")
             }
         },
-        subtext = "할머니나 할아버지의 성함을\n입력해 주세요.",
+        subTitle = "할머니나 할아버지의 성함을\n입력해 주세요.",
         onBackRequest = onBackRequest,
         bottomBar = {
             DefaultButton(

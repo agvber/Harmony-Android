@@ -1,5 +1,7 @@
 package com.teampatch.feature.home
 
+import com.teampatch.core.designsystem.theme.*
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -26,12 +30,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
 import com.teampatch.core.designsystem.component.AdditionMemoryCard
@@ -40,28 +40,30 @@ import com.teampatch.core.designsystem.component.DailyRoutineCard
 import com.teampatch.core.designsystem.component.ExpandMemoryCard
 import com.teampatch.core.designsystem.component.HomeAppBar
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.designsystem.preview.TodoPreviewParameterProvider
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.utils.noRippleClickable
+import com.teampatch.core.domain.fake.FakeDailyRoutine
 import com.teampatch.core.domain.fake.FakeMemoryCard
-import com.teampatch.core.domain.model.Todo
-import com.teampatch.feature.home.model.MemoryCardUiState
-import kotlinx.coroutines.flow.flowOf
+import com.teampatch.core.domain.model.routine.DailyRoutine
+import com.teampatch.feature.home.model.HomeUiState
+import com.teampatch.feature.home.model.MemoryCardState
 
 @Composable
 internal fun MemberHomeScreen(
     onUserPageRequest: () -> Unit,
     onMemoryCardCreationPageRequest: () -> Unit,
-    onDailyRoutineClick: (String) -> Unit, // id
-    onMemoryCardClick: (String) -> Unit, // id
-    onDailyRoutineCheckChanged: (String, Boolean) -> Unit, // id, checked
-    memoryCardUiState: MemoryCardUiState,
-    dailyRoutine: LazyPagingItems<CheckableData<Todo>>,
+    onDailyRoutineClick: (id: String) -> Unit,
+    onMemoryCardClick: (id: String) -> Unit,
+    onDailyRoutineCheckChanged: (id: String, checked: Boolean) -> Unit,
+    uiState: HomeUiState,
+    dailyRoutine: List<CheckableData<DailyRoutine>>,
 ) {
+    val context: Context = LocalContext.current
+    val memoryCardState = uiState.memoryCardState
     var memoryCardExpanded by rememberSaveable { mutableStateOf(false) }
     var isMemoryCardCreationDialogShow by rememberSaveable { mutableStateOf(false) }
 
@@ -72,7 +74,7 @@ internal fun MemberHomeScreen(
                     painter = painterResource(ic_my_appbar),
                     contentDescription = "my",
                     modifier = Modifier
-                        .padding(end = 20.dp)
+                        .padding(end = DP20)
                         .noRippleClickable(onClick = onUserPageRequest)
                 )
             }
@@ -81,7 +83,7 @@ internal fun MemberHomeScreen(
             .statusBarsPadding()
     ) { scaffoldPaddingValues ->
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(scaffoldPaddingValues)
@@ -92,23 +94,23 @@ internal fun MemberHomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(G1)
-                        .padding(top = 28.dp, bottom = 24.dp)
+                        .padding(top = DP28, bottom = DP24)
                         .noRippleClickable {
                             if (memoryCardExpanded &&
-                                memoryCardUiState is MemoryCardUiState.Success
+                                memoryCardState is MemoryCardState.Success
                             ) {
-                                onMemoryCardClick(memoryCardUiState.data.id)
+                                onMemoryCardClick(memoryCardState.data.id)
                                 return@noRippleClickable
                             }
                             memoryCardExpanded = true
                         }
                 ) {
-                    when (memoryCardUiState) {
-                        is MemoryCardUiState.Success -> {
+                    when (memoryCardState) {
+                        is MemoryCardState.Success -> {
                             if (memoryCardExpanded) {
                                 ExpandMemoryCard(
-                                    memoryCardUiState.data.text,
-                                    memoryCardUiState.data.dateTime.let {
+                                    memoryCardState.data.text,
+                                    memoryCardState.data.dateTime.let {
                                         "${it.year}${stringResource(R.string.year)} " +
                                                 "${it.monthValue}${stringResource(R.string.month)} " +
                                                 "${it.dayOfMonth}${stringResource(R.string.day)}"
@@ -131,7 +133,7 @@ internal fun MemberHomeScreen(
                                     }
                                 },
                                 text = stringResource(R.string.text_member_home_collapse_memory_card_content),
-                                writer = memoryCardUiState.data.let { "${it.writerTitle} ${it.writerName}" }
+                                writer = memoryCardState.data.let { "${it.writerTitle} ${it.writerName}" }
                             )
                         }
 
@@ -158,56 +160,47 @@ internal fun MemberHomeScreen(
                 }
             }
 
-            items(dailyRoutine.itemCount) { index ->
-                val lastDateTime =
-                    if (index > 0) dailyRoutine.peek(index - 1)?.data?.dateTime else null
-                val dateTime = dailyRoutine.peek(index)?.data?.dateTime
-                val title = dailyRoutine[index]?.data?.title
-
-                if (dateTime?.toLocalDate() != lastDateTime?.toLocalDate()) {
-                    Text(
-                        text = buildAnnotatedString {
-                            runCatching { dailyRoutine[index]?.data?.dateTime }.getOrNull()
-                                ?.let {
-                                    withStyle(style = SpanStyle(color = MainGreen)) {
-                                        append(
-                                            "${it.monthValue}${stringResource(R.string.month)} " +
-                                                    "${it.dayOfMonth}${stringResource(R.string.day)}"
-                                        )
-                                    }
-                                }
-                            withStyle(SpanStyle(BL)) {
-                                append(stringResource(R.string.text_daily_routine_time_stamp))
+            item {
+                Text(
+                    text = buildAnnotatedString {
+                        with(uiState.now) {
+                            withStyle(style = SpanStyle(color = MainGreen)) {
+                                append(
+                                    "${monthValue}${stringResource(R.string.month)} " +
+                                            "${dayOfMonth}${stringResource(R.string.day)}"
+                                )
                             }
-                        },
-                        fontFamily = PretendardFontFamily,
-                        fontWeight = FontWeight.W500,
-                        fontSize = 22.sp,
-                        modifier = Modifier
-                            .padding(start = 24.dp, top = 8.dp, bottom = 12.dp)
-                    )
-                }
-                DailyRoutineCard(
-                    onCheckedChange = {
-                        val data = dailyRoutine[index]?.data ?: return@DailyRoutineCard
-                        dailyRoutine.itemSnapshotList.items[index].checked.value = it
-                        onDailyRoutineCheckChanged(data.id, it)
-                    },
-                    checked = dailyRoutine[index]?.checked?.value ?: false,
-                    dateTime = dateTime?.stringHour() ?: "",
-                    text = title ?: "",
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .noRippleClickable {
-                            val data = dailyRoutine[index]?.data ?: return@noRippleClickable
-                            onDailyRoutineClick(data.id)
                         }
+                        withStyle(SpanStyle(BL)) {
+                            append(stringResource(R.string.text_daily_routine_time_stamp))
+                        }
+                    },
+                    fontFamily = PretendardFontFamily,
+                    fontWeight = FontWeight.W500,
+                    fontSize = 22.sp,
+                    modifier = Modifier
+                        .padding(start = DP24, top = DP8, bottom = DP12)
                 )
             }
 
-            if (dailyRoutine.itemCount != 0) {
+            items(dailyRoutine) { dailyRoutine ->
+                DailyRoutineCard(
+                    onCheckedChange = {
+                        dailyRoutine.checked.value = it
+                        onDailyRoutineCheckChanged(dailyRoutine.data.routineId, it)
+                    },
+                    checked = dailyRoutine.checked.value,
+                    dateTime = dailyRoutine.data.time.toStringFormat(context),
+                    text = dailyRoutine.data.name,
+                    modifier = Modifier
+                        .padding(horizontal = DP24)
+                        .noRippleClickable { onDailyRoutineClick(dailyRoutine.data.routineId) }
+                )
+            }
+
+            if (dailyRoutine.isNotEmpty()) {
                 item {
-                    Box(modifier = Modifier.height(20.dp))
+                    Box(modifier = Modifier.height(DP20))
                 }
             }
         }
@@ -216,10 +209,7 @@ internal fun MemberHomeScreen(
 
 @Preview
 @Composable
-private fun MemberHomeScreenPreview(
-    @PreviewParameter(provider = TodoPreviewParameterProvider::class, limit = 1)
-    todos: List<Todo>,
-) {
+private fun MemberHomeScreenPreview() {
     HarmonyTheme {
         MemberHomeScreen(
             onUserPageRequest = {},
@@ -227,26 +217,21 @@ private fun MemberHomeScreenPreview(
             onDailyRoutineClick = {},
             onMemoryCardClick = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            memoryCardUiState = MemoryCardUiState.Success(
-                FakeMemoryCard().get()[0]
-            ),
-            dailyRoutine = flowOf(
-                PagingData.from(
-                    data = TodoPreviewParameterProvider().values.first()
-                        .map { CheckableData(it, mutableStateOf(it.isFinished)) }
-                )
+            dailyRoutine = FakeDailyRoutine().get().map {
+                CheckableData(it, mutableStateOf(false))
+            },
+            uiState = HomeUiState(
+                memoryCardState = MemoryCardState.Success(
+                    FakeMemoryCard().get()[0]
+                ),
             )
-                .collectAsLazyPagingItems()
         )
     }
 }
 
 @Preview
 @Composable
-private fun MemberHomeScreenEmptyPreview(
-    @PreviewParameter(provider = TodoPreviewParameterProvider::class, limit = 1)
-    todos: List<Todo>,
-) {
+private fun MemberHomeScreenEmptyPreview() {
     HarmonyTheme {
         MemberHomeScreen(
             onUserPageRequest = {},
@@ -254,9 +239,10 @@ private fun MemberHomeScreenEmptyPreview(
             onDailyRoutineClick = {},
             onMemoryCardClick = {},
             onDailyRoutineCheckChanged = { _, _ -> },
-            memoryCardUiState = MemoryCardUiState.Wait,
-            dailyRoutine = flowOf(PagingData.empty<CheckableData<Todo>>())
-                .collectAsLazyPagingItems()
+            dailyRoutine = FakeDailyRoutine().get().map {
+                CheckableData(it, mutableStateOf(false))
+            },
+            uiState = HomeUiState()
         )
     }
 }

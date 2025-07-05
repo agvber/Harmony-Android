@@ -15,6 +15,7 @@ val G2 = Color(0xFFE6E3DD)
 val G3 = Color(0xFFC0BEB6)
 val G4 = Color(0xFF9B9B97)
 val G5 = Color(0xFF7A7971)
+val KakaoPrimary = Color(0xFFFEE500)
 
 @OptIn(ExperimentalMaterial3Api::class)
 val LocalHarmonyTimPickerColors = staticCompositionLocalOf<TimePickerColors> {

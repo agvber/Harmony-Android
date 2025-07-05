@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.fake
 
-import com.teampatch.core.domain.model.MemoryCardQuestion
+import com.teampatch.core.domain.model.memory.MemoryCardQuestion
 
 class FakeMemoryCardQuestion : FakeModel<MemoryCardQuestion>() {
     override fun build(): MemoryCardQuestion = MemoryCardQuestion(

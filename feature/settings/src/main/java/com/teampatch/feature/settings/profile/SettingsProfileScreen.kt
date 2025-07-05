@@ -49,7 +49,7 @@ import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.model.Image
-import com.teampatch.core.domain.model.Role
+import com.teampatch.core.domain.model.user.Role
 import com.teampatch.feature.settings.R
 import com.teampatch.feature.settings.profile.model.SettingsProfileSideEvent
 import com.teampatch.feature.settings.profile.model.SettingsProfileUiState

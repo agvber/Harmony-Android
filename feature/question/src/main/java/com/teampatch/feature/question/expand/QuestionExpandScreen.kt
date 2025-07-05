@@ -1,5 +1,6 @@
 package com.teampatch.feature.question.expand
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,9 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,26 +24,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.teampatch.core.common.getOrNull
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.teampatch.core.designsystem.R.drawable.ic_chevron_question
 import com.teampatch.core.designsystem.component.BackButtonAppBar
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP24
+import com.teampatch.core.designsystem.theme.DP240
+import com.teampatch.core.designsystem.theme.DP28
+import com.teampatch.core.designsystem.theme.DP4
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.G3
 import com.teampatch.core.designsystem.theme.G4
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.PretendardFontFamily
+import com.teampatch.core.designsystem.theme.RoundedCornerShape10
+import com.teampatch.core.designsystem.theme.SP18
+import com.teampatch.core.designsystem.theme.SP20
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeQuestions
+import com.teampatch.core.domain.model.question.Question
 import com.teampatch.feature.question.R
-import com.teampatch.feature.question.expand.model.QuestionExpandSideEffect
-import com.teampatch.feature.question.expand.model.QuestionExpandUiState
-import kotlinx.coroutines.flow.flowOf
+import com.teampatch.feature.question.expand.model.QuestionExpandEvent
 
 @Composable
 internal fun QuestionExpandRoute(
@@ -51,22 +56,24 @@ internal fun QuestionExpandRoute(
     questionDetailPageRequest: (String) -> Unit,
     viewModel: QuestionExpandViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val uiState: QuestionExpandUiState by viewModel.questionExpandUiState
+    val context: Context = LocalContext.current
+    val questions: List<Question> by viewModel.questions.collectAsStateWithLifecycle()
 
-    if (!uiState.isLoading) {
-        QuestionExpandScreen(
-            onBackRequest = onBackRequest,
-            questionDetailPageRequest = questionDetailPageRequest,
-            uiState = uiState
-        )
-    }
+    QuestionExpandScreen(
+        onBackRequest = onBackRequest,
+        questionDetailPageRequest = questionDetailPageRequest,
+        questions = questions
+    )
 
     LaunchedEffect(Unit) {
-        viewModel.sideEffect.collect { sideEffect ->
-            when (sideEffect) {
-                is QuestionExpandSideEffect.LoadError ->
-                    Toast.makeText(context, "데이터를 불러오지 못하였습니다.", Toast.LENGTH_SHORT).show()
+        viewModel.event.collect { event ->
+            when (event) {
+                is QuestionExpandEvent.LoadError ->
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.question_main_toast_init_data_load_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
         }
     }
@@ -76,63 +83,56 @@ internal fun QuestionExpandRoute(
 internal fun QuestionExpandScreen(
     onBackRequest: () -> Unit,
     questionDetailPageRequest: (String) -> Unit,
-    uiState: QuestionExpandUiState,
+    questions: List<Question>
 ) {
-    val questions = uiState.question.collectAsLazyPagingItems()
-    Scaffold(
-        topBar = {
-            BackButtonAppBar(
-                onBackRequest = onBackRequest,
-                title = {
-                    Text(stringResource(R.string.text_title_appbar))
-                }
-            )
-        }
-    ) { scaffoldPaddingValues ->
+    Column {
+        BackButtonAppBar(
+            onBackRequest = onBackRequest,
+            title = { Text(stringResource(R.string.question_main_text_title)) }
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPaddingValues)
-                .padding(top = 16.dp)
+                .padding(top = DP16)
         ) {
-            items(questions.itemCount) { index ->
+            items(questions) { currentItem ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 12.dp)
-                        .background(G1, RoundedCornerShape(10.dp))
-                        .noRippleClickable {
-                            val id = questions.getOrNull(index)?.id ?: return@noRippleClickable
-                            questionDetailPageRequest(id)
-                        }
+                        .padding(start = DP20, end = DP20, bottom = DP12)
+                        .background(G1, RoundedCornerShape10)
+                        .noRippleClickable { questionDetailPageRequest(currentItem.id) }
                 ) {
                     Text(
-                        text = "#${questions.getOrNull(index)?.number}",
+                        text = stringResource(
+                            R.string.question_main_text_count,
+                            currentItem.number
+                        ),
                         fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp,
+                        fontSize = SP18,
                         color = G4,
                         modifier = Modifier
-                            .padding(top = 20.dp, start = 28.dp, bottom = 4.dp)
+                            .padding(top = DP20, start = DP28, bottom = DP4)
                     )
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+                            .padding(start = DP24, end = DP24, bottom = DP16)
                     ) {
                         Text(
-                            text = questions.getOrNull(index)?.title ?: "",
+                            text = currentItem.title,
                             fontFamily = PretendardFontFamily,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
+                            fontSize = SP20,
                             color = BL,
-                            modifier = Modifier.widthIn(max = 240.dp)
+                            modifier = Modifier.widthIn(max = DP240)
                         )
                         Icon(
                             painter = painterResource(ic_chevron_question),
-                            contentDescription = "chevron",
+                            contentDescription = stringResource(R.string.question_main_image_right_chevron),
                             tint = G3
                         )
                     }
@@ -149,7 +149,7 @@ private fun QuestionExpandScreenPreview() {
         QuestionExpandScreen(
             onBackRequest = {},
             questionDetailPageRequest = {},
-            uiState = QuestionExpandUiState(question = flowOf(PagingData.from(FakeQuestions().get())))
+            questions = FakeQuestions().get()
         )
     }
 }

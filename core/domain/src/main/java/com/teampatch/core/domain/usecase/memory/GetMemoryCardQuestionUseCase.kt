@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.usecase.memory
 
-import com.teampatch.core.domain.model.MemoryCardQuestion
+import com.teampatch.core.domain.model.memory.MemoryCardQuestion
 import com.teampatch.core.domain.repository.MemoryCardRepository
 import javax.inject.Inject
 

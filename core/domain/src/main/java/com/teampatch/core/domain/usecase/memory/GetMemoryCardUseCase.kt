@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.usecase.memory
 
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCard
 import com.teampatch.core.domain.repository.MemoryCardRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first

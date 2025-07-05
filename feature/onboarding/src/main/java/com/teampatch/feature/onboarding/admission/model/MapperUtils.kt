@@ -1,7 +1,7 @@
 package com.teampatch.feature.onboarding.admission.model
 
 import androidx.core.net.toUri
-import com.teampatch.core.domain.model.AdmissionGroupInformation
+import com.teampatch.core.domain.model.group.AdmissionGroupInformation
 
 fun AdmissionGroupInformation.toPresentation(): GroupAdmissionUiState {
     return GroupAdmissionUiState(

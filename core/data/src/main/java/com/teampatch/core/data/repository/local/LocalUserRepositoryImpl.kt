@@ -10,12 +10,12 @@ import com.teampatch.core.data.di.annotation.HarmonyDispatcher
 import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.VIP
 import com.teampatch.core.data.mapper.toDomain
-import com.teampatch.core.data.service.ImageCompressorService
-import com.teampatch.core.data.service.ImageFormatTransferService
-import com.teampatch.core.data.service.ImageSaverService
+import com.teampatch.core.data.service.image.ImageCompressorService
+import com.teampatch.core.data.service.image.ImageFormatTransferService
+import com.teampatch.core.data.service.image.ImageSaverService
 import com.teampatch.core.data.utils.FileFormat
-import com.teampatch.core.domain.model.Role
-import com.teampatch.core.domain.model.User
+import com.teampatch.core.domain.model.user.Role
+import com.teampatch.core.domain.model.user.User
 import com.teampatch.core.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

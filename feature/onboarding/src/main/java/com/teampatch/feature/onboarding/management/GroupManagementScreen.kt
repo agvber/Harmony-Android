@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.teampatch.core.designsystem.R.drawable.btn_enter_space_onboarding
 import com.teampatch.core.designsystem.R.drawable.btn_make_space_onboarding
-import com.teampatch.core.designsystem.component.OnBoardingLayout
+import com.teampatch.feature.onboarding.common.ui.layout.OnboardingLayout
 import com.teampatch.core.designsystem.theme.BL
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
@@ -35,7 +35,7 @@ fun GroupManagementScreen(
     onGroupCreateRequest: () -> Unit,
     onGroupJoinRequest: () -> Unit,
 ) {
-    OnBoardingLayout(
+    OnboardingLayout(
         title = buildAnnotatedString {
             withStyle(style = SpanStyle(color = BL)) {
                 append(stringArrayResource(R.array.title_onboarding_make_space)[0])
@@ -47,7 +47,7 @@ fun GroupManagementScreen(
                 append(stringArrayResource(R.array.title_onboarding_make_space)[2])
             }
         },
-        subtext = stringResource(R.string.subtext_onboarding_make_space),
+        subTitle = stringResource(R.string.subtext_onboarding_make_space),
         onBackRequest = { onBackRequest() }
     ) {
         Column(

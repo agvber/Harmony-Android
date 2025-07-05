@@ -19,12 +19,11 @@ fun ItemFloatingButton(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .drawBehind {
                 drawCircle(color = MainGreen)
             }
             .size(64.dp)
-            .then(modifier)
     ) {
         content()
     }

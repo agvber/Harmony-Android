@@ -23,12 +23,10 @@ import androidx.room.PrimaryKey
     ]
 )
 data class QuestionCommentEntity(
+    @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name = "question_id") val questionId: Long,
     @ColumnInfo(name = "written_uid") val writtenUid: Long,
     @ColumnInfo(name = "content") val content: String,
     @ColumnInfo(name = "created_at") val createdAt: String,
     @ColumnInfo(name = "modified_at") val modifiedAt: String,
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-}
+)

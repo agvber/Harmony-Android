@@ -1,7 +1,7 @@
 package com.teampatch.core.domain.usecase.group
 
 import com.teampatch.core.domain.entities.Group
-import com.teampatch.core.domain.model.AdmissionGroupInformation
+import com.teampatch.core.domain.model.group.AdmissionGroupInformation
 import com.teampatch.core.domain.repository.GroupManagementRepository
 import javax.inject.Inject
 

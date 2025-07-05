@@ -15,6 +15,7 @@ import com.harmony.core.database.model.MemoryCardEntity
 import com.harmony.core.database.model.QuestionCommentEntity
 import com.harmony.core.database.model.QuestionEntity
 import com.harmony.core.database.model.RoutineEntity
+import com.harmony.core.database.model.RoutineLogEntity
 import com.harmony.core.database.model.TodoEntity
 import com.harmony.core.database.model.UserEntity
 
@@ -27,6 +28,7 @@ import com.harmony.core.database.model.UserEntity
         QuestionCommentEntity::class,
         MemoryCardEntity::class,
         RoutineEntity::class,
+        RoutineLogEntity::class,
     ],
     version = 1
 )

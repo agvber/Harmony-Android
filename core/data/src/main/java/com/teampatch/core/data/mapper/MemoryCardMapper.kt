@@ -2,7 +2,7 @@ package com.teampatch.core.data.mapper
 
 import com.harmony.core.database.LOCAL_DB_DATE_TIME_FORMATTER
 import com.harmony.core.database.model.MemoryCardEntity
-import com.teampatch.core.domain.model.MemoryCard
+import com.teampatch.core.domain.model.memory.MemoryCard
 import java.time.LocalDateTime
 
 fun MemoryCardEntity.toDomain(
@@ -13,6 +13,7 @@ fun MemoryCardEntity.toDomain(
     writerName = writerName,
     text = content,
     imageUrl = imageUrl,
+    imageUri = imageUri,
     dateTime = LocalDateTime.parse(
         /* text = */
         modifiedAt,

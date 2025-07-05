@@ -6,6 +6,11 @@
     <string name="month">월</string>
     <string name="day">일</string>
     <string name="hour">시</string>
+    
+    <string name="home_text_time_format_am">오전 %d시 %d분</string>
+    <string name="home_text_time_format_pm">오후 %d시 %d분</string>
+    <string name="home_text_hour_format_am">오전 %d시</string>
+    <string name="home_text_hour_format_pm">오후 %d시</string>
 
     <string name="text_daily_routine_time_stamp">의 일과</string>
     <string name="text_daily_routine_empty_title">아직 일과가 없어요.\n

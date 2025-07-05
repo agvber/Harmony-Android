@@ -1,12 +1,20 @@
 package com.teampatch.feature.question.detail.model
 
-import androidx.paging.PagingData
-import com.teampatch.core.common.PagingDataHelper
+import com.teampatch.core.domain.model.user.Role
 import java.time.LocalDateTime
-import kotlinx.coroutines.flow.flowOf
 
 internal data class QuestionDetailUiState(
-    val post: Post = Post("", 0, "", "", LocalDateTime.now(), false),
-    val comments: PagingDataHelper<Comment> = PagingDataHelper(flowOf(PagingData.empty())),
+    val uid: String = "",
+    val role: Role = Role.VIP,
+    val post: Post = Post(
+        id = "",
+        number = 0,
+        title = "",
+        content = "",
+        dateTime = LocalDateTime.MIN,
+        hasWritePermission = false
+    ),
     val isLoading: Boolean = true,
-)
+) {
+    val postWritable: Boolean = role == Role.VIP
+}

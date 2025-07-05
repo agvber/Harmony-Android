@@ -1,6 +1,6 @@
 package com.teampatch.core.domain.fake
 
-import com.teampatch.core.domain.model.QuestionComment
+import com.teampatch.core.domain.model.question.QuestionComment
 
 class FakeQuestionComments : FakeModel<List<QuestionComment>>() {
 

@@ -6,35 +6,32 @@
         <item>질문</item>
     </string-array>
 
-    <string name="text_title_question">주고받은 질문들</string>
-    <string name="text_detail_question">전체 보기</string>
-    <string name="btn_answer_member">답변보러 가기 -></string>
-    <string name="btn_answer_vip">답변하러 가기 -></string>
+    <string name="question_main_text_title">주고받은 질문들</string>
+    <string name="question_main_button_question_detail">전체 보기</string>
+    <string name="question_main_button_answer_read">답변보러 가기 -></string>
+    <string name="question_main_button_answer_write">답변하러 가기 -></string>
+    <string name="question_main_text_count">#%d</string>
+    <string name="question_main_toast_init_data_load_error">질문 목록을 불러오지 못하였습니다. 다시시도 해주세요.</string>
+    <string name="question_main_image_right_chevron">해당 아이템으로 가기</string>
+    <string name="question_main_text_post_date_time">%d년 %d월 %d일</string>
 
     <!--  detail  -->
     <string name="text_title_add_comment">댓글 남기기</string>
     <string name="btn_complete_add_comment">댓글 남기기</string>
-
     <string name="text_title_edit_comment">댓글 수정</string>
     <string name="btn_complete_edit_comment">댓글 완료</string>
-
     <string name="dropdown_edit_answer">답변 수정</string>
     <string name="dropdown_delete_answer">답변 삭제</string>
     <string name="dropdown_edit_comment">댓글 수정</string>
     <string name="dropdown_delete_comment">댓글 삭제</string>
-
     <string name="float_add_comment">댓글 남기기</string>
-    <string name="text_number_question">번째 질문</string>
-
-    <string name="text_year_datetime">년</string>
-    <string name="text_month_datetime">월</string>
-    <string name="text_day_datetime">일</string>
-
-    <string name="text_count_comment">댓글</string>
-    <string name="text_per_comment">자</string>
-
-    <!--  expand  -->
-    <string name="text_title_appbar">주고받은 질문 목록</string>
+    <string name="question_detail_text_line_count">%d번째 질문</string>
+    <string name="question_detail_text_comment_count">댓글 %d</string>
+    <string name="question_detail_text_comment_limit">%d/%d자</string>
+    <string name="question_detail_toast_init_data_load_error">존재하지 않는 페이지입니다.</string>
+    <string name="question_detail_toast_comment_add_error">댓글 추가 실패</string>
+    <string name="question_detail_toast_comment_edit_error">댓글 수정 실패</string>
+    <string name="question_detail_toast_comment_delete_error">댓글 삭제 실패</string>
 
     <!--  answer  -->
     <string name="btn_complete_answer">답변 완료</string>
