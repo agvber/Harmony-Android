@@ -2,10 +2,12 @@ package com.teampatch.feature.memory.storage
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,11 +16,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,10 +55,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.teampatch.core.designsystem.R.drawable.btn_search
 import com.teampatch.core.designsystem.R.drawable.ic_chevron_memory_storage
@@ -63,7 +63,31 @@ import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
 import com.teampatch.core.designsystem.component.AppBar
 import com.teampatch.core.designsystem.component.DefaultTextField
 import com.teampatch.core.designsystem.component.ItemFloatingButton
-import com.teampatch.core.designsystem.theme.*
+import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP0
+import com.teampatch.core.designsystem.theme.DP1
+import com.teampatch.core.designsystem.theme.DP10
+import com.teampatch.core.designsystem.theme.DP114
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP14
+import com.teampatch.core.designsystem.theme.DP16
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP4
+import com.teampatch.core.designsystem.theme.DP8
+import com.teampatch.core.designsystem.theme.FloatingButtonEnterVisibilityAnimation
+import com.teampatch.core.designsystem.theme.FloatingButtonExitVisibilityAnimation
+import com.teampatch.core.designsystem.theme.G1
+import com.teampatch.core.designsystem.theme.G2
+import com.teampatch.core.designsystem.theme.G3
+import com.teampatch.core.designsystem.theme.G5
+import com.teampatch.core.designsystem.theme.HarmonyTheme
+import com.teampatch.core.designsystem.theme.MainGreen
+import com.teampatch.core.designsystem.theme.PaddingContentHorizontal
+import com.teampatch.core.designsystem.theme.SP15
+import com.teampatch.core.designsystem.theme.SP16
+import com.teampatch.core.designsystem.theme.SP22
+import com.teampatch.core.designsystem.theme.SubRed
+import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.designsystem.utils.previewPlaceholder
 import com.teampatch.core.domain.fake.FakeMemoryCard
@@ -71,7 +95,6 @@ import com.teampatch.core.domain.model.memory.MemoryCard
 import com.teampatch.feature.memory.R
 import com.teampatch.feature.memory.storage.model.MemoryCardSort
 import com.teampatch.feature.memory.storage.model.MemoryStorageUiState
-import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 
 @Composable
@@ -82,7 +105,7 @@ internal fun MemoryStorageWithViewModel(
 ) {
     val context: Context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-    val memoryCards: LazyPagingItems<MemoryCard> = viewModel.memoryCards.collectAsLazyPagingItems()
+    val memoryCards: List<MemoryCard> by viewModel.memoryCards.collectAsStateWithLifecycle()
     val uiState: MemoryStorageUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MemoryStorageScreen(
@@ -91,7 +114,7 @@ internal fun MemoryStorageWithViewModel(
         onSearchTextChange = viewModel::updateMemoryCardSearchText,
         onSortOptionChange = viewModel::updateMemoryCardSortOption,
         uiState = uiState,
-        memoryCardsLazyItems = memoryCards
+        memoryCards = memoryCards
     )
 
     LaunchedEffect(Unit) {
@@ -114,98 +137,78 @@ internal fun MemoryStorageScreen(
     onSearchTextChange: (String) -> Unit,
     onSortOptionChange: (MemoryCardSort) -> Unit,
     uiState: MemoryStorageUiState,
-    memoryCardsLazyItems: LazyPagingItems<MemoryCard>,
+    memoryCards: List<MemoryCard>,
 ) {
     val context: Context = LocalContext.current
-    var isSearchMode by remember { mutableStateOf(false) }
+    val lazyGridState: LazyGridState = rememberLazyGridState()
+    var isSearchMode: Boolean by remember { mutableStateOf(false) }
+    val isFABShow: Boolean by remember(lazyGridState) {
+        derivedStateOf { lazyGridState.canScrollForward }
+    }
 
-    Scaffold(
-        topBar = {
-            Column(modifier = Modifier.padding(bottom = DP20)) {
-                AppBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = DP20),
-                    navigation = {
-                        if (isSearchMode) {
-                            MemoryStorageTextField(
-                                onCancelRequest = { isSearchMode = false },
-                                value = uiState.searchText,
-                                onValueChange = onSearchTextChange,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        } else {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(SpanStyle(MainGreen)) { append(uiState.userName) }
-                                    withStyle(SpanStyle(BL)) { append(stringResource(R.string.memory_storage_text_title)) }
-                                },
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 22.sp
-                            )
-                        }
-                    },
-                    actions = {
-                        if (!isSearchMode) {
-                            Image(
-                                painter = painterResource(btn_search),
-                                contentDescription = null,
-                                modifier = Modifier.noRippleClickable {
-                                    isSearchMode = true
-                                }
-                            )
-                        }
-                    }
-                )
-                MemoryStorageFilterTab(
-                    onSortOptionChange = onSortOptionChange,
-                    sortOption = uiState.sortOption,
-                )
+    Column {
+        AppBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = PaddingContentHorizontal),
+            navigation = {
+                if (isSearchMode) {
+                    MemoryStorageTextField(
+                        onCancelRequest = { isSearchMode = false; onSearchTextChange("") },
+                        value = uiState.searchText,
+                        onValueChange = onSearchTextChange,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(SpanStyle(MainGreen)) { append(uiState.userName) }
+                            withStyle(SpanStyle(BL)) { append(stringResource(R.string.memory_storage_text_title)) }
+                        },
+                        fontWeight = FontWeight.Bold,
+                        fontSize = SP22
+                    )
+                }
+            },
+            actions = {
+                if (!isSearchMode) {
+                    Image(
+                        painter = painterResource(btn_search),
+                        contentDescription = null,
+                        modifier = Modifier.noRippleClickable { isSearchMode = true }
+                    )
+                }
             }
-        },
-        floatingActionButton = {
-            ItemFloatingButton(
-                modifier = Modifier.noRippleClickable(onClick = onCreationPageRequest)
-            ) {
-                Image(
-                    painter = painterResource(id = ic_fab_plus),
-                    contentDescription = stringResource(R.string.fab_memory_add)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { scaffoldPaddingValues ->
+        )
+        MemoryStorageFilterTab(
+            onSortOptionChange = { onSortOptionChange(it); lazyGridState.requestScrollToItem(0) },
+            sortOption = uiState.sortOption,
+            modifier = Modifier.padding(bottom = DP20)
+        )
+        HorizontalDivider(thickness = DP1, color = G3)
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
+            state = lazyGridState,
             verticalArrangement = Arrangement.spacedBy(DP12),
             horizontalArrangement = Arrangement.spacedBy(DP12),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(scaffoldPaddingValues)
                 .background(G1)
                 .padding(top = DP16, bottom = DP16)
-                .padding(horizontal = DP20)
+                .padding(horizontal = PaddingContentHorizontal)
         ) {
             items(
-                count = memoryCardsLazyItems.itemCount,
-                key = memoryCardsLazyItems.itemKey(),
-            ) { index ->
-                val currentItem = memoryCardsLazyItems[index]
+                items = memoryCards,
+                key = { it.id },
+            ) { currentItem ->
                 Column(
                     modifier = Modifier
                         .background(WH)
                         .border(DP1, G2)
-                        .noRippleClickable {
-                            currentItem?.let { onDetailPageRequest(it.id) }
-                                ?: Toast.makeText(
-                                    context,
-                                    context.getString(R.string.toast_item_empty_error),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                        }
+                        .noRippleClickable { onDetailPageRequest(currentItem.id) }
                 ) {
                     AsyncImage(
-                        model = currentItem?.imageUrl ?: currentItem?.imageUri,
+                        model = currentItem.imageUrl ?: currentItem.imageUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         placeholder = previewPlaceholder(img_test_memory_card),
@@ -217,22 +220,45 @@ internal fun MemoryStorageScreen(
                         modifier = Modifier.padding(vertical = DP10, horizontal = DP14)
                     ) {
                         Text(
-                            text = currentItem?.writerTitle ?: "",
+                            text = currentItem.writerTitle,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                            fontSize = SP16,
                             color = BL,
                             maxLines = 1
                         )
                         Text(
-                            text = currentItem?.dateTime?.toStringResource(context) ?: "",
+                            text = currentItem.dateTime.toStringResource(context),
                             fontWeight = FontWeight.Medium,
-                            fontSize = 15.sp,
+                            fontSize = SP15,
                             color = G5,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
+            }
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        AnimatedVisibility(
+            visible = isFABShow,
+            enter = FloatingButtonEnterVisibilityAnimation,
+            exit = FloatingButtonExitVisibilityAnimation,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        ) {
+            ItemFloatingButton(
+                modifier = Modifier
+                    .padding(DP20)
+                    .noRippleClickable(onClick = onCreationPageRequest)
+            ) {
+                Image(
+                    painter = painterResource(id = ic_fab_plus),
+                    contentDescription = stringResource(R.string.fab_memory_add)
+                )
             }
         }
     }
@@ -295,6 +321,7 @@ fun MemoryStorageTextField(
 private fun MemoryStorageFilterTab(
     onSortOptionChange: (MemoryCardSort) -> Unit,
     sortOption: MemoryCardSort,
+    modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
     var isDropdownExpanded by remember { mutableStateOf(false) }
@@ -308,7 +335,7 @@ private fun MemoryStorageFilterTab(
     Row(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = DP20),
     ) {
@@ -379,9 +406,7 @@ private fun MemoryStorageScreenPreview() {
             onSearchTextChange = {},
             onSortOptionChange = {},
             uiState = MemoryStorageUiState("여정"),
-            memoryCardsLazyItems = flowOf(
-                PagingData.from(FakeMemoryCard().get())
-            ).collectAsLazyPagingItems()
+            memoryCards = FakeMemoryCard().get()
         )
     }
 }

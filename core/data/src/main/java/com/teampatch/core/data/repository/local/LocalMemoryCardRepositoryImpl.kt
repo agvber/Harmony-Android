@@ -3,7 +3,6 @@ package com.teampatch.core.data.repository.local
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import androidx.paging.PagingData
 import com.harmony.core.database.LOCAL_DB_DATE_TIME_FORMATTER
 import com.harmony.core.database.dao.MemoryCardDao
 import com.harmony.core.database.dao.QuestionDao
@@ -55,7 +54,7 @@ internal class LocalMemoryCardRepositoryImpl @Inject constructor(
     override suspend fun getQuestionMessage(memoryCardId: String): MemoryCardQuestion =
         FakeMemoryCardQuestion().get()
 
-    override fun getMemoryCards(): Flow<PagingData<MemoryCard>> {
+    override fun getAllMemoryCards(): Flow<List<MemoryCard>> {
         return memoryCardDao.getAllMemoryStorage().map { memoryCardEntities ->
             memoryCardEntities.mapNotNull { memoryCardEntity ->
                 val writerUserInfo = userDao.getUserById(memoryCardEntity.writtenUid).firstOrNull()
@@ -67,9 +66,21 @@ internal class LocalMemoryCardRepositoryImpl @Inject constructor(
 
                 memoryCardEntity.toDomain(writerUserInfo.name)
             }
-                .let {
-                    PagingData.from(it)
+        }
+    }
+
+    override fun getMemoryCards(keyword: String): Flow<List<MemoryCard>> {
+        return memoryCardDao.getMemoryCards(keyword).map { memoryCardEntities ->
+            memoryCardEntities.mapNotNull { memoryCardEntity ->
+                val writerUserInfo = userDao.getUserById(memoryCardEntity.writtenUid).firstOrNull()
+
+                if (writerUserInfo == null) {
+                    Log.e(TAG, "function: getMemoryCards(), data: writerUserInfo is null")
+                    return@mapNotNull null
                 }
+
+                memoryCardEntity.toDomain(writerUserInfo.name)
+            }
         }
     }
 
@@ -89,7 +100,8 @@ internal class LocalMemoryCardRepositoryImpl @Inject constructor(
         writtenUserId: String
     ) {
         val bitmap: Bitmap = imageFormatTransferService.getBitmapFormat(image)
-        val compressedImage: ByteArrayInputStream = imageCompressorService.compressImageWithTransferFormatJpeg(bitmap)
+        val compressedImage: ByteArrayInputStream =
+            imageCompressorService.compressImageWithTransferFormatJpeg(bitmap)
         val imageUri: Uri = imageSaverService.saveMemoryCardImage(compressedImage, FileFormat.JPEG)
 
         val now: LocalDateTime = LocalDateTime.now()

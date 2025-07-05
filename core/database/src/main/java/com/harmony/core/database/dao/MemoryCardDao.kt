@@ -16,6 +16,9 @@ interface MemoryCardDao {
     @Query("SELECT * FROM memory_card WHERE id = :id")
     fun getMemoryStorageById(id: Long): Flow<MemoryCardEntity>
 
+    @Query("SELECT * FROM memory_card WHERE title LIKE '%' || :keyword || '%'")
+    fun getMemoryCards(keyword: String): Flow<List<MemoryCardEntity>>
+
     @Insert(MemoryCardEntity::class)
     suspend fun insertMemoryStorage(memoryCardEntity: MemoryCardEntity)
 
