@@ -1,8 +1,8 @@
 plugins {
-    id("teampatch.android.library")
-    id("teampatch.android.library.compose")
-    id("teampatch.android.hilt")
-    id("teampatch.android.feature")
+    alias(libs.plugins.teampatch.android.library)
+    alias(libs.plugins.teampatch.android.library.compose)
+    alias(libs.plugins.teampatch.android.hilt)
+    alias(libs.plugins.teampatch.android.feature)
 }
 
 android {

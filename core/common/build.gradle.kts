@@ -1,5 +1,5 @@
 plugins {
-    id("teampatch.android.library")
+    alias(libs.plugins.teampatch.android.library)
 }
 
 android {

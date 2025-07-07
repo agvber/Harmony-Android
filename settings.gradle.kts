@@ -20,9 +20,6 @@ dependencyResolutionManagement {
         maven { url = java.net.URI("https://devrepo.kakao.com/nexus/content/groups/public/") }
     }
 }
-gradle.startParameter.excludedTaskNames.apply {
-    add(":build-logic:convention:testClasses")
-}
 
 rootProject.name = "Harmony-Android"
 include(":app")

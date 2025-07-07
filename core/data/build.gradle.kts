@@ -1,6 +1,6 @@
 plugins {
-    id("teampatch.android.library")
-    id("teampatch.android.hilt")
+    alias(libs.plugins.teampatch.android.library)
+    alias(libs.plugins.teampatch.android.hilt)
     id("kotlin-parcelize")
 }
 

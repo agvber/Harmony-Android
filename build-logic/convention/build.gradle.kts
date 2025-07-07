@@ -27,13 +27,17 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("kotlinLibrary") {
-            id = "teampatch.kotlin.library"
-            implementationClass = "KotlinLibraryConventionPlugin"
-        }
         register("androidApplication") {
             id = "teampatch.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidApplicationCompose") {
+            id = "teampatch.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "teampatch.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
         }
         register("androidLibrary") {
             id = "teampatch.android.library"
