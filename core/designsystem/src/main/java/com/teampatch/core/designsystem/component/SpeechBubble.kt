@@ -2,6 +2,7 @@ package com.teampatch.core.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -41,55 +43,21 @@ fun SpeechBubble(
     borderColor: Color = G3,
     strokeWidth: Dp = 2.dp,
     contentAlignment: Alignment = Alignment.Center,
+    contentPaddingValues: PaddingValues = PaddingValues(horizontal = 20.dp),
     propagateMinConstraints: Boolean = false,
     content: @Composable (BoxScope.() -> Unit),
 ) {
-    val density: Density = LocalDensity.current
-    val stroke: Stroke by remember {
-        mutableStateOf(with(density) { Stroke(strokeWidth.toPx()) })
-    }
-
     Box(
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
-        modifier = Modifier
+        modifier = modifier
             .padding(top = 32.dp, start = 20.dp, end = 20.dp)
-            .drawBehind {
-                drawRoundRect(
-                    color = backgroundColor,
-                    size = size,
-                    cornerRadius = CornerRadius(20.dp.toPx()),
-                )
-                drawRoundRect(
-                    color = borderColor,
-                    size = size,
-                    cornerRadius = CornerRadius(20.dp.toPx()),
-                    style = stroke
-                )
-                drawPath(
-                    path = Path().apply {
-                        moveTo(size.width / 2, size.height + 20.dp.toPx())
-                        lineTo((size.width / 2) + 24.dp.toPx(), size.height - 20.dp.toPx())
-                        lineTo((size.width / 2) - 24.dp.toPx(), size.height - 20.dp.toPx())
-                        close()
-                    },
-                    color = backgroundColor
-                )
-                drawLine(
-                    color = borderColor,
-                    start = Offset(size.width / 2, size.height + 20.dp.toPx()),
-                    end = Offset((size.width / 2) + 12.dp.toPx(), size.height),
-                    strokeWidth = stroke.width
-                )
-                drawLine(
-                    color = borderColor,
-                    start = Offset(size.width / 2, size.height + 20.dp.toPx()),
-                    end = Offset((size.width / 2) - 12.dp.toPx(), size.height),
-                    strokeWidth = stroke.width
-                )
-            }
-            .padding(horizontal = 20.dp)
-            .then(modifier)
+            .drawSpeechBubble(
+                backgroundColor = backgroundColor,
+                borderColor = borderColor,
+                strokeWidth = strokeWidth
+            )
+            .padding(contentPaddingValues)
     ) {
         CompositionLocalProvider(
             LocalTextStyle provides TextStyle(
@@ -101,6 +69,52 @@ fun SpeechBubble(
         ) {
             content()
         }
+    }
+}
+
+fun Modifier.drawSpeechBubble(
+    backgroundColor: Color = G1,
+    borderColor: Color = G3,
+    strokeWidth: Dp = 2.dp,
+): Modifier = composed {
+    val density: Density = LocalDensity.current
+    val stroke: Stroke by remember {
+        mutableStateOf(with(density) { Stroke(strokeWidth.toPx()) })
+    }
+
+    drawBehind {
+        drawRoundRect(
+            color = backgroundColor,
+            size = size,
+            cornerRadius = CornerRadius(20.dp.toPx()),
+        )
+        drawRoundRect(
+            color = borderColor,
+            size = size,
+            cornerRadius = CornerRadius(20.dp.toPx()),
+            style = stroke
+        )
+        drawPath(
+            path = Path().apply {
+                moveTo(size.width / 2, size.height + 20.dp.toPx())
+                lineTo((size.width / 2) + 24.dp.toPx(), size.height - 20.dp.toPx())
+                lineTo((size.width / 2) - 24.dp.toPx(), size.height - 20.dp.toPx())
+                close()
+            },
+            color = backgroundColor
+        )
+        drawLine(
+            color = borderColor,
+            start = Offset(size.width / 2, size.height + 20.dp.toPx()),
+            end = Offset((size.width / 2) + 12.dp.toPx(), size.height),
+            strokeWidth = stroke.width
+        )
+        drawLine(
+            color = borderColor,
+            start = Offset(size.width / 2, size.height + 20.dp.toPx()),
+            end = Offset((size.width / 2) - 12.dp.toPx(), size.height),
+            strokeWidth = stroke.width
+        )
     }
 }
 
