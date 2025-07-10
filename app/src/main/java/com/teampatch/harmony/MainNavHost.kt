@@ -14,12 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.teampatch.core.common.findActivity
-import com.teampatch.feature.routine.edit.addDailyEditScreen
-import com.teampatch.feature.routine.edit.model.DailyEditMode
-import com.teampatch.feature.routine.edit.navigateToDailyEditScreen
-import com.teampatch.feature.routine.main.addDailyMainScreen
-import com.teampatch.feature.routine.management.addDailyManagementScreen
-import com.teampatch.feature.routine.management.navigateToDailyManagementScreen
 import com.teampatch.feature.home.HomeRoute
 import com.teampatch.feature.home.addHomeScreen
 import com.teampatch.feature.home.navigateToHomeScreen
@@ -51,12 +45,18 @@ import com.teampatch.feature.onboarding.vip.addOnboardingInputVipInformationScre
 import com.teampatch.feature.onboarding.vip.navigateToOnboardingInputVipInformationScreen
 import com.teampatch.feature.question.answer.addAnswerScreen
 import com.teampatch.feature.question.answer.navigateToAnswerScreen
-import com.teampatch.feature.question.detail.QuestionDetailParams
 import com.teampatch.feature.question.detail.addQuestionDetailScreen
 import com.teampatch.feature.question.detail.navigateToQuestionDetailScreen
+import com.teampatch.feature.question.detail.popBackStackToQuestionDetailRouteResult
 import com.teampatch.feature.question.expand.addQuestionExpandScreen
 import com.teampatch.feature.question.expand.navigateToQuestionExpandScreen
 import com.teampatch.feature.question.main.addQuestionMainScreen
+import com.teampatch.feature.routine.edit.addDailyEditScreen
+import com.teampatch.feature.routine.edit.model.DailyEditMode
+import com.teampatch.feature.routine.edit.navigateToDailyEditScreen
+import com.teampatch.feature.routine.main.addDailyMainScreen
+import com.teampatch.feature.routine.management.addDailyManagementScreen
+import com.teampatch.feature.routine.management.navigateToDailyManagementScreen
 import com.teampatch.feature.settings.group.addSettingsGroupScreen
 import com.teampatch.feature.settings.group.navigateToSettingsGroupScreen
 import com.teampatch.feature.settings.preferences.addSettingsPreferencesScreen
@@ -178,13 +178,7 @@ fun MainNavHost(
 
         addAnswerScreen(
             onBackRequest = navController::navigateUp,
-            onCompleteRequest = { answer ->
-                navController.previousBackStackEntry?.savedStateHandle?.set(
-                    key = QuestionDetailParams.ANSWER_UPDATE_DATA,
-                    value = answer
-                )
-                navController.popBackStack()
-            }
+            onCompleteRequest = navController::popBackStackToQuestionDetailRouteResult
         )
 
         addSettingsPreferencesScreen(

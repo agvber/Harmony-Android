@@ -23,7 +23,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -65,24 +67,25 @@ internal class QuestionDetailViewModel @Inject constructor(
         load()
     }
 
-    private fun load() = viewModelScope.launch {
-        runCatching {
-            require(questionId.isNotEmpty())
-
-            val user = getUserInfoUseCase.invoke().first()
-            val questionDetail = getQuestionDetailUseCase(questionId)
-            val post = questionDetail.toPresentationModel(user.role == Role.VIP)
-            _uiState.value = QuestionDetailUiState(
-                uid = user.uid,
-                role = user.role,
-                post = post,
-                isLoading = false
-            )
-        }
-            .onFailure { e ->
-                _event.send(QuestionDetailEvent.LoadError(e))
-                e.printStackTrace()
+    private fun load() {
+        flowExceptionSafety { getUserInfoUseCase.invoke() }
+            .distinctUntilChanged { old, new -> old.role == new.role }
+            .onEach { user ->
+                require(questionId.isNotEmpty())
+                val questionDetail = getQuestionDetailUseCase(questionId)
+                val post = questionDetail.toPresentationModel(user.role == Role.VIP)
+                _uiState.value = QuestionDetailUiState(
+                    uid = user.uid,
+                    role = user.role,
+                    post = post,
+                    isLoading = false
+                )
             }
+            .catch {
+                it.printStackTrace()
+                _event.send(QuestionDetailEvent.LoadError(it))
+            }
+            .launchIn(viewModelScope)
     }
 
     fun updateQuestionAnswer(answer: String) {

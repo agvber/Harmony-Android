@@ -3,7 +3,7 @@ package com.teampatch.feature.home
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.teampatch.core.common.SHARING_STARTED_TIME
+import com.teampatch.core.common.DefaultSharingStarted
 import com.teampatch.core.common.flowExceptionSafety
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.domain.model.routine.DailyRoutine
@@ -17,7 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
@@ -50,10 +49,11 @@ internal class HomeViewModel @Inject constructor(
             }
             .catch {
                 it.printStackTrace()
+                _event.emit(HomeEvent.InitDataLoadError)
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(SHARING_STARTED_TIME),
+                started = DefaultSharingStarted,
                 initialValue = emptyList()
             )
 
