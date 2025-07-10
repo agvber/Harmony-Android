@@ -1,19 +1,18 @@
 package com.teampatch.feature.home
 
-import com.teampatch.core.designsystem.theme.*
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +29,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.teampatch.core.designsystem.R.drawable.ic_my_appbar
 import com.teampatch.core.designsystem.R.drawable.img_test_memory_card
@@ -41,16 +39,19 @@ import com.teampatch.core.designsystem.component.ExpandMemoryCard
 import com.teampatch.core.designsystem.component.HomeAppBar
 import com.teampatch.core.designsystem.model.CheckableData
 import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP24
+import com.teampatch.core.designsystem.theme.DP28
+import com.teampatch.core.designsystem.theme.DP8
 import com.teampatch.core.designsystem.theme.G1
 import com.teampatch.core.designsystem.theme.HarmonyTheme
 import com.teampatch.core.designsystem.theme.MainGreen
-import com.teampatch.core.designsystem.theme.PretendardFontFamily
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeDailyRoutine
 import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.home.model.HomeUiState
-import com.teampatch.feature.home.model.MemoryCardState
 
 @Composable
 internal fun MemberHomeScreen(
@@ -63,30 +64,26 @@ internal fun MemberHomeScreen(
     dailyRoutine: List<CheckableData<DailyRoutine>>,
 ) {
     val context: Context = LocalContext.current
-    val memoryCardState = uiState.memoryCardState
     var memoryCardExpanded by rememberSaveable { mutableStateOf(false) }
     var isMemoryCardCreationDialogShow by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            HomeAppBar {
-                Image(
-                    painter = painterResource(ic_my_appbar),
-                    contentDescription = "my",
-                    modifier = Modifier
-                        .padding(end = DP20)
-                        .noRippleClickable(onClick = onUserPageRequest)
-                )
-            }
-        },
+    Column(
         modifier = Modifier
-            .statusBarsPadding()
-    ) { scaffoldPaddingValues ->
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
+        HomeAppBar {
+            Image(
+                painter = painterResource(ic_my_appbar),
+                contentDescription = "my",
+                modifier = Modifier
+                    .padding(end = DP20)
+                    .noRippleClickable(onClick = onUserPageRequest)
+            )
+        }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(DP12),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(scaffoldPaddingValues)
+            modifier = Modifier.fillMaxSize()
         ) {
             item {
                 Column(
@@ -96,86 +93,79 @@ internal fun MemberHomeScreen(
                         .background(G1)
                         .padding(top = DP28, bottom = DP24)
                         .noRippleClickable {
-                            if (memoryCardExpanded &&
-                                memoryCardState is MemoryCardState.Success
-                            ) {
-                                onMemoryCardClick(memoryCardState.data.id)
+                            if (!memoryCardExpanded) {
+                                memoryCardExpanded = true
                                 return@noRippleClickable
                             }
-                            memoryCardExpanded = true
+                            uiState.memoryCard?.let { onMemoryCardClick(it.id) }
                         }
                 ) {
-                    when (memoryCardState) {
-                        is MemoryCardState.Success -> {
-                            if (memoryCardExpanded) {
-                                ExpandMemoryCard(
-                                    memoryCardState.data.text,
-                                    memoryCardState.data.dateTime.let {
-                                        "${it.year}${stringResource(R.string.year)} " +
-                                                "${it.monthValue}${stringResource(R.string.month)} " +
-                                                "${it.dayOfMonth}${stringResource(R.string.day)}"
-                                    },
-                                    painter = painterResource(img_test_memory_card)
-                                )
-                                return@item
+                    uiState.memoryCard?.let { memoryCard ->
+                        if (memoryCardExpanded) {
+                            ExpandMemoryCard(
+                                title = memoryCard.text,
+                                description = with(memoryCard.dateTime) {
+                                    stringResource(
+                                        R.string.home_text_memory_card_date_format,
+                                        year, monthValue, dayOfMonth
+                                    )
+                                },
+                                painter = painterResource(img_test_memory_card)
+                            )
+                            return@let
+                        }
+                        CollapseMemoryCard(
+                            title = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = BL)) {
+                                    append("${stringResource(R.string.member_home_text_memory_card_title1)} ")
+                                }
+                                withStyle(style = SpanStyle(color = MainGreen)) {
+                                    append(stringResource(R.string.member_home_text_memory_card_title2))
+                                }
+                                withStyle(style = SpanStyle(color = BL)) {
+                                    append(stringResource(R.string.member_home_text_memory_card_title3))
+                                }
+                            },
+                            text = stringResource(R.string.member_home_text_memory_card_content),
+                            writer = memoryCard.let { "${it.writerTitle} ${it.writerName}" }
+                        )
+                    } ?: AdditionMemoryCard(
+                        onClick = { isMemoryCardCreationDialogShow = true },
+                        title = buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = BL)) {
+                                append("${stringResource(R.string.member_home_text_empty_memory_card_title1)} ")
                             }
-
-                            CollapseMemoryCard(
-                                title = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append("${stringResource(R.string.text_member_home_collapse_memory_card_title1)} ")
-                                    }
-                                    withStyle(style = SpanStyle(color = MainGreen)) {
-                                        append(stringResource(R.string.text_member_home_collapse_memory_card_title2))
-                                    }
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append(stringResource(R.string.text_member_home_collapse_memory_card_title3))
-                                    }
-                                },
-                                text = stringResource(R.string.text_member_home_collapse_memory_card_content),
-                                writer = memoryCardState.data.let { "${it.writerTitle} ${it.writerName}" }
-                            )
-                        }
-
-                        else -> {
-                            AdditionMemoryCard(
-                                onClick = {
-                                    isMemoryCardCreationDialogShow = true
-                                },
-                                title = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append("${stringResource(R.string.text_member_home_addition_memory_card_title1)} ")
-                                    }
-                                    withStyle(style = SpanStyle(color = MainGreen)) {
-                                        append(stringResource(R.string.text_member_home_addition_memory_card_title2))
-                                    }
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append(stringResource(R.string.text_member_home_addition_memory_card_title3))
-                                    }
-                                },
-                                text = stringResource(R.string.text_member_home_addition_memory_card_content)
-                            )
-                        }
-                    }
+                            withStyle(style = SpanStyle(color = MainGreen)) {
+                                append(stringResource(R.string.member_home_text_empty_memory_card_title2))
+                            }
+                            withStyle(style = SpanStyle(color = BL)) {
+                                append(stringResource(R.string.member_home_text_empty_memory_card_title3))
+                            }
+                        },
+                        text = stringResource(R.string.member_home_text_memory_card_send)
+                    )
                 }
+
             }
 
             item {
                 Text(
                     text = buildAnnotatedString {
-                        with(uiState.now) {
-                            withStyle(style = SpanStyle(color = MainGreen)) {
+                        withStyle(style = SpanStyle(color = MainGreen)) {
+                            with(uiState.now) {
                                 append(
-                                    "${monthValue}${stringResource(R.string.month)} " +
-                                            "${dayOfMonth}${stringResource(R.string.day)}"
+                                    stringResource(
+                                        R.string.home_text_title_date_format,
+                                        monthValue,
+                                        dayOfMonth
+                                    )
                                 )
                             }
                         }
                         withStyle(SpanStyle(BL)) {
-                            append(stringResource(R.string.text_daily_routine_time_stamp))
+                            append(stringResource(R.string.hone_text_daily_routine))
                         }
                     },
-                    fontFamily = PretendardFontFamily,
                     fontWeight = FontWeight.W500,
                     fontSize = 22.sp,
                     modifier = Modifier
@@ -220,11 +210,7 @@ private fun MemberHomeScreenPreview() {
             dailyRoutine = FakeDailyRoutine().get().map {
                 CheckableData(it, mutableStateOf(false))
             },
-            uiState = HomeUiState(
-                memoryCardState = MemoryCardState.Success(
-                    FakeMemoryCard().get()[0]
-                ),
-            )
+            uiState = HomeUiState(memoryCard = FakeMemoryCard().get()[0])
         )
     }
 }

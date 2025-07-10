@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,13 +41,27 @@ import com.teampatch.core.designsystem.component.EmptyLetterBox
 import com.teampatch.core.designsystem.component.ExpandMemoryCard
 import com.teampatch.core.designsystem.component.HomeAppBar
 import com.teampatch.core.designsystem.model.CheckableData
-import com.teampatch.core.designsystem.theme.*
+import com.teampatch.core.designsystem.theme.BL
+import com.teampatch.core.designsystem.theme.DP12
+import com.teampatch.core.designsystem.theme.DP18
+import com.teampatch.core.designsystem.theme.DP20
+import com.teampatch.core.designsystem.theme.DP24
+import com.teampatch.core.designsystem.theme.DP28
+import com.teampatch.core.designsystem.theme.DP320
+import com.teampatch.core.designsystem.theme.DP48
+import com.teampatch.core.designsystem.theme.DP8
+import com.teampatch.core.designsystem.theme.G1
+import com.teampatch.core.designsystem.theme.G4
+import com.teampatch.core.designsystem.theme.HarmonyTheme
+import com.teampatch.core.designsystem.theme.MainGreen
+import com.teampatch.core.designsystem.theme.PretendardFontFamily
+import com.teampatch.core.designsystem.theme.RoundedCornerShape999
+import com.teampatch.core.designsystem.theme.WH
 import com.teampatch.core.designsystem.utils.noRippleClickable
 import com.teampatch.core.domain.fake.FakeDailyRoutine
 import com.teampatch.core.domain.fake.FakeMemoryCard
 import com.teampatch.core.domain.model.routine.DailyRoutine
 import com.teampatch.feature.home.model.HomeUiState
-import com.teampatch.feature.home.model.MemoryCardState
 
 @Composable
 internal fun VipHomeScreen(
@@ -60,12 +74,12 @@ internal fun VipHomeScreen(
     dailyRoutine: List<CheckableData<DailyRoutine>>,
 ) {
     val context: Context = LocalContext.current
-    val memoryCardState = uiState.memoryCardState
     var memoryCardExpanded by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         HomeAppBar {
             Image(
@@ -91,70 +105,62 @@ internal fun VipHomeScreen(
                         .background(G1)
                         .padding(top = DP28, bottom = DP24)
                         .noRippleClickable {
-                            if (memoryCardExpanded &&
-                                memoryCardState is MemoryCardState.Success
-                            ) {
-                                onMemoryCardClick(memoryCardState.data.id)
+                            if (!memoryCardExpanded) {
+                                memoryCardExpanded = true
                                 return@noRippleClickable
                             }
-                            memoryCardExpanded = true
+                            uiState.memoryCard?.let { onMemoryCardClick(it.id) }
                         }
                 ) {
-                    when (memoryCardState) {
-                        is MemoryCardState.Success -> {
-                            if (memoryCardExpanded) {
-                                ExpandMemoryCard(
-                                    memoryCardState.data.text,
-                                    memoryCardState.data.dateTime.let {
-                                        "${it.year}${stringResource(R.string.year)} " +
-                                                "${it.monthValue}${stringResource(R.string.month)} " +
-                                                "${it.dayOfMonth}${stringResource(R.string.day)}"
-                                    },
-                                    painter = painterResource(img_test_memory_card)
-                                )
-                                return@item
-                            }
-
-                            CollapseMemoryCard(
-                                title = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append("${stringResource(R.string.text_vip_home_collapse_memory_card_title1)} ")
-                                    }
-                                    withStyle(style = SpanStyle(color = MainGreen)) {
-                                        append(stringResource(R.string.text_vip_home_collapse_memory_card_title2))
-                                    }
-                                    withStyle(style = SpanStyle(color = BL)) {
-                                        append(stringResource(R.string.text_vip_home_collapse_memory_card_title3))
-                                    }
+                    uiState.memoryCard?.let { memoryCard ->
+                        if (memoryCardExpanded) {
+                            ExpandMemoryCard(
+                                title = memoryCard.text,
+                                description = with(memoryCard.dateTime) {
+                                    stringResource(
+                                        R.string.home_text_memory_card_date_format,
+                                        year, monthValue, dayOfMonth
+                                    )
                                 },
-                                text = stringResource(R.string.text_vip_home_collapse_memory_card_content),
-                                writer = memoryCardState.data.let { "${it.writerTitle} ${it.writerName}" }
+                                painter = painterResource(img_test_memory_card)
                             )
+                            return@let
                         }
-
-                        else -> {
-                            EmptyLetterBox()
-                        }
-                    }
+                        CollapseMemoryCard(
+                            title = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = BL)) {
+                                    append("${stringResource(R.string.vip_home_text_memory_card_title1)} ")
+                                }
+                                withStyle(style = SpanStyle(color = MainGreen)) {
+                                    append(stringResource(R.string.vip_home_text_memory_card_title2))
+                                }
+                                withStyle(style = SpanStyle(color = BL)) {
+                                    append(stringResource(R.string.vip_home_text_memory_card_title3))
+                                }
+                            },
+                            text = stringResource(R.string.vip_home_text_memory_card_content),
+                            writer = with(memoryCard) { "$writerTitle $writerName" }
+                        )
+                    } ?: EmptyLetterBox()
                 }
             }
 
             item {
                 Text(
                     text = buildAnnotatedString {
-                        with(uiState.now) {
-                            withStyle(style = SpanStyle(color = MainGreen)) {
+                        withStyle(style = SpanStyle(color = MainGreen)) {
+                            with(uiState.now) {
                                 append(
-                                    "${monthValue}${stringResource(R.string.month)} " +
-                                            "${dayOfMonth}${stringResource(R.string.day)}"
+                                    stringResource(
+                                        R.string.home_text_title_date_format, monthValue, dayOfMonth
+                                    )
                                 )
                             }
                         }
                         withStyle(SpanStyle(BL)) {
-                            append(stringResource(R.string.text_daily_routine_time_stamp))
+                            append(stringResource(R.string.hone_text_daily_routine))
                         }
                     },
-                    fontFamily = PretendardFontFamily,
                     fontWeight = FontWeight.W500,
                     fontSize = 22.sp,
                     modifier = Modifier
@@ -191,7 +197,7 @@ internal fun VipHomeScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(
-                    text = stringResource(R.string.text_daily_routine_empty_title),
+                    text = stringResource(R.string.home_text_daily_routine_empty_title),
                     color = G4,
                     fontFamily = PretendardFontFamily,
                     fontWeight = FontWeight.Medium,
@@ -210,7 +216,7 @@ internal fun VipHomeScreen(
                         )
                 ) {
                     Text(
-                        text = stringResource(R.string.btn_daily_routine_empty),
+                        text = stringResource(R.string.home_button_routine_add),
                         color = WH,
                         fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.SemiBold,
@@ -235,11 +241,7 @@ private fun VipHomeScreenPreview() {
             dailyRoutine = FakeDailyRoutine().get().map {
                 CheckableData(it, mutableStateOf(false))
             },
-            uiState = HomeUiState(
-                memoryCardState = MemoryCardState.Success(
-                    FakeMemoryCard().get()[0]
-                ),
-            )
+            uiState = HomeUiState(memoryCard = FakeMemoryCard().get()[0])
         )
     }
 }
