@@ -12,7 +12,14 @@ import kotlinx.serialization.Serializable
 data object DailyMainRoute
 
 fun NavController.navigateToDailyMainScreen(
-    navOptions: NavOptions? = navOptions { launchSingleTop = true },
+    navOptions: NavOptions? = navOptions {
+        launchSingleTop = true
+        restoreState = true
+
+        popUpTo(DailyMainRoute) {
+            inclusive = true
+        }
+    },
     navigatorExtras: Navigator.Extras? = null,
 ) {
     navigate(DailyMainRoute, navOptions, navigatorExtras)

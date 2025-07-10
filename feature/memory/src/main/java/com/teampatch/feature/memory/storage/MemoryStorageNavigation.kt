@@ -12,7 +12,14 @@ import kotlinx.serialization.Serializable
 data object MemoryStorageRoute
 
 fun NavController.navigateToMemoryStorageScreen(
-    navOptions: NavOptions? = navOptions { launchSingleTop = true },
+    navOptions: NavOptions? = navOptions {
+        launchSingleTop = true
+        restoreState = true
+
+        popUpTo(MemoryStorageRoute) {
+            inclusive = true
+        }
+    },
     navigatorExtras: Navigator.Extras? = null,
 ) {
     navigate(MemoryStorageRoute, navOptions, navigatorExtras)
