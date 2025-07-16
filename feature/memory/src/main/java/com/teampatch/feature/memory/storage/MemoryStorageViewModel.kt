@@ -19,13 +19,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,18 +43,22 @@ internal class MemoryStorageViewModel @Inject constructor(
     val uiState: StateFlow<MemoryStorageUiState> = _uiState
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val memoryCards: StateFlow<List<MemoryCard>> = uiState.debounce(800).flatMapLatest { uiState ->
-        val filterByItem: FilterByItem = when (uiState.sortOption) {
-            MemoryCardSort.OLDEST -> FilterByItem.OLDEST
-            MemoryCardSort.LATEST -> FilterByItem.LATEST
-            MemoryCardSort.NAME -> FilterByItem.ALPHABET
+    val memoryCards: StateFlow<List<MemoryCard>> = uiState
+        .distinctUntilChanged { old, new ->
+            old.searchText == new.searchText && old.sortOption == new.sortOption
         }
-        flowExceptionSafety { getMemoryCardsUseCase.invoke(uiState.searchText, filterByItem) }
-    }
-        .catch {
-            it.printStackTrace()
-            _memoryStorageEvent.send(MemoryStorageEvent.InitLoadError(it))
+        .debounce(SEARCH_DEBOUNCE_TIME)
+        .flatMapLatest { uiState ->
+            val filterByItem: FilterByItem = when (uiState.sortOption) {
+                MemoryCardSort.OLDEST -> FilterByItem.OLDEST
+                MemoryCardSort.LATEST -> FilterByItem.LATEST
+                MemoryCardSort.NAME -> FilterByItem.ALPHABET
+            }
+            flowExceptionSafety {
+                getMemoryCardsUseCase.invoke(uiState.searchText, filterByItem)
+            }
         }
+        .catch { it.printStackTrace() }
         .stateIn(
             scope = viewModelScope,
             started = DefaultSharingStarted,
@@ -64,13 +69,18 @@ internal class MemoryStorageViewModel @Inject constructor(
         loadData()
     }
 
-    fun loadData() = viewModelScope.launch {
-        runCatching {
-            getUserInfoUseCase.invoke().collectLatest { user ->
-                _uiState.update { it.copy(userName = user.name, isLoading = false) }
+    fun loadData() {
+        flowExceptionSafety { getUserInfoUseCase.invoke() }
+            .onEach {
+                _uiState.update { uiState ->
+                    uiState.copy(userName = it.name, isLoading = false)
+                }
             }
-        }
-            .onFailure { _memoryStorageEvent.send(MemoryStorageEvent.InitLoadError(it)) }
+            .catch {
+                it.printStackTrace()
+                _memoryStorageEvent.send(MemoryStorageEvent.InitLoadError(it))
+            }
+            .launchIn(viewModelScope)
     }
 
     fun updateMemoryCardSearchText(searchText: String) {
@@ -79,5 +89,9 @@ internal class MemoryStorageViewModel @Inject constructor(
 
     fun updateMemoryCardSortOption(sortOption: MemoryCardSort) {
         _uiState.update { it.copy(sortOption = sortOption) }
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_TIME: Long = 800L
     }
 }

@@ -1,6 +1,6 @@
 plugins {
-    id("teampatch.android.library")
-    id("teampatch.android.hilt")
+    alias(libs.plugins.teampatch.android.library)
+    alias(libs.plugins.teampatch.android.hilt)
 }
 
 android {
@@ -8,8 +8,6 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
 
     implementation(libs.junit)
     implementation(libs.androidx.junit)

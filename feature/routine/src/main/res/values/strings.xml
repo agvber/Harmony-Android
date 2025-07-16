@@ -22,7 +22,6 @@
     <string name="routine_text_hour_format_am">오전 %d시</string>
     <string name="routine_text_hour_format_pm">오후 %d시</string>
 
-
     <!--  Main  -->
     <string name="appbar_main_title">&#160;일과</string>
     <string name="text_main_title">완료된 일과에 응원의 한 마디를 남겨요!</string>
@@ -62,4 +61,9 @@
     <string name="toast_management_item_select_error">아이템 정보를 불러오는 과정에서 에러가 발생하였습니다.</string>
     <string name="toast_management_item_delete_error">일과 삭제 과정에서 에러가 발생하였습니다.\n 다시 시도 해주세요.</string>
     <string name="text_management_date_format">%s / %s</string>
+
+    <!--  Alarm  -->
+    <string name="routine_alarm_appbar_title">일과 알림</string>
+    <string name="routine_alarm_button_now_history">인증사진 남기러 가기</string>
+    <string name="routine_alarm_button_later_history">나중에 남기기</string>
 </resources>

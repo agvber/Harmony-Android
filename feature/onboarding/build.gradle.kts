@@ -1,8 +1,8 @@
 plugins {
-    id("teampatch.android.library")
-    id("teampatch.android.library.compose")
-    id("teampatch.android.hilt")
-    id("teampatch.android.feature")
+    alias(libs.plugins.teampatch.android.library)
+    alias(libs.plugins.teampatch.android.library.compose)
+    alias(libs.plugins.teampatch.android.hilt)
+    alias(libs.plugins.teampatch.android.feature)
     id("kotlin-parcelize")
 }
 
@@ -15,9 +15,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
     implementation(project(":core:designsystem"))
-
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
 
     implementation(libs.coil.compose)
 

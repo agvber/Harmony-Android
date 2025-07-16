@@ -31,8 +31,8 @@ internal fun LocalTime.toStringFormat(context: Context): String = with(context) 
         24 -> minute?.let { getString(R.string.routine_text_time_format_am, 12, it) }
             ?: getString(R.string.routine_text_hour_format_am, 12)
 
-        in 1..11 -> minute?.let { getString(R.string.routine_text_time_format_pm, hour, minute) }
-            ?: getString(R.string.routine_text_hour_format_pm, hour)
+        in 1..11 -> minute?.let { getString(R.string.routine_text_time_format_am, hour, minute) }
+            ?: getString(R.string.routine_text_hour_format_am, hour)
 
         else -> minute?.let { getString(R.string.routine_text_time_format_pm, hour - 12, minute) }
             ?: getString(R.string.routine_text_hour_format_pm, hour - 12)

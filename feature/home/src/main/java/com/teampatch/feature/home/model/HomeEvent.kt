@@ -1,10 +1,8 @@
 package com.teampatch.feature.home.model
 
 internal sealed interface HomeEvent {
-
-    data class ChangeDailyRoutineError(val t: Throwable) : HomeEvent
-
-    data class MemoryCardAdditionError(val t: Throwable) : HomeEvent
-
-    data class UserInfoLoadError(val t: Throwable) : HomeEvent
+    data object DailyRoutineUpdateError : HomeEvent
+    data object MemoryCardAdditionError : HomeEvent
+    data object InitDataLoadError : HomeEvent
+    data object MemoryCardReceiveError : HomeEvent
 }

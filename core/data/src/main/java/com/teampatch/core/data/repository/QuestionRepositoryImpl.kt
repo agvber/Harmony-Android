@@ -9,30 +9,34 @@ import com.teampatch.core.domain.repository.UserRepository
 import com.teampatch.core.network.QuestionRemoteDataSource
 import com.teampatch.core.network.model.question.request.CommentRequestBody
 import com.teampatch.core.network.model.question.request.QuestionCardCommentRequestBody
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class QuestionRepositoryImpl @Inject constructor(
+internal class QuestionRepositoryImpl @Inject constructor(
     private val questionRemoteDataSource: QuestionRemoteDataSource,
     private val userRepository: UserRepository,
 ) : QuestionRepository {
 
-    override fun getQuestions(limit: Int): Flow<List<Question>> = flow {
-        val user = userRepository.getUserInfo().first()
-        val questions = if ((1..3).contains(limit)) {
-            questionRemoteDataSource.getRecentThreeQuestions(user.groupId)
-        } else {
-            questionRemoteDataSource.getQuestionAll(user.groupId)
-        }
-            .data
-            .let { if (limit > 0) it.subList(0, limit) else it }
-            .mapIndexed { index, question ->
-                question.toDomain(index)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getQuestions(limit: Int): Flow<List<Question>> = userRepository.getUserInfo()
+        .distinctUntilChanged { old, new -> old.groupId == new.groupId }
+        .map { user ->
+            if (limit in QUESTION_MIN_RANGE) {
+                questionRemoteDataSource.getRecentThreeQuestions(user.groupId)
+            } else {
+                questionRemoteDataSource.getQuestionAll(user.groupId)
             }
-        emit(questions)
-    }
+                .data
+                .let { if (limit > 0) it.subList(0, limit) else it }
+                .mapIndexed { index, question ->
+                    question.toDomain(index)
+                }
+        }
 
     override suspend fun getQuestionDetail(questionId: String): QuestionDetail {
         return questionRemoteDataSource.getQuestionDetail(questionId = questionId.toInt())
@@ -45,7 +49,6 @@ class QuestionRepositoryImpl @Inject constructor(
             .map { it.toDomain() }
             .let { emit(it) }
     }
-
 
     override suspend fun addComment(questionId: String, comment: String): QuestionComment {
         val user = userRepository.getUserInfo().first()
@@ -69,5 +72,9 @@ class QuestionRepositoryImpl @Inject constructor(
 
     override suspend fun deleteComment(commentId: String) {
         questionRemoteDataSource.deleteComment(commentId.toInt())
+    }
+
+    companion object {
+        private val QUESTION_MIN_RANGE: IntRange = 0..3
     }
 }

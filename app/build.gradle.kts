@@ -3,10 +3,10 @@ import com.android.tools.build.jetifier.core.utils.Log
 import java.util.Properties
 
 plugins {
-    id("teampatch.android.application")
-    id("teampatch.android.hilt")
-    id("teampatch.android.feature")
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.teampatch.android.application)
+    alias(libs.plugins.teampatch.android.application.compose)
+    alias(libs.plugins.teampatch.android.feature)
+    alias(libs.plugins.teampatch.android.hilt)
 }
 
 android {
@@ -33,7 +33,6 @@ android {
     }
     buildFeatures {
         buildConfig = true
-        compose = true
     }
 }
 
@@ -96,23 +95,12 @@ dependencies {
 
     androidTestImplementation(project(":core:ui-test"))
 
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.coil.compose)
     implementation(libs.kakao.sdk.v2.user)
 
-    androidTestImplementation(libs.hilt.android)
-    androidTestImplementation(libs.hilt.android.test)
-    kspAndroidTest(libs.hilt.compiler)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    coreLibraryDesugaring(libs.android.tools.desugar)
 }

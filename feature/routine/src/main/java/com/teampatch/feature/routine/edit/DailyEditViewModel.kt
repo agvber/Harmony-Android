@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalTime
 import javax.inject.Inject
@@ -29,6 +30,7 @@ internal class DailyEditViewModel @Inject constructor(
     private val getRoutineUseCase: GetRoutineUseCase,
     private val addRoutineUseCase: AddRoutineUseCase,
     private val editRoutineUseCase: EditRoutineUseCase,
+    private val routineAlarmService: RoutineAlarmService
 ) : ViewModel() {
 
     private val route: DailyEditRoute = savedStateHandle.toRoute()
@@ -38,6 +40,8 @@ internal class DailyEditViewModel @Inject constructor(
 
     private val _event: Channel<DailyEditEvent> = Channel()
     val event: Flow<DailyEditEvent> = _event.receiveAsFlow()
+
+    private val cacheRoutine = MutableStateFlow<Routine?>(null)
 
     init {
         load()
@@ -50,11 +54,14 @@ internal class DailyEditViewModel @Inject constructor(
             catch = { _event.send(DailyEditEvent.LoadError(it)) }
         ) {
             val routine: Routine = getRoutineUseCase.invoke(route.dailyId)
-            _uiState.value = DailyEditUiState(
-                title = routine.name,
-                selectedDays = routine.daysOfWeekPeriod,
-                dailyEditMode = DailyEditMode.EDIT
-            )
+            _uiState.update {
+                it.copy(
+                    title = routine.name,
+                    selectedDays = routine.daysOfWeekPeriod,
+                    dailyEditMode = DailyEditMode.EDIT
+                )
+            }
+            cacheRoutine.update { routine }
         }
     }
 
@@ -80,20 +87,52 @@ internal class DailyEditViewModel @Inject constructor(
             ?.let { state.copy(time = it) } ?: state
     }
 
-    fun uploadDailyRoutine() = viewModelScope.launchWithCatch(
-        catch = { _event.send(DailyEditEvent.AddDailyError(it)) }
-    ) {
-        with(uiState.value) {
+    fun uploadDailyRoutine() = viewModelScope.launch {
+        uiState.value.runCatching {
             when (dailyEditMode) {
-                DailyEditMode.ADD -> addRoutineUseCase(title, selectedDays, time)
-                DailyEditMode.EDIT -> editRoutineUseCase(
-                    route.dailyId,
-                    title,
-                    selectedDays,
-                    time
-                )
+                DailyEditMode.ADD -> {
+                    val id = addRoutineUseCase.invoke(
+                        name = title,
+                        daysOfWeekPeriod = selectedDays,
+                        periodTime = time
+                    )
+                    routineAlarmService.setRoutineAlarm(
+                        routineId = id.toInt(),
+                        name = title,
+                        daysOfWeekPeriod = selectedDays,
+                        periodTime = time
+                    )
+                }
+
+                DailyEditMode.EDIT -> {
+                    cacheRoutine.value?.apply {
+                        routineAlarmService.cancelRoutineAlarm(
+                            routineId = route.dailyId.toInt(),
+                            name = name,
+                            daysOfWeekPeriod = selectedDays,
+                            periodTime = time
+                        )
+                    }
+                    routineAlarmService.setRoutineAlarm(
+                        routineId = route.dailyId.toInt(),
+                        name = title,
+                        daysOfWeekPeriod = selectedDays,
+                        periodTime = time
+                    )
+                    editRoutineUseCase(
+                        routineId = route.dailyId,
+                        name = title,
+                        daysOfWeekPeriod = selectedDays,
+                        periodTime = time
+                    )
+                }
             }
         }
-        _event.send(DailyEditEvent.DailyEditSuccess)
+            .onSuccess {
+                _event.send(DailyEditEvent.DailyEditSuccess)
+            }
+            .onFailure {
+                it.printStackTrace()
+            }
     }
 }

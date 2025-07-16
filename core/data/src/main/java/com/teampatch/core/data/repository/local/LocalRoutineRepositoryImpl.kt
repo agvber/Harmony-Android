@@ -31,7 +31,7 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
         routineName: String,
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
-    ) {
+    ): String {
         val routineEntity = RoutineEntity(
             id = null,
             groupId = groupId.toLong(),
@@ -39,7 +39,7 @@ internal class LocalRoutineRepositoryImpl @Inject constructor(
             dayOfWeek = daysOfWeekPeriod.set { it.name },
             time = periodTime.format(LOCAL_DB_TIME_FORMATTER)
         )
-        routineDao.insertAll(routineEntity)
+        return routineDao.insertAll(routineEntity).first().toString()
     }
 
     override suspend fun editRoutine(

@@ -12,7 +12,14 @@ import kotlinx.serialization.Serializable
 data object QuestionMainRoute
 
 fun NavController.navigateToQuestionMainScreen(
-    navOptions: NavOptions? = navOptions { launchSingleTop = true },
+    navOptions: NavOptions? = navOptions {
+        launchSingleTop = true
+        restoreState = true
+
+        popUpTo(QuestionMainRoute) {
+            inclusive = true
+        }
+    },
     navigatorExtras: Navigator.Extras? = null,
 ) {
     navigate(route = QuestionMainRoute, navOptions = navOptions, navigatorExtras = navigatorExtras)

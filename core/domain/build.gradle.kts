@@ -1,5 +1,5 @@
 plugins {
-    id("teampatch.kotlin.library")
+    alias(libs.plugins.teampatch.jvm.library)
 }
 
 dependencies {

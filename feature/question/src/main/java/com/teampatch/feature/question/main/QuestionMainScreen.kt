@@ -195,14 +195,12 @@ internal fun QuestionMainScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.question_main_text_title),
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.Medium,
                         fontSize = SP22,
                         color = BL
                     )
                     Text(
                         text = stringResource(R.string.question_main_button_question_detail),
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.Medium,
                         fontSize = SP18,
                         color = MainGreen,
@@ -224,7 +222,6 @@ internal fun QuestionMainScreen(
                 ) {
                     Text(
                         text = currentItem.title,
-                        fontFamily = PretendardFontFamily,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = SP20,
                         color = BL,

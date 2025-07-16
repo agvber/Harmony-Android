@@ -7,7 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,4 +22,7 @@ internal object CoroutineModule {
     @HarmonyDispatcher(DispatchersContext.IO)
     @Provides
     fun providesIoCoroutine(): CoroutineDispatcher = Dispatchers.IO
+
+    @Provides
+    fun providesCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob())
 }

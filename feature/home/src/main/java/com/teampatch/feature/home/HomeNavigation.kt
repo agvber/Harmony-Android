@@ -12,7 +12,14 @@ import kotlinx.serialization.Serializable
 data object HomeRoute
 
 fun NavController.navigateToHomeScreen(
-    navOptions: NavOptions? = navOptions { launchSingleTop = true },
+    navOptions: NavOptions? = navOptions {
+        launchSingleTop = true
+        restoreState = true
+
+        popUpTo(HomeRoute) {
+            inclusive = true
+        }
+    },
     navigatorExtras: Navigator.Extras? = null,
 ) {
     navigate(HomeRoute, navOptions, navigatorExtras)

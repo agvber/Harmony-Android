@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -86,6 +87,7 @@ import com.teampatch.feature.question.detail.model.QuestionDetailUiState
 internal fun QuestionDetailRoute(
     onBackRequest: () -> Unit,
     answerEditPageRequest: (questionId: String) -> Unit,
+    answer: String = "",
     viewModel: QuestionDetailViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
@@ -110,6 +112,10 @@ internal fun QuestionDetailRoute(
             uiState = uiState,
             comments = comments
         )
+    }
+
+    SideEffect {
+        viewModel.updateQuestionAnswer(answer)
     }
 
     LaunchedEffect(Unit) {

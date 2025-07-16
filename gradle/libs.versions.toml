@@ -106,3 +106,12 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jlleitschuh-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+
+# Build-logic
+teampatch-android-application = { id = "teampatch.android.application" }
+teampatch-android-application-compose = { id = "teampatch.android.application.compose" }
+teampatch-android-library = { id = "teampatch.android.library" }
+teampatch-android-library-compose = { id = "teampatch.android.library.compose" }
+teampatch-android-feature = { id = "teampatch.android.feature" }
+teampatch-jvm-library = { id = "teampatch.jvm.library" }
+teampatch-android-hilt = { id = "teampatch.android.hilt" }
