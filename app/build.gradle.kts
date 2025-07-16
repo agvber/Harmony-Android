@@ -81,19 +81,8 @@ fun DefaultConfig.setBuildConfigOrManifest(
 
 dependencies {
 
-    implementation(project(":core:common"))
-    implementation(project(":core:data"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:designsystem"))
-    implementation(project(":feature:login"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:onboarding"))
-    implementation(project(":feature:settings"))
-    implementation(project(":feature:routine"))
-    implementation(project(":feature:question"))
-    implementation(project(":feature:memory"))
-
-    androidTestImplementation(project(":core:ui-test"))
+    implementation(project(":core"))
+    implementation(project(":feature"))
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

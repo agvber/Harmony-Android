@@ -18,7 +18,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             buildTypes {
                 release {
-                    isMinifyEnabled = true
+                    isMinifyEnabled = false
+                    isShrinkResources = false
                 }
                 create("loggedInDebug") {
                     initWith(getByName("debug"))

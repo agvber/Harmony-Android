@@ -1,0 +1,24 @@
+package com.teampatch.core.data.mapper
+
+import com.teampatch.core.database.LOCAL_DB_DATE_TIME_FORMATTER
+import com.teampatch.core.database.model.MemoryCardEntity
+import com.teampatch.core.domain.model.memory.MemoryCard
+import java.time.LocalDateTime
+
+fun MemoryCardEntity.toDomain(
+    writerName: String,
+): MemoryCard = MemoryCard(
+    id = id.toString(),
+    writerTitle = title,
+    writerName = writerName,
+    text = content,
+    imageUrl = imageUrl,
+    imageUri = imageUri,
+    dateTime = LocalDateTime.parse(
+        /* text = */
+        modifiedAt,
+        /* formatter = */
+        LOCAL_DB_DATE_TIME_FORMATTER
+    ),
+    tags = tags
+)
