@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.harmony.core.database"
+    namespace = "com.teampatch.core.database"
 }
 
 dependencies {

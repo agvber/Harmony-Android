@@ -2,10 +2,10 @@ package com.teampatch.core.data.repository.local
 
 import android.net.Uri
 import androidx.core.net.toUri
-import com.harmony.core.database.dao.GroupDao
-import com.harmony.core.database.dao.UserDao
-import com.harmony.core.database.model.GroupEntity
-import com.harmony.core.database.model.UserEntity
+import com.teampatch.core.database.dao.GroupDao
+import com.teampatch.core.database.dao.UserDao
+import com.teampatch.core.database.model.GroupEntity
+import com.teampatch.core.database.model.UserEntity
 import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.data.mapper.MEMBER
 import com.teampatch.core.data.mapper.roleStringMapper

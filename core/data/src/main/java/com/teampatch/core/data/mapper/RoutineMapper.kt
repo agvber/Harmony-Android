@@ -1,7 +1,7 @@
 package com.teampatch.core.data.mapper
 
-import com.harmony.core.database.LOCAL_DB_TIME_FORMATTER
-import com.harmony.core.database.model.RoutineEntity
+import com.teampatch.core.database.LOCAL_DB_TIME_FORMATTER
+import com.teampatch.core.database.model.RoutineEntity
 import com.teampatch.core.common.set
 import com.teampatch.core.domain.model.routine.Routine
 import java.time.DayOfWeek

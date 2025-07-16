@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.harmony.core.ui.test"
+    namespace = "com.teampatch.core.ui.test"
 }
 
 dependencies {

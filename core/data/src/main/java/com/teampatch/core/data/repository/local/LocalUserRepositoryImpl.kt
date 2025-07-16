@@ -2,8 +2,8 @@ package com.teampatch.core.data.repository.local
 
 import android.net.Uri
 import androidx.core.net.toUri
-import com.harmony.core.database.dao.UserDao
-import com.harmony.core.database.model.UserEntity
+import com.teampatch.core.database.dao.UserDao
+import com.teampatch.core.database.model.UserEntity
 import com.teampatch.core.data.datasource.AuthenticationLocalDatasource
 import com.teampatch.core.data.di.annotation.DispatchersContext
 import com.teampatch.core.data.di.annotation.HarmonyDispatcher
