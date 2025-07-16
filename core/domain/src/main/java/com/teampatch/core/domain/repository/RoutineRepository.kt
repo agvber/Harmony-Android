@@ -1,10 +1,10 @@
 package com.teampatch.core.domain.repository
 
-import java.time.DayOfWeek
-import com.teampatch.core.domain.model.routine.Routine
 import com.teampatch.core.domain.model.TaskProgress
 import com.teampatch.core.domain.model.routine.DailyRoutine
+import com.teampatch.core.domain.model.routine.Routine
 import kotlinx.coroutines.flow.Flow
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -15,7 +15,7 @@ interface RoutineRepository {
         routineName: String,
         daysOfWeekPeriod: Set<DayOfWeek>,
         periodTime: LocalTime
-    )
+    ): String
 
     suspend fun editRoutine(
         groupId: Int,
