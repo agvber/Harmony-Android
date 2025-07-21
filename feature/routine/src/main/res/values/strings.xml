@@ -66,4 +66,11 @@
     <string name="routine_alarm_appbar_title">일과 알림</string>
     <string name="routine_alarm_button_now_history">인증사진 남기러 가기</string>
     <string name="routine_alarm_button_later_history">나중에 남기기</string>
+
+    <!--  Certification  -->
+    <string name="routine_certification_image_camera_description">카메라</string>
+    <string name="routine_certification_appbar_title">일과 인증</string>
+    <string name="routine_certification_text_photo_input_information_message">이곳을 눌러 사진을 남겨보세요!</string>
+    <string name="routine_certification_button_complete">인증 완료</string>
+    <string name="routine_certification_toast_init_data_load_error">데이터를 불러오는 과정에서 에러가 발생하였습니다.</string>
 </resources>
