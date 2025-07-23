@@ -30,7 +30,6 @@ internal class DailyEditViewModel @Inject constructor(
     private val getRoutineUseCase: GetRoutineUseCase,
     private val addRoutineUseCase: AddRoutineUseCase,
     private val editRoutineUseCase: EditRoutineUseCase,
-    private val routineAlarmService: RoutineAlarmService
 ) : ViewModel() {
 
     private val route: DailyEditRoute = savedStateHandle.toRoute()
@@ -90,42 +89,18 @@ internal class DailyEditViewModel @Inject constructor(
     fun uploadDailyRoutine() = viewModelScope.launch {
         uiState.value.runCatching {
             when (dailyEditMode) {
-                DailyEditMode.ADD -> {
-                    val id = addRoutineUseCase.invoke(
-                        name = title,
-                        daysOfWeekPeriod = selectedDays,
-                        periodTime = time
-                    )
-                    routineAlarmService.setRoutineAlarm(
-                        routineId = id.toInt(),
-                        name = title,
-                        daysOfWeekPeriod = selectedDays,
-                        periodTime = time
-                    )
-                }
+                DailyEditMode.ADD -> addRoutineUseCase.invoke(
+                    name = title,
+                    daysOfWeekPeriod = selectedDays,
+                    periodTime = time
+                )
 
-                DailyEditMode.EDIT -> {
-                    cacheRoutine.value?.apply {
-                        routineAlarmService.cancelRoutineAlarm(
-                            routineId = route.dailyId.toInt(),
-                            name = name,
-                            daysOfWeekPeriod = selectedDays,
-                            periodTime = time
-                        )
-                    }
-                    routineAlarmService.setRoutineAlarm(
-                        routineId = route.dailyId.toInt(),
-                        name = title,
-                        daysOfWeekPeriod = selectedDays,
-                        periodTime = time
-                    )
-                    editRoutineUseCase(
-                        routineId = route.dailyId,
-                        name = title,
-                        daysOfWeekPeriod = selectedDays,
-                        periodTime = time
-                    )
-                }
+                DailyEditMode.EDIT -> editRoutineUseCase.invoke(
+                    routineId = route.dailyId,
+                    name = title,
+                    daysOfWeekPeriod = selectedDays,
+                    periodTime = time
+                )
             }
         }
             .onSuccess {

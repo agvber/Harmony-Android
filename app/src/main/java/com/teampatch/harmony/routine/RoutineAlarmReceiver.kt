@@ -1,4 +1,4 @@
-package com.teampatch.feature.routine.alarm
+package com.teampatch.harmony.routine
 
 import android.Manifest
 import android.content.BroadcastReceiver
